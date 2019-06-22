@@ -18,7 +18,7 @@ func Render(w http.ResponseWriter, name string, content interface{}) {
 		log.Fatal(err)
 	}
 	// client以下を
-	wd += "/client/front/"
+	wd += "/front/"
 	t, err := template.ParseFiles(
 		wd+"template/layout.html", wd+"template/header.html", wd+"template/"+name)
 	if err != nil {

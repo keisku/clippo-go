@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kskumgk63/Clippo-api/handler"
+	"github.com/kskumgk63/Clippo-api/front/handler"
 	"github.com/gorilla/mux"
 	"github.com/kskumgk63/Clippo-api/proto/post"
 	"google.golang.org/grpc"
@@ -24,8 +24,8 @@ func main() {
 	r.Path("/post").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
 
 	// static フォルダの読み取り
-	static := http.StripPrefix("/front/static", http.FileServer(http.Dir("/front/static")))
-	r.PathPrefix("/front/static/").Handler(static)
+	static := http.StripPrefix("/static", http.FileServer(http.Dir("/static")))
+	r.PathPrefix("/static/").Handler(static)
 	svc := &http.Server{
 		Handler: r,
 		Addr:    "127.0.0.1:8080",

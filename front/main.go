@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
-	"projects/Clippo-api/client/front/handler"
-	"projects/Clippo-api/proto/post"
 
+	"github.com/kskumgk63/Clippo-api/handler"
 	"github.com/gorilla/mux"
+	"github.com/kskumgk63/Clippo-api/proto/post"
 	"google.golang.org/grpc"
 )
 
@@ -24,9 +24,8 @@ func main() {
 	r.Path("/post").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
 
 	// static フォルダの読み取り
-	static := http.StripPrefix("/static", http.FileServer(http.Dir("static")))
-	r.PathPrefix("/static/").Handler(static)
-
+	static := http.StripPrefix("/front/static", http.FileServer(http.Dir("/front/static")))
+	r.PathPrefix("/front/static/").Handler(static)
 	svc := &http.Server{
 		Handler: r,
 		Addr:    "127.0.0.1:8080",
@@ -34,7 +33,7 @@ func main() {
 	log.Fatalln(svc.ListenAndServe())
 }
 
-// getGRPCConnection gRPC通信の接続
+// getGRPCConnection gRPCとの通信の接続
 func getGRPCConnection() *grpc.ClientConn {
 	connection, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {

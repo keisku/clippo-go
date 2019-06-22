@@ -3,8 +3,9 @@ package handler
 import (
 	"log"
 	"net/http"
-	"projects/Clippo-api/client/front/template"
-	"projects/Clippo-api/proto/post"
+
+	"github.com/kskumgk63/Clippo-api/front/template"
+	"github.com/kskumgk63/Clippo-api/proto/post"
 )
 
 // FrontServer クライアントスタブを作成

@@ -1,12 +1,10 @@
 package main
 
 import (
-	"context"
-	"encoding/json"
 	"log"
 	"net/http"
-	clippopb "projects/Clippo-api/proto"
-	"time"
+	"projects/Clippo-api/client/front/handler"
+	"projects/Clippo-api/proto/post"
 
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
@@ -15,41 +13,32 @@ import (
 func main() {
 	r := mux.NewRouter()
 
-	r.Path("/get").Methods(http.MethodPost).HandlerFunc(GetArticleTitleDescriptionImg)
+	postClient := post.NewPostServiceClient(getGRPCConnection())
+
+	frontSrv := &handler.FrontServer{
+		PostClient: postClient,
+	}
+
+	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.PostRegister)
+	r.Path("/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.PostRegisterConfirm)
+	r.Path("/post").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
+
+	// static フォルダの読み取り
+	static := http.StripPrefix("/static", http.FileServer(http.Dir("static")))
+	r.PathPrefix("/static/").Handler(static)
 
 	svc := &http.Server{
-		Handler:      r,
-		Addr:         "127.0.0.1:8080",
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		Handler: r,
+		Addr:    "127.0.0.1:8080",
 	}
 	log.Fatalln(svc.ListenAndServe())
 }
 
 // getGRPCConnection gRPC通信の接続
-func getGRPCConnection() clippopb.ArticleServiceClient {
+func getGRPCConnection() *grpc.ClientConn {
 	connection, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalln(err)
 	}
-	return clippopb.NewArticleServiceClient(connection)
-}
-
-// GetArticleTitleDescriptionImg 送信したURLでtitle, descriptionをスクレイピングする
-func GetArticleTitleDescriptionImg(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	url := r.FormValue("url")
-
-	req := &clippopb.ArticleURLRequest{
-		Url: url,
-	}
-
-	c := getGRPCConnection()
-	res, err := c.GetArticleTitleDescriptionImg(context.Background(), req)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	bytes, _ := json.Marshal(&res)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(bytes)
+	return connection
 }

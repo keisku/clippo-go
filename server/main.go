@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"log"
 	"net"
-	clippopb "projects/Clippo-api/proto"
+	"projects/Clippo-api/proto/post"
 
 	goose "github.com/advancedlogic/GoOse"
 	"google.golang.org/grpc"
 )
 
-type server struct{}
+type postServer struct{}
 
-func (*server) GetArticleTitleDescriptionImg(ctx context.Context, req *clippopb.ArticleURLRequest) (*clippopb.ArticleTitleDescriptionImgResponse, error) {
-	fmt.Printf("GetArticleTitleDescriprion was invoked with %v\n", req)
+func (*postServer) GetPostDetail(ctx context.Context, req *post.PostURLRequest) (*post.PostResponse, error) {
+	fmt.Printf("GetPostDetail was invoked with %v\n", req)
 
 	// リクエストURLのタイトルとディスクリプションをスクレイピング
 	url := req.GetUrl()
@@ -23,7 +23,8 @@ func (*server) GetArticleTitleDescriptionImg(ctx context.Context, req *clippopb.
 	article, _ := g.ExtractFromURL(url)
 
 	// gRPCレスポンスの作成
-	res := &clippopb.ArticleTitleDescriptionImgResponse{
+	res := &post.PostResponse{
+		Url:         url,
 		Title:       article.Title,
 		Description: article.MetaDescription,
 		Image:       article.TopImage,
@@ -41,7 +42,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	clippopb.RegisterArticleServiceServer(s, &server{})
+	post.RegisterPostServiceServer(s, &postServer{})
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalln(err)

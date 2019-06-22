@@ -1,0 +1,11 @@
+{{ define "content" }}
+<div class="container">
+    <div class="card" style="width: 300px;">
+        <img src="{{.Image}}" class="card-img-top" width="250px" height="250px">
+        <div class="card-body">
+            <h3 class="card-title"><a href="{{.Url}}">{{.Title}}</a></h3>
+            <p class="card-text">{{.Description}}</p>
+        </div>
+    </div>
+</div>
+{{ end }}

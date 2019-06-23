@@ -11,6 +11,8 @@ import (
 )
 
 func main() {
+
+	// gorilla
 	r := mux.NewRouter()
 
 	postClient := post.NewPostServiceClient(getGRPCConnection())
@@ -24,8 +26,8 @@ func main() {
 	r.Path("/post").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
 
 	// static フォルダの読み取り
-	static := http.StripPrefix("/static", http.FileServer(http.Dir("/static")))
-	r.PathPrefix("/static/").Handler(static)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
 	svc := &http.Server{
 		Handler: r,
 		Addr:    "127.0.0.1:8080",

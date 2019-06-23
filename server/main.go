@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net"
-
 	"github.com/kskumgk63/Clippo-api/proto/post"
-	goose "github.com/advancedlogic/GoOse"
+	"github.com/advancedlogic/GoOse"
 	"google.golang.org/grpc"
 )
 

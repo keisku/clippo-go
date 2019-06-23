@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kskumgk63/Clippo-api/front/handler"
 	"github.com/gorilla/mux"
+	"github.com/kskumgk63/Clippo-api/front/handler"
 	"github.com/kskumgk63/Clippo-api/proto/post"
 	"google.golang.org/grpc"
 )
@@ -21,9 +21,10 @@ func main() {
 		PostClient: postClient,
 	}
 
-	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.PostRegister)
-	r.Path("/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.PostRegisterConfirm)
-	r.Path("/post").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
+	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.Top)
+	r.Path("/post/register/init").Methods(http.MethodGet).HandlerFunc(frontSrv.PostRegister)
+	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.PostRegisterConfirm)
+	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
 
 	// static フォルダの読み取り
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))

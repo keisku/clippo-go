@@ -1,0 +1,18 @@
+{{ define "content" }}
+<div class="container">
+    <h1>?????</h1>
+
+    {{range .Posts}}
+        <div class="row shadow-sm p-5">
+            <div class="col-4">
+                <img src="{{.Image}}" width="250px" height="250px">
+            </div>
+            <div class="col-8">
+                <h3><a href="{{.URL}}">{{.Title}}</a></h3>
+                <p>{{.Description}}</p>
+            </div>
+        </div>
+    {{end}}
+
+</div>
+{{ end }}

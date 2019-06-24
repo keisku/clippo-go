@@ -21,6 +21,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.9.2 // indirect
 	github.com/jaytaylor/html2text v0.0.0-20190408195923-01ec452cbe43 // indirect
 	github.com/jinzhu/gorm v1.9.9
+	github.com/joho/godotenv v1.3.0
 	github.com/josharian/impl v0.0.0-20180228163738-3d0f908298c4 // indirect
 	github.com/kr/pty v1.1.5 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect

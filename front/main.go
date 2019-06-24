@@ -11,8 +11,6 @@ import (
 )
 
 func main() {
-
-	// gorilla
 	r := mux.NewRouter()
 
 	postClient := post.NewPostServiceClient(getGRPCConnection())
@@ -40,7 +38,7 @@ func main() {
 	log.Fatalln(svc.ListenAndServe())
 }
 
-// getGRPCConnection gRPCとの通信の接続
+// getGRPCConnection gRPCと接続
 func getGRPCConnection() *grpc.ClientConn {
 	connection, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {

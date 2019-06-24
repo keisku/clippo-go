@@ -10,17 +10,17 @@ import (
 // Render テンプレートエンジン
 func Render(w http.ResponseWriter, name string, content interface{}) {
 
-	// ワーキングディレクトリをGET
-	// 実行するディレクトリのパスを取得
-	// Clippo-apiで実行すると、/Users/umegakikeisuke/go/src/projects/Clippo-api/ となる
+	/*
+		ワーキングディレクトリをGET
+		.Clippo-api/front/
+		上記パスで実行されることを前提とする。
+	*/
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
-	// client以下を
-	wd += "/front/"
 	t, err := template.ParseFiles(
-		wd+"template/layout.html", wd+"template/header.html", wd+"template/"+name)
+		wd+"/template/layout.html", wd+"/template/header.html", wd+"/template/"+name)
 	if err != nil {
 		log.Fatalln(err)
 	}

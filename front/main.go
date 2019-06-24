@@ -26,8 +26,12 @@ func main() {
 	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.PostRegisterConfirm)
 	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
 
-	// static フォルダの読み取り
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	/*
+		static フォルダの読み取り
+		.Clippo-api/front/
+		上記パスで実行されることを前提とする。
+	*/
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	svc := &http.Server{
 		Handler: r,

@@ -12,7 +12,7 @@ import (
 
 // GormConnect mysqlとの接続
 func GormConnect() *gorm.DB {
-	err := godotenv.Load("./database/config/database.env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error in %v\n", err)
 	}

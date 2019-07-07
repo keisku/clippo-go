@@ -9,6 +9,10 @@ require (
 	github.com/acroca/go-symbols v0.1.1 // indirect
 	github.com/advancedlogic/GoOse v0.0.0-20180825110909-6cd46faf50eb
 	github.com/araddon/dateparse v0.0.0-20190510211750-d2ba70357e92 // indirect
+	github.com/auth0/go-jwt-middleware v0.0.0-20170425171159-5493cabe49f7
+	github.com/codegangsta/negroni v1.0.0 // indirect
+	github.com/davecgh/go-spew v1.1.1
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/gomodifytags v0.0.0-20190517204355-df91c5bc7551 // indirect
 	github.com/fatih/set v0.2.1 // indirect
 	github.com/gigawattio/window v0.0.0-20180317192513-0f5467e35573 // indirect
@@ -23,19 +27,26 @@ require (
 	github.com/jinzhu/gorm v1.9.9
 	github.com/joho/godotenv v1.3.0
 	github.com/josharian/impl v0.0.0-20180228163738-3d0f908298c4 // indirect
+	github.com/jtolds/gls v4.20.0+incompatible
 	github.com/kr/pty v1.1.5 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/gls v0.0.0-20190610040709-84558782a674
+	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/nsf/gocode v0.0.0-20190302080247-5bee97b48836 // indirect
 	github.com/olekukonko/tablewriter v0.0.1 // indirect
+	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/pmylund/go-cache v2.1.0+incompatible
 	github.com/ramya-rao-a/go-outline v0.0.0-20181122025142-7182a932836a // indirect
 	github.com/rogpeppe/fastuuid v1.1.0 // indirect
 	github.com/rogpeppe/godef v1.1.1 // indirect
+	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
 	github.com/sqs/goreturns v0.0.0-20181028201513-538ac6014518 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	github.com/tpng/gopkgs v0.0.0-20180428091733-81e90e22e204 // indirect
 	github.com/zmb3/gogetdoc v0.0.0-20190228002656-b37376c5da6a // indirect
 	go.opencensus.io v0.22.0 // indirect
-	golang.org/x/crypto v0.0.0-20190621222207-cc06ce4a13d4 // indirect
+	golang.org/x/crypto v0.0.0-20190621222207-cc06ce4a13d4
 	golang.org/x/exp v0.0.0-20190510132918-efd6b22b2522 // indirect
 	golang.org/x/image v0.0.0-20190622003408-7e034cad6442 // indirect
 	golang.org/x/mobile v0.0.0-20190607214518-6fa95d984e88 // indirect

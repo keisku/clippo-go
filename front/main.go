@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -11,6 +12,7 @@ import (
 )
 
 func main() {
+	fmt.Println("**** START SERVER ****")
 	r := mux.NewRouter()
 
 	postClient := post.NewPostServiceClient(getGRPCConnection())
@@ -19,10 +21,20 @@ func main() {
 		PostClient: postClient,
 	}
 
-	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.Top)
+	r.Path("/set").Methods(http.MethodGet).HandlerFunc(frontSrv.SetCookie)
+	r.Path("/get").Methods(http.MethodGet).HandlerFunc(frontSrv.GetCookie)
+
+	r.Path("/login").Methods(http.MethodGet).HandlerFunc(frontSrv.Login)
+	r.Path("/login/success").Methods(http.MethodPost).HandlerFunc(frontSrv.LoginSuccess)
+	r.Path("/top").Methods(http.MethodGet).HandlerFunc(handler.AuthToken(frontSrv.Top))
+
+	r.Path("/user/register/init").Methods(http.MethodGet).HandlerFunc(frontSrv.UserRegister)
+	r.Path("/user/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.UserRegisterConfirm)
+	r.Path("/user/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.UserRegisterDo)
+
 	r.Path("/post/register/init").Methods(http.MethodGet).HandlerFunc(frontSrv.PostRegister)
 	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.PostRegisterConfirm)
-	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.PostResult)
+	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.PostDo)
 
 	/*
 		static フォルダの読み取り

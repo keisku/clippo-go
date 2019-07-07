@@ -12,7 +12,7 @@ func Render(w http.ResponseWriter, name string, content interface{}) {
 
 	/*
 		ワーキングディレクトリをGET
-		.Clippo-api/front/
+		.clippo-go/front/
 		上記パスで実行されることを前提とする。
 	*/
 	wd, err := os.Getwd()

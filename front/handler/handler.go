@@ -11,9 +11,9 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/kskumgk63/Clippo-api/front/database"
-	"github.com/kskumgk63/Clippo-api/front/template"
-	"github.com/kskumgk63/Clippo-api/proto/post"
+	"github.com/kskumgk63/clippo-go/front/database"
+	"github.com/kskumgk63/clippo-go/front/template"
+	"github.com/kskumgk63/clippo-go/proto/post"
 )
 
 // FrontServer クライアントスタブを作成
@@ -23,17 +23,7 @@ type FrontServer struct {
 
 // Posts トップページへ構造体をマッピング
 type Posts struct {
-	Posts []Post
-}
-
-// User DB格納用の構造体
-type User struct {
-	Email, Password string
-}
-
-// Post DB格納用の構造体
-type Post struct {
-	URL, Title, Description, Image string
+	Posts []database.Post
 }
 
 // JWT 認証用トークン
@@ -41,13 +31,17 @@ type JWT struct {
 	Token string `json:"token"`
 }
 
-// TOKENCACHE 認証トークンのキャッシュ格納時のキー
-const TOKENCACHE = "token-cache"
+const (
+	// TOKENCACHE 認証トークンのキー
+	TOKENCACHE = "token-cache"
+	// LOGINUSER ログインユーザーIdのキー
+	LOGINUSER = "login-user"
+)
 
 var cache = gocache.New(1*time.Hour, 2*time.Hour)
 
 // GenerateJWTToken JWT認証トークンを生成
-func GenerateJWTToken(user User) (string, error) {
+func GenerateJWTToken(user database.User) (string, error) {
 	secret := "secret"
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -67,9 +61,12 @@ func GenerateJWTToken(user User) (string, error) {
 // AuthToken 認証トークンが含まれているかチェックするミドルウェア
 func AuthToken(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// キャッシュを取り出す
 		cached, found := cache.Get(TOKENCACHE)
+		// 見つからなければリダイレクト
 		if !found {
 			http.Redirect(w, r, "/login", http.StatusFound)
+			return
 		}
 		bearerToken := cached.(string)
 		token, err := jwt.Parse(bearerToken, func(token *jwt.Token) (interface{}, error) {
@@ -101,7 +98,7 @@ func (s *FrontServer) Login(w http.ResponseWriter, r *http.Request) {
 
 // LoginSuccess returns "/top"
 func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user database.User
 
 	r.ParseForm()
 	email := r.FormValue("email")
@@ -135,10 +132,13 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 	}
 	// トークンをキャッシュに格納
 	cache.Set(TOKENCACHE, token, gocache.DefaultExpiration)
+	// ログインユーザーのIdをキャッシュに格納
+	cache.Set(LOGINUSER, user.ID, gocache.DefaultExpiration)
 
 	// 投稿一覧取得
-	posts := []Post{}
+	posts := []database.Post{}
 	db.Find(&posts)
+	db.Where("user_id = ?", user.ID).Find(&posts)
 
 	template.Render(w, "top/top.html", &Posts{
 		Posts: posts,
@@ -151,8 +151,14 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 	db := database.GormConnect()
 	defer db.Close()
 
-	posts := []Post{}
-	err := db.Find(&posts).Error
+	// キャッシュされているログインユーザーのIdを取得
+	cached, found := cache.Get(LOGINUSER)
+	if !found {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	posts := []database.Post{}
+	err := db.Where("user_id = ?", cached).Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))
@@ -176,15 +182,24 @@ func (s *FrontServer) UserRegisterConfirm(w http.ResponseWriter, r *http.Request
 	password := r.FormValue("password")
 	confirmPassword := r.FormValue("confirmPassword")
 
+	// エラーハンドリング
+	if email == "" {
+		http.Redirect(w, r, "/user/register/init", http.StatusFound)
+		return
+	}
+	if password == "" {
+		http.Redirect(w, r, "/user/register/init", http.StatusFound)
+		return
+	}
 	if password != confirmPassword {
-		template.Render(w, "user/userRegisterForm.html", User{
+		template.Render(w, "user/userRegisterForm.html", database.User{
 			Email:    email,
 			Password: "",
 		})
 		return
 	}
 
-	template.Render(w, "user/userRegisterConfirmForm.html", User{
+	template.Render(w, "user/userRegisterConfirmForm.html", &database.User{
 		Email:    email,
 		Password: password,
 	})
@@ -196,6 +211,16 @@ func (s *FrontServer) UserRegisterDo(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
+	// エラーハンドリング
+	if email == "" {
+		http.Redirect(w, r, "/user/register/init", http.StatusFound)
+		return
+	}
+	if password == "" {
+		http.Redirect(w, r, "/user/register/init", http.StatusFound)
+		return
+	}
+
 	// ハッシュ化
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 10)
 	if err != nil {
@@ -204,22 +229,16 @@ func (s *FrontServer) UserRegisterDo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// DBからのパスワード
-	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		http.Redirect(w, r, "/user/register/init", http.StatusFound)
-		return
-	}
-
 	// MySQLと接続
 	db := database.GormConnect()
 	defer db.Close()
-	db.Create(User{
+	user := database.User{
 		Email:    email,
 		Password: string(hashedPassword),
-	})
+	}
+	db.Create(&user)
+	db.Model(&user).Update("CreatedAt", time.Now().Add(9*time.Hour))
+	db.Model(&user).Update("UpdatedAt", time.Now().Add(9*time.Hour))
 
 	http.Redirect(w, r, "/login", http.StatusFound)
 }
@@ -252,15 +271,26 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	description := r.FormValue("description")
 	image := r.FormValue("image")
 
+	// キャッシュされているログインユーザーのIdを取得
+	cached, found := cache.Get(LOGINUSER)
+	if !found {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+
 	// MySQLと接続
 	db := database.GormConnect()
 	defer db.Close()
-	db.Create(Post{
+	post := database.Post{
 		URL:         url,
 		Title:       title,
 		Description: description,
 		Image:       image,
-	})
+		UserID:      cached.(uint),
+	}
+	db.Create(&post)
+	db.Model(&post).Update("CreatedAt", time.Now().Add(9*time.Hour))
+	db.Model(&post).Update("UpdatedAt", time.Now().Add(9*time.Hour))
 
 	http.Redirect(w, r, "/top", http.StatusFound)
 }

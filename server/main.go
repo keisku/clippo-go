@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"github.com/kskumgk63/Clippo-api/proto/post"
-	"github.com/advancedlogic/GoOse"
+
+	goose "github.com/advancedlogic/GoOse"
+	"github.com/kskumgk63/clippo-go/proto/post"
 	"google.golang.org/grpc"
 )
 
@@ -33,7 +34,7 @@ func (*postServer) GetPostDetail(ctx context.Context, req *post.PostURLRequest) 
 }
 
 func main() {
-	fmt.Println("Starting the server....")
+	fmt.Println("***** SERVER RUNNING *****")
 
 	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {

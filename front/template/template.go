@@ -20,7 +20,7 @@ func Render(w http.ResponseWriter, name string, content interface{}) {
 		log.Fatal(err)
 	}
 	t, err := template.ParseFiles(
-		wd+"/template/layout.html", wd+"/template/header.html", wd+"/template/"+name)
+		wd+"/template/layout.tmpl", wd+"/template/header.tmpl", wd+"/template/"+name)
 	if err != nil {
 		log.Fatalln(err)
 	}

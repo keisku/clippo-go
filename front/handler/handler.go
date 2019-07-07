@@ -93,7 +93,7 @@ func AuthToken(next http.HandlerFunc) http.HandlerFunc {
 
 // Login returns "/login"
 func (s *FrontServer) Login(w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "login/loginForm.html", nil)
+	template.Render(w, "login/loginForm.tmpl", nil)
 }
 
 // LoginSuccess returns "/top"
@@ -140,7 +140,7 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 	db.Find(&posts)
 	db.Where("user_id = ?", user.ID).Find(&posts)
 
-	template.Render(w, "top/top.html", &Posts{
+	template.Render(w, "top/top.tmpl", &Posts{
 		Posts: posts,
 	})
 }
@@ -165,14 +165,14 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	template.Render(w, "top/top.html", &Posts{
+	template.Render(w, "top/top.tmpl", &Posts{
 		Posts: posts,
 	})
 }
 
 // UserRegister returns "user/register/init"
 func (s *FrontServer) UserRegister(w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "user/userRegisterForm.html", nil)
+	template.Render(w, "user/userRegisterForm.tmpl", nil)
 }
 
 // UserRegisterConfirm returns "user/register/confirm"
@@ -192,14 +192,14 @@ func (s *FrontServer) UserRegisterConfirm(w http.ResponseWriter, r *http.Request
 		return
 	}
 	if password != confirmPassword {
-		template.Render(w, "user/userRegisterForm.html", database.User{
+		template.Render(w, "user/userRegisterForm.tmpl", database.User{
 			Email:    email,
 			Password: "",
 		})
 		return
 	}
 
-	template.Render(w, "user/userRegisterConfirmForm.html", &database.User{
+	template.Render(w, "user/userRegisterConfirmForm.tmpl", &database.User{
 		Email:    email,
 		Password: password,
 	})
@@ -245,7 +245,7 @@ func (s *FrontServer) UserRegisterDo(w http.ResponseWriter, r *http.Request) {
 
 // PostRegister returns "/post/register/init"
 func (s *FrontServer) PostRegister(w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "post/postRegisterForm.html", nil)
+	template.Render(w, "post/postRegisterForm.tmpl", nil)
 }
 
 // PostRegisterConfirm returns "/post/register/confirm"
@@ -260,7 +260,7 @@ func (s *FrontServer) PostRegisterConfirm(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		log.Fatalln(err)
 	}
-	template.Render(w, "post/postRegisterConfirmForm.html", res)
+	template.Render(w, "post/postRegisterConfirmForm.tmpl", res)
 }
 
 // PostDo returns "/"
@@ -318,7 +318,7 @@ func (s *FrontServer) PostSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	template.Render(w, "top/top.html", &Posts{
+	template.Render(w, "top/top.tmpl", &Posts{
 		Posts: posts,
 	})
 }

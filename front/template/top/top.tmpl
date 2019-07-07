@@ -1,0 +1,29 @@
+{{ define "content" }}
+<div class="mb-5">
+    <h1>検索</h1>
+    <form method="POST" action="/post/search">
+        <div class="form-group">
+            <input class="form-control" type="text" name="title" placeholder="タイトルを入力してください" required />
+        </div>
+        <div>
+            <input class="btn btn-success" type="submit" value="Search">
+        </div>
+    </form>
+</div>
+<div>
+    <h1>あなたがクリップした記事</h1>
+</div>
+<div>
+    {{range .Posts}}
+    <div class="row shadow-sm p-5">
+        <div class="col-4">
+            <img src="{{.Image}}" width="250px" height="250px">
+        </div>
+        <div class="col-8">
+            <h3><a href="{{.URL}}">{{.Title}}</a></h3>
+            <p>{{.Description}}</p>
+        </div>
+    </div>
+    {{end}}
+</div>
+{{ end }}

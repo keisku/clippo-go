@@ -294,3 +294,31 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
+
+// PostSearch return Posts which is match with input
+func (s *FrontServer) PostSearch(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	title := r.FormValue("title")
+
+	// MySQLと接続
+	db := database.GormConnect()
+	defer db.Close()
+
+	// キャッシュされているログインユーザーのIdを取得
+	cached, found := cache.Get(LOGINUSER)
+	if !found {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	posts := []database.Post{}
+	err := db.Where("user_id = ? AND title LIKE ?", cached, "%"+title+"%").Find(&posts).Error
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Printf("*** %v\n", fmt.Sprint(err))
+		return
+	}
+
+	template.Render(w, "top/top.html", &Posts{
+		Posts: posts,
+	})
+}

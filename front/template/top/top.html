@@ -1,8 +1,22 @@
 {{ define "content" }}
 <div class="container">
-    <h1>?????</h1>
-
-    {{range .Posts}}
+    <div>
+        <h1>??</h1>
+        <form method="POST" action="/post/search">
+            <div class="form-group">
+                <label>??????</label>
+                <input class="form-control" type="text" name="title" placeholder="?????????????" required />
+            </div>
+            <div>
+                <input class="btn btn-success" type="submit" value="Search">
+            </div>
+        </form>
+    </div>
+    <div>
+        <h1>??????????????</h1>
+    </div>
+    <div>
+        {{range .Posts}}
         <div class="row shadow-sm p-5">
             <div class="col-4">
                 <img src="{{.Image}}" width="250px" height="250px">
@@ -12,7 +26,7 @@
                 <p>{{.Description}}</p>
             </div>
         </div>
-    {{end}}
-
+        {{end}}
+    </div>
 </div>
 {{ end }}

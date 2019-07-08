@@ -12,6 +12,46 @@
 </div>
 <div>
     <h1>あなたがクリップした記事</h1>
+    <ul>
+        <li style="list-style:none;">
+            <form method="POST" action="/post/search/usecase">
+                <div class="form-group shadow-sm">
+                    <h4>記事の目的</h4>
+                    <select name="usecase">
+                        <option value="おもしろい">おもしろい</option>
+                        <option value="知識">知識</option>
+                        <option value="リファレンス">リファレンス</option>
+                        <option value="チュートリアル">チュートリアル</option>
+                        <option value="その他">その他</option>
+                    </select>
+                    <div>
+                        <input class="btn btn-success" type="submit" value="絞り込む">
+                    </div>
+                </div>
+            </form>
+        </li>
+        <li style="list-style:none;">
+            <form method="POST" action="/post/search/genre">
+                <div class="form-group shadow-sm">
+                    <h4>ジャンル</h4>
+                    <select name="genre">
+                        <option value="プログラミング言語">プログラミング言語</option>
+                        <option value="フレームワーク">フレームワーク</option>
+                        <option value="ライブラリ">ライブラリ</option>
+                        <option value="OS">OS</option>
+                        <option value="SQL">SQL</option>
+                        <option value="クラウド">クラウド</option>
+                        <option value="コンテナ技術">コンテナ技術</option>
+                        <option value="デザイン">デザイン</option>
+                        <option value="その他">その他</option>
+                    </select>
+                    <div>
+                        <input class="btn btn-success" type="submit" value="絞り込む">
+                    </div>
+                </div>
+            </form>
+        </li>
+    </ul>
 </div>
 <div>
     {{range .Posts}}
@@ -21,6 +61,8 @@
         </div>
         <div class="col-8">
             <h3><a href="{{.URL}}">{{.Title}}</a></h3>
+            <h5 class="btn btn-outline-info">記事の目的 : {{.Usecase}}</h5>
+            <h5 class="btn btn-outline-info">ジャンル : {{.Genre}}</h5>
             <p>{{.Description}}</p>
         </div>
     </div>

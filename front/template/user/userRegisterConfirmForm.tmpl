@@ -3,10 +3,9 @@
 <form method="POST" action="/user/register/do">
     <div class="form-group">
         <label>e-mail</label><br>
-        <p class="form-control" style="background:gray;">{{ .Email }}</p>
+        <input class="form-control" type="text" name="email" value="{{ .Email }}" readonly />
     </div>
     <div>
-        <input type="hidden" name="email" value="{{ .Email }}" />
         <input type="hidden" name="password" value="{{ .Password }}" />
         <input class="btn btn-success" type="submit" value="Register">
     </div>

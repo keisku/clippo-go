@@ -24,8 +24,8 @@ type User struct {
 // Post 投稿
 type Post struct {
 	gorm.Model
-	URL, Title, Description, Image string
-	UserID                         uint
+	URL, Title, Description, Image, Usecase, Genre string
+	UserID                                         uint
 }
 
 // GormConnect mysqlとの接続

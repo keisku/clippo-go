@@ -270,6 +270,8 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	description := r.FormValue("description")
 	image := r.FormValue("image")
+	usecase := r.FormValue("usecase")
+	genre := r.FormValue("genre")
 
 	// キャッシュされているログインユーザーのIdを取得
 	cached, found := cache.Get(LOGINUSER)
@@ -286,6 +288,8 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 		Title:       title,
 		Description: description,
 		Image:       image,
+		Usecase:     usecase,
+		Genre:       genre,
 		UserID:      cached.(uint),
 	}
 	db.Create(&post)
@@ -295,8 +299,8 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
 
-// PostSearch return Posts which is match with input
-func (s *FrontServer) PostSearch(w http.ResponseWriter, r *http.Request) {
+// PostSearchTitle return Posts which is match with input
+func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	title := r.FormValue("title")
 
@@ -311,7 +315,66 @@ func (s *FrontServer) PostSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	posts := []database.Post{}
+
 	err := db.Where("user_id = ? AND title LIKE ?", cached, "%"+title+"%").Find(&posts).Error
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Printf("*** %v\n", fmt.Sprint(err))
+		return
+	}
+
+	template.Render(w, "top/top.tmpl", &Posts{
+		Posts: posts,
+	})
+}
+
+// PostSearchUsecase return Posts which is match with input
+func (s *FrontServer) PostSearchUsecase(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	usecase := r.FormValue("usecase")
+
+	// MySQLと接続
+	db := database.GormConnect()
+	defer db.Close()
+
+	// キャッシュされているログインユーザーのIdを取得
+	cached, found := cache.Get(LOGINUSER)
+	if !found {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	posts := []database.Post{}
+
+	err := db.Where("user_id = ? AND usecase LIKE ?", cached, "%"+usecase+"%").Find(&posts).Error
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Printf("*** %v\n", fmt.Sprint(err))
+		return
+	}
+
+	template.Render(w, "top/top.tmpl", &Posts{
+		Posts: posts,
+	})
+}
+
+// PostSearchGenre return Posts which is match with input
+func (s *FrontServer) PostSearchGenre(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	genre := r.FormValue("genre")
+
+	// MySQLと接続
+	db := database.GormConnect()
+	defer db.Close()
+
+	// キャッシュされているログインユーザーのIdを取得
+	cached, found := cache.Get(LOGINUSER)
+	if !found {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	posts := []database.Post{}
+
+	err := db.Where("user_id = ? AND genre LIKE ?", cached, "%"+genre+"%").Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))

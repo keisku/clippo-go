@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/kskumgk63/clippo-go/front/database"
+
 	"github.com/gorilla/mux"
 	"github.com/kskumgk63/clippo-go/front/handler"
 	"github.com/kskumgk63/clippo-go/proto/post"
@@ -22,9 +24,9 @@ func getGRPCConnection() *grpc.ClientConn {
 
 func main() {
 	// テーブル作成
-	// db := database.GormConnect()
-	// database.CreateTable(db)
-	// defer db.Close()
+	db := database.GormConnect()
+	database.CreateTable(db)
+	defer db.Close()
 
 	fmt.Println("***** SERVER RUNNING *****")
 
@@ -47,7 +49,9 @@ func main() {
 	r.Path("/post/register/init").Methods(http.MethodGet).HandlerFunc(handler.AuthToken(frontSrv.PostRegister))
 	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(handler.AuthToken(frontSrv.PostRegisterConfirm))
 	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(handler.AuthToken(frontSrv.PostDo))
-	r.Path("/post/search").Methods(http.MethodPost).HandlerFunc(handler.AuthToken(frontSrv.PostSearch))
+	r.Path("/post/search/title").Methods(http.MethodPost).HandlerFunc(handler.AuthToken(frontSrv.PostSearchTitle))
+	r.Path("/post/search/usecase").Methods(http.MethodPost).HandlerFunc(handler.AuthToken(frontSrv.PostSearchUsecase))
+	r.Path("/post/search/genre").Methods(http.MethodPost).HandlerFunc(handler.AuthToken(frontSrv.PostSearchGenre))
 
 	/*
 		static フォルダの読み取り

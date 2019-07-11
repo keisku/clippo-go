@@ -1,10 +1,14 @@
 {{define "header"}}
 <header>
-    <ul class="nav">
-        <li class="nav-item">
+    <ul class="headerCover">
+        <li class="headerLinks">
             <h1><a class="nav-link active" href="/top">Clippo</a></h1>
-            <a class="nav-link active" href="/post/register/init">クリップする</a>
-            <a class="nav-link active" href="/user/register/init">SignUp</a>
+            <div class="headerInnerLinks">
+                <a class="nav-link active" href="/post/register/init">クリップする</a>
+                <form method="POST" action="/logout">
+                    <input class="btn headerButton" type="submit" value="Logout">
+                </form>
+            </div>
         </li>
     </ul>
 </header>

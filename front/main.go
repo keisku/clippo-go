@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kskumgk63/clippo-go/front/database"
+	"github.com/kskumgk63/clippo-go/database"
 
 	"github.com/gorilla/mux"
 	"github.com/kskumgk63/clippo-go/front/handler"
@@ -38,7 +38,11 @@ func main() {
 		PostClient: postClient,
 	}
 
+	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.TopBeforeLogin)
+	r.Path("/test").Methods(http.MethodPost).HandlerFunc(frontSrv.Test)
+	r.Path("/test/do").Methods(http.MethodPost).HandlerFunc(frontSrv.TestDo)
 	r.Path("/login").Methods(http.MethodGet).HandlerFunc(frontSrv.Login)
+	r.Path("/logout").Methods(http.MethodGet).HandlerFunc(frontSrv.Logout)
 	r.Path("/login/success").Methods(http.MethodPost).HandlerFunc(frontSrv.LoginSuccess)
 	r.Path("/top").Methods(http.MethodGet).HandlerFunc(handler.AuthToken(frontSrv.Top))
 

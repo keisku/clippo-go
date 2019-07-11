@@ -4,10 +4,11 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
+
 	"github.com/jinzhu/gorm"
 	// mysql
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/joho/godotenv"
 )
 
 /*
@@ -43,8 +44,9 @@ func GormConnect() *gorm.DB {
 
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
 	db, err := gorm.Open(DBMS, CONNECT)
-
 	if err != nil {
+		log.Println(CONNECT)
+		log.SetFlags(log.Lshortfile)
 		log.Fatalln(err)
 	}
 	return db

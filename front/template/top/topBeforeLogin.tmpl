@@ -1,0 +1,25 @@
+{{ define "content" }}
+    <div class="content">
+        <h1>機能を試せます！</h1>
+        <form method="POST" action="/test">
+            <div class="form-group d-flex">
+                <input class="form-control" type="text" name="url" placeholder="クリップしたい記事のURLを入力してください" />
+                <input class="btn clipButton" style="border: 2px solid lightskyblue;color:lightskyblue;margin-left: 5px;" type="submit" value="クリップ">
+            </div>
+        </form>
+    </div>
+    <div>
+        <div class="row shadow-sm p-5">
+            <div class="col-4">
+                <img src="{{ .Image }}" width="250px" height="250px">
+            </div>
+            <div class="col-8">
+                <a href="{{ .URL }}" style="font-size:12px;">{{ .URL }}</a>
+                <h3>{{ .Title }}</h3>
+                <h5 class="btn btn-outline-info">記事の目的 : {{ .Usecase }}</h5>
+                <h5 class="btn btn-outline-info">ジャンル : {{ .Genre }}</h5>
+                <p>{{.Description}}</p>
+            </div>
+        </div>
+    </div>
+{{ end }}

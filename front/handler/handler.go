@@ -11,7 +11,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/kskumgk63/clippo-go/front/database"
+	"github.com/kskumgk63/clippo-go/database"
 	"github.com/kskumgk63/clippo-go/front/template"
 	"github.com/kskumgk63/clippo-go/proto/post"
 )
@@ -91,9 +91,64 @@ func AuthToken(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+// TopBeforeLogin returns "/"
+func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
+	post := &database.Post{
+		URL:         "http://localhost:8080/",
+		Title:       "タイトルの見本",
+		Description: "記事の簡単な要約を書いてください。",
+		Image:       "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg",
+		Usecase:     "エラー解決",
+		Genre:       "プログラミング言語",
+	}
+	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
+}
+
+// Test returns "/test"
+func (s *FrontServer) Test(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	url := r.FormValue("url")
+
+	req := &post.PostURLRequest{
+		Url: url,
+	}
+	res, err := s.PostClient.GetPostDetail(r.Context(), req)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	template.RenderBeforeLogin(w, "post/testConfirmForm.tmpl", res)
+}
+
+// TestDo returns "/"
+func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	url := r.FormValue("url")
+	title := r.FormValue("title")
+	description := r.FormValue("description")
+	image := r.FormValue("image")
+	usecase := r.FormValue("usecase")
+	genre := r.FormValue("genre")
+
+	post := &database.Post{
+		URL:         url,
+		Title:       title,
+		Description: description,
+		Image:       image,
+		Usecase:     usecase,
+		Genre:       genre,
+	}
+	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
+}
+
 // Login returns "/login"
 func (s *FrontServer) Login(w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "login/loginForm.tmpl", nil)
+	template.Render(w, "top/topBeforeLogin.tmpl", nil)
+}
+
+// Logout returns "/"
+func (s *FrontServer) Logout(w http.ResponseWriter, r *http.Request) {
+	cache.Delete(LOGINUSER)
+	template.RenderBeforeLogin(w, "login/loginForm.tmpl", nil)
 }
 
 // LoginSuccess returns "/top"

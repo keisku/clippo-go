@@ -1,0 +1,52 @@
+{{ define "content" }}
+<form method="POST" action="/test/do">
+    <div class="form-group">
+        <span><a href="{{.Url}}">元の記事を見る</a></span>
+        <input class="form-control" type="text" name="url" value="{{.Url}}" required />
+    </div>
+    <div class="form-group">
+        <label>タイトル</label><br>
+        <input class="form-control" type="text" name="title" value="{{.Title}}" required />
+    </div>
+    <div class="form-group">
+        <label>イメージ画像</label><br>
+        <input class="form-control" type="text" name="image" value="{{.Image}}" required />
+        <div>
+            <img src="{{.Image}}" width="200px" height="200px">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="dropdown dropright">
+            <label>記事の目的</label>
+            <select name="usecase">
+                <option value="おもしろい">おもしろい</option>
+                <option value="知識">知識</option>
+                <option value="リファレンス">リファレンス</option>
+                <option value="チュートリアル">チュートリアル</option>
+                <option value="その他">その他</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>ジャンル</label>
+        <select name="genre">
+            <option value="プログラミング言語">プログラミング言語</option>
+            <option value="フレームワーク">フレームワーク</option>
+            <option value="ライブラリ">ライブラリ</option>
+            <option value="OS">OS</option>
+            <option value="SQL">SQL</option>
+            <option value="クラウド">クラウド</option>
+            <option value="コンテナ技術">コンテナ技術</option>
+            <option value="デザイン">デザイン</option>
+            <option value="その他">その他</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>記事の要約</label><br>
+        <textarea class="form-control" type="text" name="description" value="{{.Description}}" required></textarea>
+    </div>
+    <div>
+        <input class="btn btn-success" type="submit" value="Send">
+    </div>
+</form>
+{{ end }}

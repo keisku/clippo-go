@@ -1,0 +1,10 @@
+version: '3'
+services:
+  front:
+    build:
+      context: ./
+      dockerfile: front/Dockerfile
+    image: clippo-go/front
+    container_name: front
+    ports:
+    - "8080:8080"

@@ -3,3 +3,46 @@ p {
     font-weight: 100;
     line-height: 2;
 }
+
+.headerCover {
+    padding: 15px 0px;
+    margin: 0;
+    background-color: lightskyblue;
+}
+
+.headerLinks {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    justify-content: space-between;
+    padding: 0px 50px;
+}
+
+.headerLinks h1 {
+    margin: 0;
+}
+
+.headerLinks a {
+    color: white;
+    font-weight: bold;
+}
+
+.headerButton {
+    color: white;
+    border: 2px solid;
+}
+
+.headerInnerLinks {
+    display: flex;
+}
+
+.content {
+    margin: 100px 0px;
+}
+
+.clipButton {
+    font-weight: 100;
+    border: 1px solid;
+    color: dodgerblue;
+    background-color: aliceblue;
+}

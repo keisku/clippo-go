@@ -1,0 +1,117 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description:
+  VPC & subnet create
+
+Resources:
+  ClippoVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value: CloudFormation-VPC
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ClippoVPC
+      Tags:
+      - Key: Name
+        Value: CloudFormation-VPC-PublicRT
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ClippoVPC
+      Tags:
+      - Key: Name
+        Value: CloudFormation-VPC-PrivateRT
+
+  PublicSubnet1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ClippoVPC
+      CidrBlock: 10.0.0.0/24
+      AvailabilityZone: "ap-northeast-1a"
+      Tags:
+      - Key: Name
+        Value: CloudFormation-public-subnet-1a
+
+  PrivateSubnet1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ClippoVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: "ap-northeast-1a"
+      Tags:
+      - Key: Name
+        Value: CloudFormation-private-subnet-1a
+
+  PrivateSubnet1C:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ClippoVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: "ap-northeast-1c"
+      Tags:
+      - Key: Name
+        Value: CloudFormation-private-subnet-1c
+
+  PriSubnet1ARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1A
+      RouteTableId: !Ref PrivateRouteTable
+
+  PriSubnet2ARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1C
+      RouteTableId: !Ref PrivateRouteTable
+
+
+  myInternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+      - Key: Name
+        Value: CloudFormation-ING
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref ClippoVPC
+      InternetGatewayId: !Ref myInternetGateway
+  myRoute:
+    Type: AWS::EC2::Route
+    DependsOn: myInternetGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref myInternetGateway
+
+Outputs:
+  StackVPC:
+    Description: The ID of the VPC
+    Value: !Ref ClippoVPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPCID"
+
+  StackPublicSubnet1A:
+    Description: The ID of the VPC Subnet
+    Value: !Ref PublicSubnet1A
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnet1A"
+
+  StackPrivateSubnet1A:
+    Description: The ID of the VPC Subnet
+    Value: !Ref PrivateSubnet1A
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet1A"
+
+  StackPrivateSubnet1C:
+    Description: The ID of the VPC Subnet
+    Value: !Ref PrivateSubnet1C
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnet1C"

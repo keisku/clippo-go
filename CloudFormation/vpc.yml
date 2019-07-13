@@ -61,7 +61,7 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PubSubnet1C
-      RouteTableId: !Ref PriRT
+      RouteTableId: !Ref PubRT
 
   PriSubnet1A:
     Type: AWS::EC2::Subnet

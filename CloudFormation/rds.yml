@@ -84,7 +84,7 @@ Parameters:
     AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
     ConstraintDescription: "must begin with a letter and contain only alphanumeric characters."
   DBPassword:
-    Default: "root"
+    Default: "Root0000"
     NoEcho: true
     Type: String
     MinLength: 8
@@ -143,7 +143,7 @@ Resources:
   RDSSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
-      VpcId: { "Fn::ImportValue": "StackVPC-VPCID" }
+      VpcId: { "Fn::ImportValue": "ClippoVPC-VPCID" }
       GroupName: !Sub "${PJPrefix}-${DBInstanceName}-sg"
       GroupDescription: "-"
       Tags:
@@ -160,25 +160,25 @@ Resources:
 #  DBSubnetGroup
 # ------------------------------------------------------------#
 
-## PublicSubnet-Group
+## PublicSubnetGroup
   DBPubSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties:
       DBPriSubnetGroupName: "public-subnets"
       DBPriSubnetGroupDescription: "-"
       SubnetIds:
-        - { "Fn::ImportValue": "StackPubSubnet1A" }
-        - { "Fn::ImportValue": "StackPubSubnet1C" }
+        - { "Fn::ImportValue": "ClippoVPC-PubSubnet1A" }
+        - { "Fn::ImportValue": "ClippoVPC-PubSubnet1C" }
 
-## PrivateSubnet-Group
+## PrivateSubnetGroup
   DBPriSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties:
       DBPriSubnetGroupName: "private-subnets"
       DBPriSubnetGroupDescription: "-"
       SubnetIds:
-        - { "Fn::ImportValue": "StackPriSubnet1A" }
-        - { "Fn::ImportValue": "StackPriSubnet1C" }
+        - { "Fn::ImportValue": "ClippoVPC-PriSubnet1A" }
+        - { "Fn::ImportValue": "ClippoVPC-PriSubnet1C" }
 
 # ------------------------------------------------------------#
 # Output Parameters

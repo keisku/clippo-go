@@ -51,7 +51,7 @@ Metadata:
 Parameters:
   PJPrefix:
     Type: String
-    Default: "clippo-cf"
+    Default: "clippo"
 
   DBInstanceName:
     Type: String
@@ -74,17 +74,17 @@ Parameters:
     Default: "gp2"
   DBName:
     Type: String
-    Default: "clippo"
+    Default: "root"
   DBMasterUserName:
     Type: String
-    Default: "clippouser"
+    Default: "root"
     NoEcho: true
     MinLength: 1
     MaxLength: 16
     AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
     ConstraintDescription: "must begin with a letter and contain only alphanumeric characters."
   DBPassword:
-    Default: "clippopassword"
+    Default: "root"
     NoEcho: true
     Type: String
     MinLength: 8
@@ -112,7 +112,7 @@ Resources:
       DBName: !Ref DBName
       MasterUsername: !Ref DBMasterUserName
       MasterUserPassword: !Ref DBPassword
-      DBSubnetGroupName: !Ref DBSubnetGroup
+      DBSubnetGroupName: !Ref DBPriSubnetGroup
       PubliclyAccessible: false
       MultiAZ: !Ref MultiAZ
       PreferredBackupWindow: "18:00-18:30"
@@ -143,7 +143,7 @@ Resources:
   RDSSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
-      VpcId: { "Fn::ImportValue": "ClippoVPC-VPCID" }
+      VpcId: { "Fn::ImportValue": "StackVPC-VPCID" }
       GroupName: !Sub "${PJPrefix}-${DBInstanceName}-sg"
       GroupDescription: "-"
       Tags:
@@ -159,14 +159,26 @@ Resources:
 # ------------------------------------------------------------#
 #  DBSubnetGroup
 # ------------------------------------------------------------#
-  DBSubnetGroup:
+
+## PublicSubnet-Group
+  DBPubSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
     Properties:
-      DBSubnetGroupName: "CloudFormation-private-subnets"
-      DBSubnetGroupDescription: "-"
+      DBPriSubnetGroupName: "public-subnets"
+      DBPriSubnetGroupDescription: "-"
       SubnetIds:
-        - { "Fn::ImportValue": "ClippoVPC-PrivateSubnet1A" }
-        - { "Fn::ImportValue": "ClippoVPC-PrivateSubnet1C" }
+        - { "Fn::ImportValue": "StackPubSubnet1A" }
+        - { "Fn::ImportValue": "StackPubSubnet1C" }
+
+## PrivateSubnet-Group
+  DBPriSubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties:
+      DBPriSubnetGroupName: "private-subnets"
+      DBPriSubnetGroupDescription: "-"
+      SubnetIds:
+        - { "Fn::ImportValue": "StackPriSubnet1A" }
+        - { "Fn::ImportValue": "StackPriSubnet1C" }
 
 # ------------------------------------------------------------#
 # Output Parameters

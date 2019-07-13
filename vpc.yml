@@ -3,7 +3,7 @@ Description:
   VPC & subnet create
 
 Resources:
-  ClippoVPC:
+  MyVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -12,106 +12,137 @@ Resources:
       InstanceTenancy: default
       Tags:
       - Key: Name
-        Value: CloudFormation-VPC
-  PublicRouteTable:
+        Value: MyVPC
+
+  PubRT:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref ClippoVPC
+      VpcId: !Ref MyVPC
       Tags:
       - Key: Name
-        Value: CloudFormation-VPC-PublicRT
+        Value: MyVPC-PubRT
 
-  PrivateRouteTable:
+  PriRT:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref ClippoVPC
+      VpcId: !Ref MyVPC
       Tags:
       - Key: Name
-        Value: CloudFormation-VPC-PrivateRT
+        Value: MyVPC-PriRT
 
-  PublicSubnet1A:
+  PubSubnet1A:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref ClippoVPC
-      CidrBlock: 10.0.0.0/24
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.11.0/24
       AvailabilityZone: "ap-northeast-1a"
       Tags:
       - Key: Name
-        Value: CloudFormation-public-subnet-1a
+        Value: PubSubnet1A
 
-  PrivateSubnet1A:
+  PubSubnet1ARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PubSubnet1A
+      RouteTableId: !Ref PubRT
+
+
+  PubSubnet1C:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref ClippoVPC
-      CidrBlock: 10.0.1.0/24
-      AvailabilityZone: "ap-northeast-1a"
-      Tags:
-      - Key: Name
-        Value: CloudFormation-private-subnet-1a
-
-  PrivateSubnet1C:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref ClippoVPC
-      CidrBlock: 10.0.2.0/24
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.12.0/24
       AvailabilityZone: "ap-northeast-1c"
       Tags:
       - Key: Name
-        Value: CloudFormation-private-subnet-1c
+        Value: PubSubnet1C
+
+  PubSubnet1CRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PubSubnet1C
+      RouteTableId: !Ref PriRT
+
+  PriSubnet1A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.21.0/24
+      AvailabilityZone: "ap-northeast-1a"
+      Tags:
+      - Key: Name
+        Value: PriSubnet1A
 
   PriSubnet1ARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet1A
-      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PriSubnet1A
+      RouteTableId: !Ref PriRT
+
+  PriSubnet1C:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.22.0/24
+      AvailabilityZone: "ap-northeast-1c"
+      Tags:
+      - Key: Name
+        Value: PriSubnet1C
 
   PriSubnet2ARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet1C
-      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PriSubnet1C
+      RouteTableId: !Ref PriRT
 
-
-  myInternetGateway:
+  MyIGW:
     Type: "AWS::EC2::InternetGateway"
     Properties:
       Tags:
       - Key: Name
-        Value: CloudFormation-ING
+        Value: MyIGW
+
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref ClippoVPC
-      InternetGatewayId: !Ref myInternetGateway
-  myRoute:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyIGW
+
+  MyRoute:
     Type: AWS::EC2::Route
-    DependsOn: myInternetGateway
+    DependsOn: MyIGW
     Properties:
-      RouteTableId: !Ref PublicRouteTable
+      RouteTableId: !Ref PubRT
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref myInternetGateway
+      GatewayId: !Ref MyIGW
 
 Outputs:
   StackVPC:
     Description: The ID of the VPC
-    Value: !Ref ClippoVPC
+    Value: !Ref MyVPC
     Export:
       Name: !Sub "${AWS::StackName}-VPCID"
 
-  StackPublicSubnet1A:
+  StackPubSubnet1A:
     Description: The ID of the VPC Subnet
-    Value: !Ref PublicSubnet1A
+    Value: !Ref PubSubnet1A
     Export:
-      Name: !Sub "${AWS::StackName}-PublicSubnet1A"
+      Name: !Sub "${AWS::StackName}-PubSubnet1A"
 
-  StackPrivateSubnet1A:
+  StackPubSubnet1C:
     Description: The ID of the VPC Subnet
-    Value: !Ref PrivateSubnet1A
+    Value: !Ref PubSubnet1A
     Export:
-      Name: !Sub "${AWS::StackName}-PrivateSubnet1A"
+      Name: !Sub "${AWS::StackName}-PubSubnet1C"
 
-  StackPrivateSubnet1C:
+  StackPriSubnet1A:
     Description: The ID of the VPC Subnet
-    Value: !Ref PrivateSubnet1C
+    Value: !Ref PriSubnet1A
     Export:
-      Name: !Sub "${AWS::StackName}-PrivateSubnet1C"
+      Name: !Sub "${AWS::StackName}-PriSubnet1A"
+
+  StackPriSubnet1C:
+    Description: The ID of the VPC Subnet
+    Value: !Ref PriSubnet1C
+    Export:
+      Name: !Sub "${AWS::StackName}-PriSubnet1C"

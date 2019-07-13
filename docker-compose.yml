@@ -8,3 +8,19 @@ services:
     container_name: front
     ports:
     - "8080:8080"
+  server_cache:
+    build:
+      context: ./
+      dockerfile: server_cache/Dockerfile
+    image: clippo-go/server_cache
+    container_name: server_cache
+    ports:
+    - "50051:50051"
+  server_post:
+    build:
+      context: ./
+      dockerfile: server_post/Dockerfile
+    image: clippo-go/server_post
+    container_name: server_cache
+    ports:
+    - "50052:50051"

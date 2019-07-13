@@ -4,21 +4,23 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	gocache "github.com/pmylund/go-cache"
 
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/kskumgk63/clippo-go/database"
 	"github.com/kskumgk63/clippo-go/front/template"
-	"github.com/kskumgk63/clippo-go/proto/post"
+	"github.com/kskumgk63/clippo-go/server_cache/cachepb"
+	"github.com/kskumgk63/clippo-go/server_post/postpb"
 )
 
 // FrontServer クライアントスタブを作成
 type FrontServer struct {
-	PostClient post.PostServiceClient
+	PostClient  postpb.PostServiceClient
+	CacheClient cachepb.CacheServiceClient
 }
 
 // Posts トップページへ構造体をマッピング
@@ -37,8 +39,6 @@ const (
 	// LOGINUSER ログインユーザーIdのキー
 	LOGINUSER = "login-user"
 )
-
-var cache = gocache.New(1*time.Hour, 2*time.Hour)
 
 // GenerateJWTToken JWT認証トークンを生成
 func GenerateJWTToken(user database.User) (string, error) {
@@ -59,16 +59,19 @@ func GenerateJWTToken(user database.User) (string, error) {
 }
 
 // AuthToken 認証トークンが含まれているかチェックするミドルウェア
-func AuthToken(next http.HandlerFunc) http.HandlerFunc {
+func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// キャッシュを取り出す
-		cached, found := cache.Get(TOKENCACHE)
-		// 見つからなければリダイレクト
-		if !found {
-			http.Redirect(w, r, "/login", http.StatusFound)
-			return
+		// キャッシュサーバーへアクセス
+		req := &cachepb.GetTokenRequest{
+			Key: TOKENCACHE,
 		}
-		bearerToken := cached.(string)
+		res, _ := s.CacheClient.GetToken(r.Context(), req)
+		if res.Token == "" {
+			log.SetFlags(log.Lshortfile)
+			log.Printf("*** %v\n", "JWT Token is empty.")
+			http.Redirect(w, r, "/login", http.StatusFound)
+		}
+		bearerToken := res.Token
 		token, err := jwt.Parse(bearerToken, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("There was an error")
@@ -109,7 +112,7 @@ func (s *FrontServer) Test(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	url := r.FormValue("url")
 
-	req := &post.PostURLRequest{
+	req := &postpb.PostURLRequest{
 		Url: url,
 	}
 	res, err := s.PostClient.GetPostDetail(r.Context(), req)
@@ -142,12 +145,16 @@ func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
 
 // Login returns "/login"
 func (s *FrontServer) Login(w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "top/topBeforeLogin.tmpl", nil)
+	template.RenderBeforeLogin(w, "login/loginForm.tmpl", nil)
 }
 
 // Logout returns "/"
 func (s *FrontServer) Logout(w http.ResponseWriter, r *http.Request) {
-	cache.Delete(LOGINUSER)
+	req := &cachepb.DeleteIDRequest{
+		Key: LOGINUSER,
+	}
+	res, _ := s.CacheClient.DeleteID(r.Context(), req)
+	log.Println(res)
 	template.RenderBeforeLogin(w, "login/loginForm.tmpl", nil)
 }
 
@@ -186,9 +193,19 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// トークンをキャッシュに格納
-	cache.Set(TOKENCACHE, token, gocache.DefaultExpiration)
+	reqToken := &cachepb.SetTokenRequest{
+		Token: token,
+		Key:   TOKENCACHE,
+	}
+	res, _ := s.CacheClient.SetToken(r.Context(), reqToken)
+	log.Println(res.Message)
 	// ログインユーザーのIdをキャッシュに格納
-	cache.Set(LOGINUSER, user.ID, gocache.DefaultExpiration)
+	reqID := &cachepb.SetIDRequest{
+		Id:  fmt.Sprint(user.ID),
+		Key: LOGINUSER,
+	}
+	resID, _ := s.CacheClient.SetID(r.Context(), reqID)
+	log.Println(resID.Message)
 
 	// 投稿一覧取得
 	posts := []database.Post{}
@@ -206,12 +223,18 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 	db := database.GormConnect()
 	defer db.Close()
 
-	// キャッシュされているログインユーザーのIdを取得
-	cached, found := cache.Get(LOGINUSER)
-	if !found {
+	// トークンをキャッシュに格納
+	req := &cachepb.GetIDRequest{
+		Key: LOGINUSER,
+	}
+	res, _ := s.CacheClient.GetID(r.Context(), req)
+	log.Println(res.Id)
+	if res.Id == "" {
+		log.Println("id is empty")
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
+	cached := res.Id
 	posts := []database.Post{}
 	err := db.Where("user_id = ?", cached).Find(&posts).Error
 	if err != nil {
@@ -227,7 +250,7 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 
 // UserRegister returns "user/register/init"
 func (s *FrontServer) UserRegister(w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "user/userRegisterForm.tmpl", nil)
+	template.RenderBeforeLogin(w, "user/userRegisterForm.tmpl", nil)
 }
 
 // UserRegisterConfirm returns "user/register/confirm"
@@ -308,7 +331,7 @@ func (s *FrontServer) PostRegisterConfirm(w http.ResponseWriter, r *http.Request
 	r.ParseForm()
 	url := r.FormValue("url")
 
-	req := &post.PostURLRequest{
+	req := &postpb.PostURLRequest{
 		Url: url,
 	}
 	res, err := s.PostClient.GetPostDetail(r.Context(), req)
@@ -329,10 +352,19 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	genre := r.FormValue("genre")
 
 	// キャッシュされているログインユーザーのIdを取得
-	cached, found := cache.Get(LOGINUSER)
-	if !found {
+	req := &cachepb.GetIDRequest{
+		Key: LOGINUSER,
+	}
+	res, _ := s.CacheClient.GetID(r.Context(), req)
+	log.Println(res.Id)
+	if res.Id == "" {
+		log.Println("token is empty")
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
+	}
+	id, err := strconv.ParseUint(res.Id, 10, 64)
+	if err != nil {
+		log.Println(err)
 	}
 
 	// MySQLと接続
@@ -345,7 +377,7 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 		Image:       image,
 		Usecase:     usecase,
 		Genre:       genre,
-		UserID:      cached.(uint),
+		UserID:      uint(id),
 	}
 	db.Create(&post)
 	db.Model(&post).Update("CreatedAt", time.Now().Add(9*time.Hour))
@@ -364,14 +396,19 @@ func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// キャッシュされているログインユーザーのIdを取得
-	cached, found := cache.Get(LOGINUSER)
-	if !found {
+	req := &cachepb.GetIDRequest{
+		Key: LOGINUSER,
+	}
+	res, _ := s.CacheClient.GetID(r.Context(), req)
+	log.Println(res.Id)
+	if res.Id == "" {
+		log.Println("token is empty")
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
 	posts := []database.Post{}
 
-	err := db.Where("user_id = ? AND title LIKE ?", cached, "%"+title+"%").Find(&posts).Error
+	err := db.Where("user_id = ? AND title LIKE ?", res.Id, "%"+title+"%").Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))
@@ -393,14 +430,19 @@ func (s *FrontServer) PostSearchUsecase(w http.ResponseWriter, r *http.Request) 
 	defer db.Close()
 
 	// キャッシュされているログインユーザーのIdを取得
-	cached, found := cache.Get(LOGINUSER)
-	if !found {
+	req := &cachepb.GetIDRequest{
+		Key: LOGINUSER,
+	}
+	res, _ := s.CacheClient.GetID(r.Context(), req)
+	log.Println(res.Id)
+	if res.Id == "" {
+		log.Println("token is empty")
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
 	posts := []database.Post{}
 
-	err := db.Where("user_id = ? AND usecase LIKE ?", cached, "%"+usecase+"%").Find(&posts).Error
+	err := db.Where("user_id = ? AND usecase LIKE ?", res.Id, "%"+usecase+"%").Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))
@@ -422,14 +464,19 @@ func (s *FrontServer) PostSearchGenre(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	// キャッシュされているログインユーザーのIdを取得
-	cached, found := cache.Get(LOGINUSER)
-	if !found {
+	req := &cachepb.GetIDRequest{
+		Key: LOGINUSER,
+	}
+	res, _ := s.CacheClient.GetID(r.Context(), req)
+	log.Println(res.Id)
+	if res.Id == "" {
+		log.Println("token is empty")
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
 	posts := []database.Post{}
 
-	err := db.Where("user_id = ? AND genre LIKE ?", cached, "%"+genre+"%").Find(&posts).Error
+	err := db.Where("user_id = ? AND genre LIKE ?", res.Id, "%"+genre+"%").Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))

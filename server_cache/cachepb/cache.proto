@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+/*
+    * HOW TO : generate proto
+    protoc server_cache/cachepb/cache.proto --go_out=plugins=grpc:.
+*/
+
+package cachepb;
+option go_package="server_cache/cachepb";
+
+message SetTokenRequest {
+    string token = 1;
+    string key = 2;
+}
+
+message SetTokenResponse {
+    string message = 1;
+}
+
+message GetTokenRequest {
+    string key = 1;
+}
+
+message GetTokenResponse {
+    string token = 1;
+}
+
+message DeleteTokenRequest {
+    string key = 1;
+}
+
+message DeleteTokenResponse {
+    string message = 1;
+}
+
+message SetIDRequest {
+    string id = 1;
+    string key = 2;
+}
+
+message SetIDResponse {
+    string message = 1;
+}
+
+message GetIDRequest {
+    string key = 1;
+}
+
+message GetIDResponse {
+    string id = 1;
+}
+
+message DeleteIDRequest {
+    string key = 1;
+}
+
+message DeleteIDResponse {
+    string message = 1;
+}
+
+service CacheService {
+    rpc SetToken(SetTokenRequest) returns (SetTokenResponse) {};
+    rpc GetToken(GetTokenRequest) returns (GetTokenResponse) {};
+    rpc DeleteToken(DeleteTokenRequest) returns (DeleteTokenResponse) {};
+    rpc SetID(SetIDRequest) returns (SetIDResponse) {};
+    rpc GetID(GetIDRequest) returns (GetIDResponse) {};
+    rpc DeleteID(DeleteIDRequest) returns (DeleteIDResponse) {};
+}

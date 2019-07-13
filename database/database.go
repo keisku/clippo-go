@@ -31,7 +31,7 @@ type Post struct {
 
 // GormConnect mysqlとの接続
 func GormConnect() *gorm.DB {
-	err := godotenv.Load()
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Error in %v\n", err)
 	}

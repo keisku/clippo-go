@@ -2,11 +2,11 @@ syntax = "proto3";
 
 /*
     * HOW TO : generate proto
-    protoc proto/post/post.proto --go_out=plugins=grpc:.
+    protoc server_post/postpb/post.proto --go_out=plugins=grpc:.
 */
 
-package post;
-option go_package="proto/post";
+package postpb;
+option go_package="server_post/postpb";
 
 message PostURLRequest {
     string url = 1;

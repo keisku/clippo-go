@@ -7,13 +7,13 @@ import (
 	"net"
 
 	goose "github.com/advancedlogic/GoOse"
-	"github.com/kskumgk63/clippo-go/proto/post"
+	"github.com/kskumgk63/clippo-go/server_post/postpb"
 	"google.golang.org/grpc"
 )
 
 type postServer struct{}
 
-func (*postServer) GetPostDetail(ctx context.Context, req *post.PostURLRequest) (*post.PostResponse, error) {
+func (*postServer) GetPostDetail(ctx context.Context, req *postpb.PostURLRequest) (*postpb.PostResponse, error) {
 	fmt.Printf("GetPostDetail was invoked with %v\n", req)
 
 	// リクエストURLのタイトルとディスクリプションをスクレイピング
@@ -23,7 +23,7 @@ func (*postServer) GetPostDetail(ctx context.Context, req *post.PostURLRequest) 
 	article, _ := g.ExtractFromURL(url)
 
 	// gRPCレスポンスの作成
-	res := &post.PostResponse{
+	res := &postpb.PostResponse{
 		Url:         url,
 		Title:       article.Title,
 		Description: article.MetaDescription,
@@ -42,7 +42,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	post.RegisterPostServiceServer(s, &postServer{})
+	postpb.RegisterPostServiceServer(s, &postServer{})
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalln(err)

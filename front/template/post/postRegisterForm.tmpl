@@ -1,11 +1,11 @@
 {{ define "content" }}
 <form method="POST" action="/post/register/confirm">
 	<div class="form-group">
-		<label>Input URL</label><br>
-		<input class="form-control" type="text" name="url" required />
-	</div>
-	<div>
-		<input class="btn btn-success" type="submit" value="Confirm">
+		<p>URLを入力してください</p>
+		<div class="d-flex">
+			<input class="form-control" type="text" name="url" placeholder="http://clippo.com" required />
+			<input class="clipButton" style="margin-left:25px;width:120px;" type="submit" value="確認する">
+		</div>
 	</div>
 </form>
 {{ end }}

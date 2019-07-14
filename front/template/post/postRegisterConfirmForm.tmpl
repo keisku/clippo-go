@@ -1,19 +1,21 @@
 {{ define "content" }}
 <form method="POST" action="/post/register/do">
     <div class="form-group">
-        <span><a href="{{.Url}}">元の記事を見る</a></span>
-        <input class="form-control" type="text" name="url" value="{{.Url}}" required />
-    </div>
-    <div class="form-group">
         <label>タイトル</label><br>
         <input class="form-control" type="text" name="title" value="{{.Title}}" required />
     </div>
     <div class="form-group">
+        <label>URL</label><br>
+        <span><a href="{{.Url}}">{{.Url}}</a></span>
+        <input class="form-control" type="hidden" name="url" value="{{.Url}}" required />
+    </div>
+    <div class="form-group">
         <label>イメージ画像</label><br>
-        <input class="form-control" type="text" name="image" value="{{.Image}}" required />
+        <input class="form-control" type="hidden" name="image" value="{{.Image}}" required />
         <div>
             <img src="{{.Image}}" width="200px" height="200px">
         </div>
+        <span><a href="{{.Image}}">{{.Image}}</a></span>
     </div>
     <div class="form-group">
         <div class="dropdown dropright">
@@ -46,7 +48,7 @@
         <textarea class="form-control" type="text" name="description" value="{{.Description}}" required></textarea>
     </div>
     <div>
-        <input class="btn btn-success" type="submit" value="Send">
+        <input class="clipButton" type="submit" value="投稿する">
     </div>
 </form>
 {{ end }}

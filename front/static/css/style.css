@@ -2,6 +2,7 @@ p {
     color: gray;
     font-weight: 100;
     line-height: 2;
+    margin: 0;
 }
 
 .headerCover {
@@ -37,7 +38,7 @@ p {
 }
 
 .content {
-    margin: 100px 0px;
+    margin: 50px 0px;
 }
 
 .clipButton {
@@ -45,4 +46,27 @@ p {
     border: 1px solid;
     color: dodgerblue;
     background-color: aliceblue;
+    border-radius: 5px;
+}
+
+.narrowDown {
+    border: 1px solid lightskyblue;
+    color: dodgerblue;
+    background-color: aliceblue;
+    border-radius: 5px;
+    font-size: 14px;
+    margin: 0 10px;
+}
+
+.narrowDownCover {
+    width: 80px;
+}
+
+.narrowDownCover2 {
+    width: 180px;
+}
+
+.narrowDownCover p {
+    font-size: 14px;
+    margin: 0;
 }

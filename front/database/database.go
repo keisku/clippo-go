@@ -4,8 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/joho/godotenv"
-
 	"github.com/jinzhu/gorm"
 	// mysql
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -31,11 +29,6 @@ type Post struct {
 
 // GormConnect mysqlとの接続
 func GormConnect() *gorm.DB {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatalf("Error in %v\n", err)
-	}
-
 	DBMS := os.Getenv("DBMS")
 	USER := "root"
 	PASS := os.Getenv("PASS")
@@ -45,8 +38,9 @@ func GormConnect() *gorm.DB {
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
 	db, err := gorm.Open(DBMS, CONNECT)
 	if err != nil {
-		log.Println(CONNECT)
-		log.SetFlags(log.Lshortfile)
+		log.Println("DBMS = %v", DBMS)
+		log.Println("CONNECT = %v", CONNECT)
+		log.SetFlags(log.Lshortfile)s
 		log.Fatalln(err)
 	}
 	return db

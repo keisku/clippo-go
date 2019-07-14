@@ -1,10 +1,16 @@
-FROM golang:1.12
+FROM golang:1.12.0-alpine3.9
 
-WORKDIR /go/src/github.com/kskumgk63/clippo-go/server_post
-COPY . .
+WORKDIR /go/src/server_post
+
 ENV GO111MODULE=on
 
-RUN go get github.com/pilu/fresh
+RUN apk add --no-cache \
+        alpine-sdk \
+        git \
+    && go get github.com/pilu/fresh
+
+EXPOSE 50052
+
 CMD ["fresh"]
 
 # FROM golang:1.12

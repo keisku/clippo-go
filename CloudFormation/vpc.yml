@@ -131,7 +131,7 @@ Outputs:
 
   StackPubSubnet1C:
     Description: The ID of the VPC Subnet
-    Value: !Ref PubSubnet1A
+    Value: !Ref PubSubnet1C
     Export:
       Name: !Sub "${AWS::StackName}-PubSubnet1C"
 

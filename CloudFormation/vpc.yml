@@ -3,6 +3,19 @@ Description:
   VPC & subnet create
 
 Resources:
+# ------------------------------------------------------------#
+# VPC
+# - パブリックルートテーブル
+# - パブリックサブネット*2
+# - プライベートルートテーブル
+# - プライベートサブネット*2
+# - ルートテーブルとサブネットの関連付け
+# - インターネットゲートウェイ
+# ------------------------------------------------------------#
+# スタック実行後にやること
+# - NATゲートウェイ作成、プライベートサブネットへアタッチ
+# - NATゲートウェイは、プライベートサブネットがインターネットへ接続しなくて良いなら必要ない
+# ------------------------------------------------------------#
   MyVPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -13,7 +26,6 @@ Resources:
       Tags:
       - Key: Name
         Value: MyVPC
-
   PubRT:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -21,7 +33,6 @@ Resources:
       Tags:
       - Key: Name
         Value: MyVPC-PubRT
-
   PriRT:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -29,7 +40,6 @@ Resources:
       Tags:
       - Key: Name
         Value: MyVPC-PriRT
-
   PubSubnet1A:
     Type: AWS::EC2::Subnet
     Properties:
@@ -39,14 +49,11 @@ Resources:
       Tags:
       - Key: Name
         Value: PubSubnet1A
-
   PubSubnet1ARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PubSubnet1A
       RouteTableId: !Ref PubRT
-
-
   PubSubnet1C:
     Type: AWS::EC2::Subnet
     Properties:
@@ -56,13 +63,11 @@ Resources:
       Tags:
       - Key: Name
         Value: PubSubnet1C
-
   PubSubnet1CRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PubSubnet1C
       RouteTableId: !Ref PubRT
-
   PriSubnet1A:
     Type: AWS::EC2::Subnet
     Properties:
@@ -72,13 +77,11 @@ Resources:
       Tags:
       - Key: Name
         Value: PriSubnet1A
-
   PriSubnet1ARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PriSubnet1A
       RouteTableId: !Ref PriRT
-
   PriSubnet1C:
     Type: AWS::EC2::Subnet
     Properties:
@@ -88,26 +91,22 @@ Resources:
       Tags:
       - Key: Name
         Value: PriSubnet1C
-
   PriSubnet2ARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PriSubnet1C
       RouteTableId: !Ref PriRT
-
   MyIGW:
     Type: "AWS::EC2::InternetGateway"
     Properties:
       Tags:
       - Key: Name
         Value: MyIGW
-
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId: !Ref MyVPC
       InternetGatewayId: !Ref MyIGW
-
   MyRoute:
     Type: AWS::EC2::Route
     DependsOn: MyIGW
@@ -115,32 +114,30 @@ Resources:
       RouteTableId: !Ref PubRT
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref MyIGW
-
+# ------------------------------------------------------------#
+#  Outputs
+# ------------------------------------------------------------#
 Outputs:
   StackVPC:
     Description: The ID of the VPC
     Value: !Ref MyVPC
     Export:
       Name: !Sub "${AWS::StackName}-VPCID"
-
   StackPubSubnet1A:
     Description: The ID of the VPC Subnet
     Value: !Ref PubSubnet1A
     Export:
       Name: !Sub "${AWS::StackName}-PubSubnet1A"
-
   StackPubSubnet1C:
     Description: The ID of the VPC Subnet
     Value: !Ref PubSubnet1C
     Export:
       Name: !Sub "${AWS::StackName}-PubSubnet1C"
-
   StackPriSubnet1A:
     Description: The ID of the VPC Subnet
     Value: !Ref PriSubnet1A
     Export:
       Name: !Sub "${AWS::StackName}-PriSubnet1A"
-
   StackPriSubnet1C:
     Description: The ID of the VPC Subnet
     Value: !Ref PriSubnet1C

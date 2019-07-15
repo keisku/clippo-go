@@ -37,6 +37,18 @@ p {
     display: flex;
 }
 
+.footerCover {
+    margin-top: 100px;
+    background-color: lightskyblue;
+    text-align: center;
+    height: 100px;
+}
+
+.footerCover h5 {
+    line-height: 100px;
+    color: white;
+}
+
 .content {
     margin: 50px 0px;
 }
@@ -69,4 +81,87 @@ p {
 .narrowDownCover p {
     font-size: 14px;
     margin: 0;
+}
+
+.clipImage {
+    object-fit: cover;
+    border: 2px solid #FAFAFA;
+}
+
+.clipCategory {
+    border: 1px solid lightskyblue;
+    border-radius: 10px;
+    color: lightskyblue;
+    padding: 5px;
+    font-size: 10px;
+}
+
+.clipTitle {
+    font-weight: bold;
+    line-height: 1.5;
+    margin: 0;
+    font-size: 14px;
+}
+
+.clipDescription {
+    font-size: 12px;
+    margin: 0;
+    border: 1px solid#F2F2F2;
+    padding: 10px;
+}
+
+
+/*************************************
+* ネットから拾ってきたinputタグ
+* https://copypet.jp/692/
+**************************************/
+.cp_iptxt {
+	position: relative;
+	width: 80%;
+}
+.cp_iptxt input[type='text'] {
+	font: 15px/24px sans-serif;
+	box-sizing: border-box;
+	width: 100%;
+	letter-spacing: 1px;
+	padding-left: 4em;
+}
+.cp_iptxt input[type='text']:focus {
+	outline: none;
+}
+.ef {
+	padding: 4px 0;
+	border: 0;
+	border-bottom: 1px solid #1b2538;
+	background-color: transparent;
+}
+.ef ~ .focus_line {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	height: 2px;
+	transition: 0.4s;
+	background-color: lightskyblue;
+}
+.ef:focus ~ .focus_line,
+.cp_iptxt.ef ~ .focus_line {
+	width: 100%;
+	transition: 0.4s;
+}
+.ef ~ label {
+	position: absolute;
+	z-index: -1;
+	top: 4px;
+	left: 0;
+	width: 100%;
+	transition: 0.3s;
+	letter-spacing: 0.5px;
+	color: #aaaaaa;
+}
+.ef:focus ~ label, .cp_iptxt.ef ~ label {
+	font-size: 12px;
+	top: -16px;
+	transition: 0.3s;
+	color: lightskyblue;
 }

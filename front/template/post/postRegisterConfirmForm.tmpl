@@ -45,7 +45,7 @@
     </div>
     <div class="form-group">
         <label>記事の要約</label><br>
-        <textarea class="form-control" type="text" name="description" value="{{.Description}}" required></textarea>
+        <textarea class="form-control" type="text" maxlength="250" name="description" placeholder="250文字以内でクリップしたい記事の要約を書いてください" value="{{.Description}}" required></textarea>
     </div>
     <div>
         <input class="clipButton" type="submit" value="投稿する">

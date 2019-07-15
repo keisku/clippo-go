@@ -7,7 +7,7 @@ services:
     image: clippo-go/front
     container_name: front
     ports:
-    - "8080:8080"
+    - "9000:8080"
     environment:
     - "DBMS=mysql"
     - "PASS=ao6415012"
@@ -15,7 +15,7 @@ services:
     - "DBNAME=clippo"
 
     # server_cache:
-    #   build: ./server_cache
+    #   build: ./server_cachex
     #   volumes:
     #       - ./:/go/src/server_cache
     #   image: clippo-go/server_cache

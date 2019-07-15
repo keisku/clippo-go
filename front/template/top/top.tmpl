@@ -1,88 +1,109 @@
 {{ define "content" }}
 <div class="content">
-    <div>
-        <h3>記事をクリップする</h3>
-    </div>
     <form method="POST" action="/post/register/confirm">
-        <div class="form-group">
-            <div class="d-flex">
-                <input class="form-control" type="text" name="url" placeholder="http://clippo.com" required />
+        <div class="d-flex">
+            <div class="cp_iptxt">
+                <input class="ef" name="url" type="text" required >
+                <label>クリップしたい記事のURLをタイプ！</label>
+                <span class="focus_line"></span>
+            </div>
+            <div>
                 <input class="clipButton" style="margin-left:25px;width:120px;" type="submit" value="クリップ">
             </div>
         </div>
     </form>
-    <div class="mt-3">
-        <h3>記事を探す</h3>
-    </div>
+</div>
+<div>
+    <h5>マイリスト</h5>
+</div>
+<div class="content">
     <form method="POST" action="/post/search">
-        <div class="form-group d-flex">
-            <input class="form-control" type="text" name="title" placeholder="タイトルで検索してください" required />
-            <input class="clipButton" style="margin-left:25px;width:120px;" type="submit" value="検索">
-        </div>
-    </form>
-    <form method="POST" action="/post/search/usecase">
         <div class="d-flex">
-            <div class="narrowDownCover">
-                <p>記事の目的</p>
+            <div class="cp_iptxt">
+                <input class="ef" name="title" type="text" required >
+                <label>タイトル検索</label>
+                <span class="focus_line"></span>
             </div>
-    		<div class="d-flex">
-                <div class="narrowDownCover2">
-                    <select name="usecase">
-                        <option value="おもしろい">おもしろい</option>
-                        <option value="知識">知識</option>
-                        <option value="リファレンス">リファレンス</option>
-                        <option value="チュートリアル">チュートリアル</option>
-                        <option value="その他">その他</option>
-                    </select>
-                </div>
-                <div class="narrowDownCover">
-                    <input class="narrowDown" type="submit" value="絞り込む">
-                </div>
-    		</div>
-        </div>
-    </form>
-    <form method="POST" action="/post/search/genre">
-        <div class="d-flex">
-            <div class="narrowDownCover">
-                <p>ジャンル</p>
+            <div>
+                <input class="clipButton" style="margin-left:25px;width:120px;" type="submit" value="検索">
             </div>
-    		<div class="d-flex">
-                <div class="narrowDownCover2">
-                    <select name="genre">
-                        <option value="プログラミング言語">プログラミング言語</option>
-                        <option value="フレームワーク">フレームワーク</option>
-                        <option value="ライブラリ">ライブラリ</option>
-                        <option value="OS">OS</option>
-                        <option value="SQL">SQL</option>
-                        <option value="クラウド">クラウド</option>
-                        <option value="コンテナ技術">コンテナ技術</option>
-                        <option value="デザイン">デザイン</option>
-                        <option value="その他">その他</option>
-                    </select>
-                </div>
-                <div class="narrowDownCover">
-                    <input class="narrowDown" type="submit" value="絞り込む">
-                </div>
-    		</div>
         </div>
     </form>
 </div>
 <div>
-    <h3>あなたがクリップした記事</h3>
-</div>
-<div>
-    {{range .Posts}}
-    <div class="row shadow-sm p-5">
-        <div class="col-4">
-            <img src="{{.Image}}" width="250px" height="250px">
-        </div>
-        <div class="col-8">
-            <h3><a href="{{.URL}}">{{.Title}}</a></h3>
-            <h5 class="btn btn-outline-info">記事の目的 : {{.Usecase}}</h5>
-            <h5 class="btn btn-outline-info">ジャンル : {{.Genre}}</h5>
-            <p>{{.Description}}</p>
-        </div>
+    <div class="mb-2">
+        <form method="POST" action="/post/search/usecase">
+            <div class="d-flex">
+                <div class="narrowDownCover">
+                    <p>記事の目的</p>
+                </div>
+                <div class="d-flex">
+                    <div class="narrowDownCover2">
+                        <select name="usecase">
+                            <option value="おもしろい">おもしろい</option>
+                            <option value="知識">知識</option>
+                            <option value="リファレンス">リファレンス</option>
+                            <option value="チュートリアル">チュートリアル</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                    <div class="narrowDownCover">
+                        <input class="narrowDown" type="submit" value="絞り込む">
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+    <div>
+        <form method="POST" action="/post/search/genre">
+            <div class="d-flex">
+                <div class="narrowDownCover">
+                    <p>ジャンル</p>
+                </div>
+                <div class="d-flex">
+                    <div class="narrowDownCover2">
+                        <select name="genre">
+                            <option value="プログラミング言語">プログラミング言語</option>
+                            <option value="フレームワーク">フレームワーク</option>
+                            <option value="ライブラリ">ライブラリ</option>
+                            <option value="OS">OS</option>
+                            <option value="SQL">SQL</option>
+                            <option value="クラウド">クラウド</option>
+                            <option value="コンテナ技術">コンテナ技術</option>
+                            <option value="デザイン">デザイン</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                    <div class="narrowDownCover">
+                        <input class="narrowDown" type="submit" value="絞り込む">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="d-flex justify-content-evenly">
+    {{range .Posts}}
+        <div style="width: 500px;margin:30px; 10px;">
+            <div class="shadow-sm p-2">
+                <div class="d-flex">
+                    <div class="text-center">
+                        <img src="{{ .Image }}" width="100px" height="100px" class="clipImage">
+                    </div>
+                    <div style="padding:0px 10px">
+                        <a href="{{ .URL }}" style="font-size:8px;word-break: break-all;">{{ .URL }}</a>
+                        <p class="clipTitle">{{ .Title }}</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="m-2">
+                        <span class="clipCategory">{{ .Usecase }}</span>
+                        <span class="clipCategory">{{ .Genre }}</span>
+                    </div>
+                    <p class="clipDescription">{{ .Description }}</p>
+                </div>
+            </div>
+        </div>
     {{end}}
 </div>
 {{ end }}

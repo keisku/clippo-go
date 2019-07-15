@@ -99,7 +99,7 @@ func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
 	post := &database.Post{
 		URL:         "http://localhost:8080/",
 		Title:       "タイトルの見本",
-		Description: "記事の簡単な要約を書いてください。",
+		Description: "250文字以内で記事の簡単な要約を書いてください。",
 		Image:       "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg",
 		Usecase:     "エラー解決",
 		Genre:       "プログラミング言語",

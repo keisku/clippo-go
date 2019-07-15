@@ -20,7 +20,7 @@ func Render(w http.ResponseWriter, name string, content interface{}) {
 		log.Fatal(err)
 	}
 	t, err := template.ParseFiles(
-		wd+"/template/layout.tmpl", wd+"/template/header.tmpl", wd+"/template/"+name)
+		wd+"/template/layout.tmpl", wd+"/template/header.tmpl", wd+"/template/"+name, wd+"/template/footer.tmpl")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -42,7 +42,7 @@ func RenderBeforeLogin(w http.ResponseWriter, name string, content interface{}) 
 		log.Fatal(err)
 	}
 	t, err := template.ParseFiles(
-		wd+"/template/layout.tmpl", wd+"/template/headerBeforeLogin.tmpl", wd+"/template/"+name)
+		wd+"/template/layout.tmpl", wd+"/template/headerBeforeLogin.tmpl", wd+"/template/"+name, wd+"/template/footer.tmpl")
 	if err != nil {
 		log.Fatalln(err)
 	}

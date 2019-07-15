@@ -1,13 +1,18 @@
 {{ define "content" }}
-<h1>Confirm</h1>
+<h1>確認</h1>
 <form method="POST" action="/user/register/do">
     <div class="form-group">
-        <label>メールアドレス</label><br>
-        <input class="form-control" type="text" name="email" value="{{ .Email }}" readonly />
+        <div>
+            <div class="cp_iptxt">
+                <input class="ef" type="text" name="email" value="{{ .Email }}" readonly />
+                <label>メールアドレス</label>
+                <span class="focus_line"></span>
+            </div>
+        </div>
     </div>
     <div>
         <input type="hidden" name="password" value="{{ .Password }}" />
-        <input class="btn btn-success" type="submit" value="Sign Up">
+        <input class="clipButton" type="submit" value="登録する">
     </div>
 </form>
 {{ end }}

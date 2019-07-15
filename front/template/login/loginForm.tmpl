@@ -1,22 +1,21 @@
 {{ define "content" }}
-<h1 class="mb-5">ログイン</h1>
-<form method="POST" action="/login/success">
-	<div class="mt-5">
-		<div class="cp_iptxt">
-			<input class="ef" style="width:100%;padding-left: 150px;" name="email" type="email" required >
-			<label>メールアドレス</label>
-			<span class="focus_line"></span>
+<div class="form-wrapper">
+	<h3 class="form-title">ログイン</h3>
+	<form method="POST" action="/login/success">
+		<div class="form-item">
+			<label for="email"></label>
+			<input type="email" name="email" required="required" placeholder="メールアドレス"></input>
 		</div>
-	</div>
-	<div class="mt-5 mb-5">
-		<div class="cp_iptxt">
-			<input class="ef" style="width:100%;padding-left: 150px;" name="password" type="password" required >
-			<label>パスワード</label>
-			<span class="focus_line"></span>
+		<div class="form-item">
+			<label for="password"></label>
+			<input type="password" name="password" required="required" placeholder="パスワード"></input>
 		</div>
+		<div class="button-panel">
+			<input type="submit" class="button" title="確認する" value="確認する"></input>
+		</div>
+	</form>
+	<div class="form-footer">
+		<p><a href="/">前の画面に戻る</a></p>
 	</div>
-	<div>
-		<input class="clipButton" type="submit" value="ログイン">
-	</div>
-</form>
+</div>
 {{ end }}

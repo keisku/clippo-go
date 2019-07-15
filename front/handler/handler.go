@@ -98,8 +98,8 @@ func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
 	post := &database.Post{
 		URL:         "http://localhost:8080/",
-		Title:       "タイトルの見本",
-		Description: "250文字以内で記事の簡単な要約を書いてください。",
+		Title:       "サンプルのタイトル",
+		Description: "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。",
 		Image:       "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg",
 		Usecase:     "エラー解決",
 		Genre:       "プログラミング言語",

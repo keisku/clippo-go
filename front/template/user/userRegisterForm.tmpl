@@ -1,35 +1,25 @@
 {{ define "content" }}
-<h1 class="mb-3">SignUp</h1>
-<form method="POST" action="/user/register/confirm">
-	<div class="form-group m-3">
-		<div>
-            <div class="cp_iptxt">
-                <input class="ef" type="text" name="email" required />
-                <label>メールアドレス</label>
-                <span class="focus_line"></span>
-            </div>
-        </div>
-  	</div>
-	<div class="form-group m-5">
-		<div>
-            <div class="cp_iptxt">
-                <input class="ef" style="width:100%;padding-left: 150px;" type="password" name="password" required />
-                <label>パスワード</label>
-                <span class="focus_line"></span>
-            </div>
-        </div>
-  	</div>
-	<div class="form-group m-5">
-		<div>
-            <div class="cp_iptxt">
-                <input class="ef" style="width:100%;padding-left: 150px;" type="password" name="confirmPassword" required />
-                <label>確認パスワード</label>
-                <span class="focus_line"></span>
-            </div>
-        </div>
-  	</div>
-	<div>
-		<input class="clipButton" type="submit" value="確認する">
+<div class="form-wrapper">
+	<h3 class="form-title">ユーザー登録</h3>
+	<form method="POST" action="/user/register/confirm">
+		<div class="form-item">
+			<label for="email"></label>
+			<input type="email" name="email" required="required" placeholder="メールアドレス"></input>
+		</div>
+		<div class="form-item">
+			<label for="password"></label>
+			<input type="password" name="password" required="required" placeholder="パスワード"></input>
+		</div>
+		<div class="form-item">
+			<label for="confirmPassword"></label>
+			<input type="password" name="confirmPassword" required="required" placeholder="確認パスワード"></input>
+		</div>
+		<div class="button-panel">
+			<input type="submit" class="button" title="確認する" value="確認する"></input>
+		</div>
+	</form>
+	<div class="form-footer">
+		<p><a href="/">前の画面に戻る</a></p>
 	</div>
-</form>
+</div>
 {{ end }}

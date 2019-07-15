@@ -66,9 +66,8 @@ func main() {
 	*/
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	svc := &http.Server{
-		Handler: r,
-		Addr:    "127.0.0.1:8080",
+	err := http.ListenAndServe(":8080", r)
+	if err != nil {
+		log.Println("failed to exit serve: ", err)
 	}
-	log.Fatalln(svc.ListenAndServe())
 }

@@ -1,18 +1,18 @@
 {{ define "content" }}
-<h1>確認</h1>
-<form method="POST" action="/user/register/do">
-    <div class="form-group">
-        <div>
-            <div class="cp_iptxt">
-                <input class="ef" type="text" name="email" value="{{ .Email }}" readonly />
-                <label>メールアドレス</label>
-                <span class="focus_line"></span>
-            </div>
-        </div>
-    </div>
-    <div>
-        <input type="hidden" name="password" value="{{ .Password }}" />
-        <input class="clipButton" type="submit" value="登録する">
-    </div>
-</form>
+<div class="form-wrapper">
+	<h3 class="form-title">ユーザー登録</h3>
+	<form method="POST" action="/user/register/do">
+		<div class="form-item">
+			<label for="email"></label>
+			<input type="email" name="email" required="required" value="{{ .Email }}" readonly></input>
+		</div>
+		<div class="button-panel">
+			<input type="hidden" name="password" value="{{ .Password }}"></input>
+			<input type="submit" class="button" title="登録する" value="登録する"></input>
+		</div>
+	</form>
+	<div class="form-footer">
+		<p><a href="/user/register/init">前の画面に戻る</a></p>
+	</div>
+</div>
 {{ end }}

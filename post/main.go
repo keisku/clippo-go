@@ -7,7 +7,7 @@ import (
 	"net"
 
 	goose "github.com/advancedlogic/GoOse"
-	"github.com/kskumgk63/clippo-go/server_post/postpb"
+	"github.com/kskumgk63/clippo-go/post/postpb"
 	"google.golang.org/grpc"
 )
 

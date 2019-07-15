@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/kskumgk63/clippo-go/server_cache/cachepb"
+	"github.com/kskumgk63/clippo-go/cache/cachepb"
 	gocache "github.com/pmylund/go-cache"
 	"google.golang.org/grpc"
 )

@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/kskumgk63/clippo-go/front/database"
+	"github.com/kskumgk63/clippo-go/database"
 	"github.com/kskumgk63/clippo-go/front/handler"
-	"github.com/kskumgk63/clippo-go/server_cache/cachepb"
-	"github.com/kskumgk63/clippo-go/server_post/postpb"
+	"github.com/kskumgk63/clippo-go/cache/cachepb"
+	"github.com/kskumgk63/clippo-go/post/postpb"
 	"google.golang.org/grpc"
 )
 

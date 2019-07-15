@@ -11,10 +11,10 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/kskumgk63/clippo-go/front/database"
+	"github.com/kskumgk63/clippo-go/database"
 	"github.com/kskumgk63/clippo-go/front/template"
-	"github.com/kskumgk63/clippo-go/server_cache/cachepb"
-	"github.com/kskumgk63/clippo-go/server_post/postpb"
+	"github.com/kskumgk63/clippo-go/cache/cachepb"
+	"github.com/kskumgk63/clippo-go/post/postpb"
 )
 
 // FrontServer クライアントスタブを作成

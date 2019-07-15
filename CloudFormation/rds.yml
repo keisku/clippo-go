@@ -154,7 +154,8 @@ Resources:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          CidrIp: 10.0.1.0/24
+          # vpc.yml | PubSubnet1Aからのアクセスを許可
+          CidrIp: 10.0.11.0/24
 
 # ------------------------------------------------------------#
 #  DBSubnetGroup

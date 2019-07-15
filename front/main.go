@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	// "github.com/kskumgk63/clippo-go/front/database"
+	"github.com/kskumgk63/clippo-go/front/database"
 	"github.com/kskumgk63/clippo-go/front/handler"
 	"github.com/kskumgk63/clippo-go/server_cache/cachepb"
 	"github.com/kskumgk63/clippo-go/server_post/postpb"
@@ -24,9 +24,9 @@ func getGRPCConnection(port string) *grpc.ClientConn {
 
 func main() {
 	// テーブル作成
-	// db := database.GormConnect()
-	// database.CreateTable(db)
-	// defer db.Close()
+	db := database.GormConnect()
+	database.CreateTable(db)
+	defer db.Close()
 
 	fmt.Println("***** SERVER RUNNING *****")
 

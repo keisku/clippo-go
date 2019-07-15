@@ -46,6 +46,7 @@ Resources:
       VpcId: !Ref MyVPC
       CidrBlock: 10.0.11.0/24
       AvailabilityZone: "ap-northeast-1a"
+      MapPublicIpOnLaunch: 'true'
       Tags:
       - Key: Name
         Value: PubSubnet1A
@@ -60,6 +61,7 @@ Resources:
       VpcId: !Ref MyVPC
       CidrBlock: 10.0.12.0/24
       AvailabilityZone: "ap-northeast-1c"
+      MapPublicIpOnLaunch: 'true'
       Tags:
       - Key: Name
         Value: PubSubnet1C

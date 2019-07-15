@@ -15,7 +15,7 @@ import (
 
 // getGRPCConnection gRPCと接続
 func getGRPCConnection(port string) *grpc.ClientConn {
-	connection, err := grpc.Dial("localhost:"+port, grpc.WithInsecure())
+	connection, err := grpc.Dial(port, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -32,8 +32,8 @@ func main() {
 
 	r := mux.NewRouter()
 
-	cacheClient := cachepb.NewCacheServiceClient(getGRPCConnection("50051"))
-	postClient := postpb.NewPostServiceClient(getGRPCConnection("50052"))
+	cacheClient := cachepb.NewCacheServiceClient(getGRPCConnection(":50051"))
+	postClient := postpb.NewPostServiceClient(getGRPCConnection(":50052"))
 
 	frontSrv := &handler.FrontServer{
 		PostClient:  postClient,

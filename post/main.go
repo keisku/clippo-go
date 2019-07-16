@@ -18,7 +18,7 @@ import (
 type postServer struct{}
 
 const (
-	SAMPLE_URL         = "http://localhost:8080/"
+	SAMPLE_URL         = "http://loc alhost:8080/"
 	SAMPLE_TITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
 	SAMPLE_DESCRIPTION = "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
 	SAMPLE_IMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"

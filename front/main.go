@@ -7,9 +7,10 @@ import (
 
 	"github.com/gorilla/mux"
 	// "github.com/kskumgk63/clippo-go/database"
-	"github.com/kskumgk63/clippo-go/front/handler"
 	"github.com/kskumgk63/clippo-go/cache/cachepb"
+	"github.com/kskumgk63/clippo-go/front/handler"
 	"github.com/kskumgk63/clippo-go/post/postpb"
+	"github.com/kskumgk63/clippo-go/user/userpb"
 	"google.golang.org/grpc"
 )
 
@@ -34,10 +35,12 @@ func main() {
 
 	cacheClient := cachepb.NewCacheServiceClient(getGRPCConnection(":50051"))
 	postClient := postpb.NewPostServiceClient(getGRPCConnection(":50052"))
+	userClient := userpb.NewUserServiceClient(getGRPCConnection(":50053"))
 
 	frontSrv := &handler.FrontServer{
 		PostClient:  postClient,
 		CacheClient: cacheClient,
+		UserClient:  userClient,
 	}
 
 	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.TopBeforeLogin)

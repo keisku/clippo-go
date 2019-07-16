@@ -25,7 +25,7 @@ func Render(w http.ResponseWriter, name string, content interface{}) {
 		log.Fatalln(err)
 	}
 	if err := t.ExecuteTemplate(w, "layout", content); err != nil {
-		panic(err)
+		log.Println(err)
 	}
 }
 
@@ -47,6 +47,6 @@ func RenderBeforeLogin(w http.ResponseWriter, name string, content interface{}) 
 		log.Fatalln(err)
 	}
 	if err := t.ExecuteTemplate(w, "layout", content); err != nil {
-		panic(err)
+		log.Println(err)
 	}
 }

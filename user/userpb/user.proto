@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+/*
+    * HOW TO : generate proto
+    protoc user/userpb/user.proto --go_out=plugins=grpc:.
+*/
+
+package userpb;
+option go_package="user/userpb";
+
+// ユーザーの定義
+message User {
+    string email = 1;
+    string password = 2;
+}
+
+message CreateUserRequest {
+    User user = 1;
+}
+
+message CreateUserResponse {
+    string message = 1;
+}
+
+message GetUserRequest {
+    string email = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+    string id = 2;
+}
+
+service UserService {
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {};
+    rpc GetUser(GetUserRequest) returns (GetUserResponse) {};
+}

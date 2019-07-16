@@ -6,10 +6,11 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/kskumgk63/clippo-go/front/database"
+	// "github.com/kskumgk63/clippo-go/database"
+	"github.com/kskumgk63/clippo-go/cache/cachepb"
 	"github.com/kskumgk63/clippo-go/front/handler"
-	"github.com/kskumgk63/clippo-go/server_cache/cachepb"
-	"github.com/kskumgk63/clippo-go/server_post/postpb"
+	"github.com/kskumgk63/clippo-go/post/postpb"
+	"github.com/kskumgk63/clippo-go/user/userpb"
 	"google.golang.org/grpc"
 )
 
@@ -24,9 +25,9 @@ func getGRPCConnection(port string) *grpc.ClientConn {
 
 func main() {
 	// テーブル作成
-	db := database.GormConnect()
-	database.CreateTable(db)
-	defer db.Close()
+	// db := database.GormConnect()
+	// database.CreateTable(db)
+	// defer db.Close()
 
 	fmt.Println("***** SERVER RUNNING *****")
 
@@ -34,10 +35,12 @@ func main() {
 
 	cacheClient := cachepb.NewCacheServiceClient(getGRPCConnection(":50051"))
 	postClient := postpb.NewPostServiceClient(getGRPCConnection(":50052"))
+	userClient := userpb.NewUserServiceClient(getGRPCConnection(":50053"))
 
 	frontSrv := &handler.FrontServer{
 		PostClient:  postClient,
 		CacheClient: cacheClient,
+		UserClient:  userClient,
 	}
 
 	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.TopBeforeLogin)
@@ -55,6 +58,7 @@ func main() {
 	r.Path("/post/register/init").Methods(http.MethodGet).HandlerFunc(frontSrv.AuthToken(frontSrv.PostRegister))
 	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostRegisterConfirm))
 	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDo))
+	r.Path("/post/delete").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDelete))
 	r.Path("/post/search/title").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearchTitle))
 	r.Path("/post/search/usecase").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearchUsecase))
 	r.Path("/post/search/genre").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearchGenre))

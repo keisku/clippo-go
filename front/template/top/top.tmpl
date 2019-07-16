@@ -17,7 +17,7 @@
     <h5>マイリスト</h5>
 </div>
 <div class="content">
-    <form method="POST" action="/post/search">
+    <form method="POST" action="/post/search/title">
         <div class="d-flex">
             <div class="cp_iptxt">
                 <input class="ef" name="title" type="text" required >
@@ -83,7 +83,7 @@
     </div>
 </div>
 <div class="d-flex justify-content-evenly">
-    {{range .Posts}}
+    {{ range . }}
         <div style="width: 500px;margin:30px; 10px;">
             <div class="shadow-sm p-2">
                 <div class="d-flex">
@@ -91,7 +91,7 @@
                         <img src="{{ .Image }}" width="100px" height="100px" class="clipImage">
                     </div>
                     <div style="padding:0px 10px">
-                        <a href="{{ .URL }}" style="font-size:8px;word-break: break-all;">{{ .URL }}</a>
+                        <a href="{{ .Url }}" style="font-size:8px;word-break: break-all;">{{ .Url }}</a>
                         <p class="clipTitle">{{ .Title }}</p>
                     </div>
                 </div>
@@ -101,6 +101,10 @@
                         <span class="clipCategory">{{ .Genre }}</span>
                     </div>
                     <p class="clipDescription">{{ .Description }}</p>
+                    <form method="POST" action="/post/delete" style="text-align: right;padding:0!important">
+                        <input type="hidden" name="post_id" value="{{ .Id }}">
+                        <input type="submit" class="deleteButton" value="Delete">
+                    </form>
                 </div>
             </div>
         </div>

@@ -2,11 +2,11 @@ syntax = "proto3";
 
 /*
     * HOW TO : generate proto
-    protoc server_cache/cachepb/cache.proto --go_out=plugins=grpc:.
+    protoc cache/cachepb/cache.proto --go_out=plugins=grpc:.
 */
 
 package cachepb;
-option go_package="server_cache/cachepb";
+option go_package="cache/cachepb";
 
 message SetTokenRequest {
     string token = 1;

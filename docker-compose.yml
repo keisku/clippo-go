@@ -13,19 +13,27 @@ services:
     - "PASS=ao6415012"
     - "PROTOCOL=tcp(127.0.0.1:3306)"
     - "DBNAME=clippo"
-  server_cache:
+  cache:
     build:
       context: ./
-      dockerfile: server_cache/Dockerfile
-    image: clippo-go/server_cache
-    container_name: server_cache
+      dockerfile: cache/Dockerfile
+    image: clippo-go/cache
+    container_name: cache
     ports:
     - "50051:50051"
-  server_post:
+  post:
     build:
       context: ./
-      dockerfile: server_post/Dockerfile
-    image: clippo-go/server_post
-    container_name: server_post
+      dockerfile: post/Dockerfile
+    image: clippo-go/post
+    container_name: post
     ports:
     - "50052:50051"
+  user:
+    build:
+      context: ./
+      dockerfile: user/Dockerfile
+    image: clippo-go/user
+    container_name: user
+    ports:
+    - "50053:50051"

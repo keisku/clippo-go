@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+/*
+    * HOW TO : generate proto
+    protoc post/postpb/post.proto --go_out=plugins=grpc:.
+*/
+
+package postpb;
+option go_package="post/postpb";
+
+// 投稿の定義
+message Post {
+    string id = 1;
+    string url = 2;
+    string title = 3;
+    string description = 4;
+    string image = 5;
+    string usecase = 6;
+    string genre = 7;
+    string user_id = 8;
+}
+
+// 投稿の作成
+message CreatePostRequest {
+    Post post = 1;
+}
+message CreatePostResponse {
+    string message = 1;
+}
+
+// 投稿の削除
+message DeletePostRequest {
+    string id = 1;
+}
+message DeletePostResponse {
+    string message = 1;
+}
+
+// ユーザーIDを紐付いたすべての投稿を取得
+message GetAllPostsByUserIDRequest {
+    string user_id = 1;
+}
+message GetAllPostsByUserIDResponse {
+    repeated Post posts = 1;
+}
+
+// タイトル検索
+message SearchPostsByTitleRequest {
+    string user_id = 1;
+    string title = 2;
+}
+message SearchPostsByTitleResponse {
+    repeated Post posts = 1;
+}
+
+// ユースケース検索
+message SearchPostsByUsecaseRequest {
+    string user_id = 1;
+    string usecase = 2;
+}
+message SearchPostsByUsecaseResponse {
+    repeated Post posts = 1;
+}
+
+// ジャンル検索
+message SearchPostsByGenreRequest {
+    string user_id = 1;
+    string genre = 2;
+}
+message SearchPostsByGenreResponse {
+    repeated Post posts = 1;
+}
+
+// URLからスクレイピングしてくれる
+message PostURLRequest {
+    string url = 1;
+}
+
+message PostResponse {
+    string url = 1;
+    string title = 2;
+    string description = 3;
+    string image = 4;
+}
+
+service PostService {
+    // URLからスクレイピングしてくれる
+    rpc GetPostDetail(PostURLRequest) returns (PostResponse) {};
+    // 投稿の作成
+    rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {};
+    // 投稿の削除
+    rpc DeletePost (DeletePostRequest) returns (DeletePostResponse) {};
+    // ユーザーIDを紐付いたすべての投稿を取得
+    rpc GetAllPostsByUserID (GetAllPostsByUserIDRequest) returns (GetAllPostsByUserIDResponse) {};
+    // タイトル検索
+    rpc SearchPostsByTitle (SearchPostsByTitleRequest) returns (SearchPostsByTitleResponse) {};
+    // ユースケース検索
+    rpc SearchPostsByUsecase (SearchPostsByUsecaseRequest) returns (SearchPostsByUsecaseResponse) {};
+    // ジャンル検索
+    rpc SearchPostsByGenre (SearchPostsByGenreRequest) returns (SearchPostsByGenreResponse) {};
+}

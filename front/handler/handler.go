@@ -4,23 +4,24 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-	"time"
+
+	"github.com/kskumgk63/clippo-go/user/userpb"
 
 	"github.com/dgrijalva/jwt-go"
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/kskumgk63/clippo-go/front/database"
+	"github.com/kskumgk63/clippo-go/cache/cachepb"
+	"github.com/kskumgk63/clippo-go/database"
 	"github.com/kskumgk63/clippo-go/front/template"
-	"github.com/kskumgk63/clippo-go/server_cache/cachepb"
-	"github.com/kskumgk63/clippo-go/server_post/postpb"
+	"github.com/kskumgk63/clippo-go/post/postpb"
 )
 
 // FrontServer クライアントスタブを作成
 type FrontServer struct {
 	PostClient  postpb.PostServiceClient
 	CacheClient cachepb.CacheServiceClient
+	UserClient  userpb.UserServiceClient
 }
 
 // Posts トップページへ構造体をマッピング
@@ -38,10 +39,18 @@ const (
 	TOKENCACHE = "token-cache"
 	// LOGINUSER ログインユーザーIdのキー
 	LOGINUSER = "login-user"
+
+	SAMPLE_URL         = "http://loc alhost:8080/"
+	SAMPLE_TITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
+	SAMPLE_DESCRIPTION = "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
+	SAMPLE_IMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
+	SAMPLE_USECASE     = "エラー解決"
+	SAMPLE_GENRE       = "プログラミング言語"
+	SAMPLE_ID          = "0000"
 )
 
 // GenerateJWTToken JWT認証トークンを生成
-func GenerateJWTToken(user database.User) (string, error) {
+func GenerateJWTToken(user *userpb.User) (string, error) {
 	secret := "secret"
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -97,12 +106,12 @@ func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 // TopBeforeLogin returns "/"
 func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
 	post := &database.Post{
-		URL:         "http://localhost:8080/",
-		Title:       "サンプルのタイトル",
-		Description: "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。",
-		Image:       "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg",
-		Usecase:     "エラー解決",
-		Genre:       "プログラミング言語",
+		URL:         SAMPLE_TITLE,
+		Title:       SAMPLE_TITLE,
+		Description: SAMPLE_DESCRIPTION,
+		Image:       SAMPLE_IMAGE,
+		Usecase:     SAMPLE_USECASE,
+		Genre:       SAMPLE_GENRE,
 	}
 	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
 }
@@ -160,16 +169,20 @@ func (s *FrontServer) Logout(w http.ResponseWriter, r *http.Request) {
 
 // LoginSuccess returns "/top"
 func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
-	var user database.User
-
+	// フォームから取得する値
 	r.ParseForm()
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	// MySQLからユーザーの取得
-	db := database.GormConnect()
-	defer db.Close()
-	err := db.Find(&user, "email=?", email).Error
+	// gRPC通信
+	reqUser := &userpb.GetUserRequest{
+		Email: email,
+	}
+	resUser, _ := s.UserClient.GetUser(r.Context(), reqUser)
+	user := resUser.User
+
+	// パスワードの正誤判断
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))
@@ -177,44 +190,39 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// DBからのパスワード
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		http.Redirect(w, r, "/login", http.StatusFound)
-		return
-	}
-
+	// 有効なユーザーに対して認証トークン生成
 	token, err := GenerateJWTToken(user)
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))
 		return
 	}
-	// トークンをキャッシュに格納
+	// 認証トークンをキャッシュに格納
 	reqToken := &cachepb.SetTokenRequest{
 		Token: token,
 		Key:   TOKENCACHE,
 	}
 	res, _ := s.CacheClient.SetToken(r.Context(), reqToken)
 	log.Println(res.Message)
+
 	// ログインユーザーのIdをキャッシュに格納
 	reqID := &cachepb.SetIDRequest{
-		Id:  fmt.Sprint(user.ID),
+		Id:  resUser.Id,
 		Key: LOGINUSER,
 	}
 	resID, _ := s.CacheClient.SetID(r.Context(), reqID)
 	log.Println(resID.Message)
 
 	// 投稿一覧取得
-	posts := []database.Post{}
-	db.Find(&posts)
-	db.Where("user_id = ?", user.ID).Find(&posts)
+	reqPost := &postpb.GetAllPostsByUserIDRequest{
+		UserId: reqID.Id,
+	}
+	resPost, err := s.PostClient.GetAllPostsByUserID(r.Context(), reqPost)
+	if err != nil {
+		log.Println(err)
+	}
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // Top returns "/top"
@@ -234,18 +242,16 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	cached := res.Id
-	posts := []database.Post{}
-	err := db.Where("user_id = ?", cached).Find(&posts).Error
+	// 投稿一覧取得
+	reqPost := &postpb.GetAllPostsByUserIDRequest{
+		UserId: res.Id,
+	}
+	resPost, err := s.PostClient.GetAllPostsByUserID(r.Context(), reqPost)
 	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+		log.Println(err)
 	}
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // UserRegister returns "user/register/init"
@@ -255,12 +261,27 @@ func (s *FrontServer) UserRegister(w http.ResponseWriter, r *http.Request) {
 
 // UserRegisterConfirm returns "user/register/confirm"
 func (s *FrontServer) UserRegisterConfirm(w http.ResponseWriter, r *http.Request) {
+	var user database.User
+
+	// フォームから取得した値
 	r.ParseForm()
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	confirmPassword := r.FormValue("confirmPassword")
 
+	// MySQLと接続
+	db := database.GormConnect()
+	defer db.Close()
+
 	// エラーハンドリング
+	err := db.Find(&user, "email=?", email).Error
+	if err == nil {
+		// DBにフォームから来たメールが存在していたらリダイレクト
+		// 存在していたら err == nil になる
+		log.Println("This email is already registered")
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
 	if email == "" {
 		http.Redirect(w, r, "/user/register/init", http.StatusFound)
 		return
@@ -307,16 +328,14 @@ func (s *FrontServer) UserRegisterDo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// MySQLと接続
-	db := database.GormConnect()
-	defer db.Close()
-	user := database.User{
-		Email:    email,
-		Password: string(hashedPassword),
+	req := &userpb.CreateUserRequest{
+		User: &userpb.User{
+			Email:    email,
+			Password: string(hashedPassword),
+		},
 	}
-	db.Create(&user)
-	db.Model(&user).Update("CreatedAt", time.Now().Add(9*time.Hour))
-	db.Model(&user).Update("UpdatedAt", time.Now().Add(9*time.Hour))
+	res, _ := s.UserClient.CreateUser(r.Context(), req)
+	log.Println(res.Message)
 
 	http.Redirect(w, r, "/login", http.StatusFound)
 }
@@ -352,37 +371,49 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	genre := r.FormValue("genre")
 
 	// キャッシュされているログインユーザーのIdを取得
-	req := &cachepb.GetIDRequest{
+	reqCache := &cachepb.GetIDRequest{
 		Key: LOGINUSER,
 	}
-	res, _ := s.CacheClient.GetID(r.Context(), req)
-	log.Println(res.Id)
-	if res.Id == "" {
-		log.Println("token is empty")
-		http.Redirect(w, r, "/login", http.StatusFound)
+	resCache, _ := s.CacheClient.GetID(r.Context(), reqCache)
+
+	// 投稿を作成するgRPCリクエスト
+	reqPost := &postpb.CreatePostRequest{
+		Post: &postpb.Post{
+			Url:         url,
+			Title:       title,
+			Description: description,
+			Image:       image,
+			Usecase:     usecase,
+			Genre:       genre,
+			UserId:      resCache.Id,
+		},
+	}
+	resPost, err := s.PostClient.CreatePost(r.Context(), reqPost)
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Printf("*** %v\n", fmt.Sprint(err))
+		http.Redirect(w, r, "/post/register/init", http.StatusFound)
 		return
 	}
-	id, err := strconv.ParseUint(res.Id, 10, 64)
-	if err != nil {
-		log.Println(err)
+	log.Println(resPost.GetMessage())
+
+	http.Redirect(w, r, "/top", http.StatusFound)
+}
+
+// PostDelete deletes a post
+func (s *FrontServer) PostDelete(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	postID := r.FormValue("post_id")
+
+	if postID == "xxxx" {
+		template.Render(w, "top/top.tmpl", nil)
 	}
 
-	// MySQLと接続
-	db := database.GormConnect()
-	defer db.Close()
-	post := database.Post{
-		URL:         url,
-		Title:       title,
-		Description: description,
-		Image:       image,
-		Usecase:     usecase,
-		Genre:       genre,
-		UserID:      uint(id),
+	req := &postpb.DeletePostRequest{
+		Id: postID,
 	}
-	db.Create(&post)
-	db.Model(&post).Update("CreatedAt", time.Now().Add(9*time.Hour))
-	db.Model(&post).Update("UpdatedAt", time.Now().Add(9*time.Hour))
-
+	res, _ := s.PostClient.DeletePost(r.Context(), req)
+	log.Panicln(res.GetMessage())
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
 
@@ -406,18 +437,14 @@ func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	posts := []database.Post{}
-
-	err := db.Where("user_id = ? AND title LIKE ?", res.Id, "%"+title+"%").Find(&posts).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+	// 投稿一覧取得
+	reqPost := &postpb.SearchPostsByTitleRequest{
+		UserId: res.Id,
+		Title:  title,
 	}
+	resPost, _ := s.PostClient.SearchPostsByTitle(r.Context(), reqPost)
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // PostSearchUsecase return Posts which is match with input
@@ -440,18 +467,14 @@ func (s *FrontServer) PostSearchUsecase(w http.ResponseWriter, r *http.Request) 
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	posts := []database.Post{}
-
-	err := db.Where("user_id = ? AND usecase LIKE ?", res.Id, "%"+usecase+"%").Find(&posts).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+	// 投稿一覧取得
+	reqPost := &postpb.SearchPostsByUsecaseRequest{
+		UserId:  res.Id,
+		Usecase: usecase,
 	}
+	resPost, _ := s.PostClient.SearchPostsByUsecase(r.Context(), reqPost)
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // PostSearchGenre return Posts which is match with input
@@ -474,16 +497,12 @@ func (s *FrontServer) PostSearchGenre(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	posts := []database.Post{}
-
-	err := db.Where("user_id = ? AND genre LIKE ?", res.Id, "%"+genre+"%").Find(&posts).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+	// 投稿一覧取得
+	reqPost := &postpb.SearchPostsByGenreRequest{
+		UserId: res.Id,
+		Genre:  genre,
 	}
+	resPost, _ := s.PostClient.SearchPostsByGenre(r.Context(), reqPost)
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }

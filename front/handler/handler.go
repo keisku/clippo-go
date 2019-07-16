@@ -4,16 +4,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 
 	"golang.org/x/crypto/bcrypt"
 
+	"github.com/kskumgk63/clippo-go/cache/cachepb"
 	"github.com/kskumgk63/clippo-go/database"
 	"github.com/kskumgk63/clippo-go/front/template"
-	"github.com/kskumgk63/clippo-go/cache/cachepb"
 	"github.com/kskumgk63/clippo-go/post/postpb"
 )
 
@@ -208,13 +207,15 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 	log.Println(resID.Message)
 
 	// 投稿一覧取得
-	posts := []database.Post{}
-	db.Find(&posts)
-	db.Where("user_id = ?", user.ID).Find(&posts)
+	reqPost := &postpb.GetAllPostsByUserIDRequest{
+		UserId: reqID.Id,
+	}
+	resPost, err := s.PostClient.GetAllPostsByUserID(r.Context(), reqPost)
+	if err != nil {
+		log.Println(err)
+	}
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // Top returns "/top"
@@ -234,18 +235,16 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	cached := res.Id
-	posts := []database.Post{}
-	err := db.Where("user_id = ?", cached).Find(&posts).Error
+	// 投稿一覧取得
+	reqPost := &postpb.GetAllPostsByUserIDRequest{
+		UserId: res.Id,
+	}
+	resPost, err := s.PostClient.GetAllPostsByUserID(r.Context(), reqPost)
 	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+		log.Println(err)
 	}
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // UserRegister returns "user/register/init"
@@ -352,36 +351,31 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	genre := r.FormValue("genre")
 
 	// キャッシュされているログインユーザーのIdを取得
-	req := &cachepb.GetIDRequest{
+	reqCache := &cachepb.GetIDRequest{
 		Key: LOGINUSER,
 	}
-	res, _ := s.CacheClient.GetID(r.Context(), req)
-	log.Println(res.Id)
-	if res.Id == "" {
-		log.Println("token is empty")
-		http.Redirect(w, r, "/login", http.StatusFound)
+	resCache, _ := s.CacheClient.GetID(r.Context(), reqCache)
+
+	// 投稿を作成するgRPCリクエスト
+	reqPost := &postpb.CreatePostRequest{
+		Post: &postpb.Post{
+			Url:         url,
+			Title:       title,
+			Description: description,
+			Image:       image,
+			Usecase:     usecase,
+			Genre:       genre,
+			UserId:      resCache.Id,
+		},
+	}
+	resPost, err := s.PostClient.CreatePost(r.Context(), reqPost)
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Printf("*** %v\n", fmt.Sprint(err))
+		http.Redirect(w, r, "/post/register/init", http.StatusFound)
 		return
 	}
-	id, err := strconv.ParseUint(res.Id, 10, 64)
-	if err != nil {
-		log.Println(err)
-	}
-
-	// MySQLと接続
-	db := database.GormConnect()
-	defer db.Close()
-	post := database.Post{
-		URL:         url,
-		Title:       title,
-		Description: description,
-		Image:       image,
-		Usecase:     usecase,
-		Genre:       genre,
-		UserID:      uint(id),
-	}
-	db.Create(&post)
-	db.Model(&post).Update("CreatedAt", time.Now().Add(9*time.Hour))
-	db.Model(&post).Update("UpdatedAt", time.Now().Add(9*time.Hour))
+	log.Println(resPost.GetMessage())
 
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
@@ -406,18 +400,14 @@ func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	posts := []database.Post{}
-
-	err := db.Where("user_id = ? AND title LIKE ?", res.Id, "%"+title+"%").Find(&posts).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+	// 投稿一覧取得
+	reqPost := &postpb.SearchPostsByTitleRequest{
+		UserId: res.Id,
+		Title:  title,
 	}
+	resPost, _ := s.PostClient.SearchPostsByTitle(r.Context(), reqPost)
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // PostSearchUsecase return Posts which is match with input
@@ -440,18 +430,14 @@ func (s *FrontServer) PostSearchUsecase(w http.ResponseWriter, r *http.Request) 
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	posts := []database.Post{}
-
-	err := db.Where("user_id = ? AND usecase LIKE ?", res.Id, "%"+usecase+"%").Find(&posts).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+	// 投稿一覧取得
+	reqPost := &postpb.SearchPostsByUsecaseRequest{
+		UserId:  res.Id,
+		Usecase: usecase,
 	}
+	resPost, _ := s.PostClient.SearchPostsByUsecase(r.Context(), reqPost)
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }
 
 // PostSearchGenre return Posts which is match with input
@@ -474,16 +460,12 @@ func (s *FrontServer) PostSearchGenre(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	posts := []database.Post{}
-
-	err := db.Where("user_id = ? AND genre LIKE ?", res.Id, "%"+genre+"%").Find(&posts).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
-		return
+	// 投稿一覧取得
+	reqPost := &postpb.SearchPostsByGenreRequest{
+		UserId: res.Id,
+		Genre:  genre,
 	}
+	resPost, _ := s.PostClient.SearchPostsByGenre(r.Context(), reqPost)
 
-	template.Render(w, "top/top.tmpl", &Posts{
-		Posts: posts,
-	})
+	template.Render(w, "top/top.tmpl", resPost.Posts)
 }

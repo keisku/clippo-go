@@ -6,6 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.0 // indirect
 	github.com/advancedlogic/GoOse v0.0.0-20180825110909-6cd46faf50eb
 	github.com/araddon/dateparse v0.0.0-20190622164848-0fb0a474d195 // indirect
+	github.com/davecgh/go-spew v1.1.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/set v0.2.1 // indirect
 	github.com/gigawattio/window v0.0.0-20180317192513-0f5467e35573 // indirect

@@ -8,6 +8,61 @@ syntax = "proto3";
 package postpb;
 option go_package="post/postpb";
 
+// 投稿の定義
+message Post {
+    string url = 1;
+    string title = 2;
+    string description = 3;
+    string image = 4;
+    string usecase = 5;
+    string genre = 6;
+    string user_id = 7;
+}
+
+// 投稿の作成
+message CreatePostRequest {
+    Post post = 1;
+}
+message CreatePostResponse {
+    string message = 1;
+}
+
+// ユーザーIDを紐付いたすべての投稿を取得
+message GetAllPostsByUserIDRequest {
+    string user_id = 1;
+}
+message GetAllPostsByUserIDResponse {
+    repeated Post posts = 1;
+}
+
+// タイトル検索
+message SearchPostsByTitleRequest {
+    string user_id = 1;
+    string title = 2;
+}
+message SearchPostsByTitleResponse {
+    repeated Post posts = 1;
+}
+
+// ユースケース検索
+message SearchPostsByUsecaseRequest {
+    string user_id = 1;
+    string usecase = 2;
+}
+message SearchPostsByUsecaseResponse {
+    repeated Post posts = 1;
+}
+
+// ジャンル検索
+message SearchPostsByGenreRequest {
+    string user_id = 1;
+    string genre = 2;
+}
+message SearchPostsByGenreResponse {
+    repeated Post posts = 1;
+}
+
+// URLからスクレイピングしてくれる
 message PostURLRequest {
     string url = 1;
 }
@@ -20,5 +75,16 @@ message PostResponse {
 }
 
 service PostService {
+    // URLからスクレイピングしてくれる
     rpc GetPostDetail(PostURLRequest) returns (PostResponse) {};
+    // 投稿の作成
+    rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {};
+    // ユーザーIDを紐付いたすべての投稿を取得
+    rpc GetAllPostsByUserID (GetAllPostsByUserIDRequest) returns (GetAllPostsByUserIDResponse) {};
+    // タイトル検索
+    rpc SearchPostsByTitle (SearchPostsByTitleRequest) returns (SearchPostsByTitleResponse) {};
+    // ユースケース検索
+    rpc SearchPostsByUsecase (SearchPostsByUsecaseRequest) returns (SearchPostsByUsecaseResponse) {};
+    // ジャンル検索
+    rpc SearchPostsByGenre (SearchPostsByGenreRequest) returns (SearchPostsByGenreResponse) {};
 }

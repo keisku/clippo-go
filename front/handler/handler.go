@@ -400,6 +400,23 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
 
+// PostDelete deletes a post
+func (s *FrontServer) PostDelete(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	postID := r.FormValue("post_id")
+
+	if postID == "xxxx" {
+		template.Render(w, "top/top.tmpl", nil)
+	}
+
+	req := &postpb.DeletePostRequest{
+		Id: postID,
+	}
+	res, _ := s.PostClient.DeletePost(r.Context(), req)
+	log.Panicln(res.GetMessage())
+	http.Redirect(w, r, "/top", http.StatusFound)
+}
+
 // PostSearchTitle return Posts which is match with input
 func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()

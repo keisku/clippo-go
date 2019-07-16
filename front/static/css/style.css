@@ -125,7 +125,15 @@ p {
     border: 1px solid#F2F2F2;
     padding: 10px;
 }
-
+.deleteButton {
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 2px solid red;
+    background-color: #FA5858;
+    color: white;
+    font-size: 12px;
+    padding: 1px 3px;
+}
 
 /*************************************
 * ネットから拾ってきたinputタグ

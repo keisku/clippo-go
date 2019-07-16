@@ -10,13 +10,14 @@ option go_package="post/postpb";
 
 // 投稿の定義
 message Post {
-    string url = 1;
-    string title = 2;
-    string description = 3;
-    string image = 4;
-    string usecase = 5;
-    string genre = 6;
-    string user_id = 7;
+    string id = 1;
+    string url = 2;
+    string title = 3;
+    string description = 4;
+    string image = 5;
+    string usecase = 6;
+    string genre = 7;
+    string user_id = 8;
 }
 
 // 投稿の作成
@@ -24,6 +25,14 @@ message CreatePostRequest {
     Post post = 1;
 }
 message CreatePostResponse {
+    string message = 1;
+}
+
+// 投稿の削除
+message DeletePostRequest {
+    string id = 1;
+}
+message DeletePostResponse {
     string message = 1;
 }
 
@@ -79,6 +88,8 @@ service PostService {
     rpc GetPostDetail(PostURLRequest) returns (PostResponse) {};
     // 投稿の作成
     rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {};
+    // 投稿の削除
+    rpc DeletePost (DeletePostRequest) returns (DeletePostResponse) {};
     // ユーザーIDを紐付いたすべての投稿を取得
     rpc GetAllPostsByUserID (GetAllPostsByUserIDRequest) returns (GetAllPostsByUserIDResponse) {};
     // タイトル検索

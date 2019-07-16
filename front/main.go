@@ -58,6 +58,7 @@ func main() {
 	r.Path("/post/register/init").Methods(http.MethodGet).HandlerFunc(frontSrv.AuthToken(frontSrv.PostRegister))
 	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostRegisterConfirm))
 	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDo))
+	r.Path("/post/delete").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDelete))
 	r.Path("/post/search/title").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearchTitle))
 	r.Path("/post/search/usecase").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearchUsecase))
 	r.Path("/post/search/genre").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearchGenre))

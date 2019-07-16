@@ -101,6 +101,10 @@
                         <span class="clipCategory">{{ .Genre }}</span>
                     </div>
                     <p class="clipDescription">{{ .Description }}</p>
+                    <form method="POST" action="/post/delete" style="text-align: right;padding:0!important">
+                        <input type="hidden" name="post_id" value="{{ .Id }}">
+                        <input type="submit" class="deleteButton" value="Delete">
+                    </form>
                 </div>
             </div>
         </div>

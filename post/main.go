@@ -18,31 +18,33 @@ import (
 type postServer struct{}
 
 const (
+	SAMPLE_POSTID      = "xxxx"
 	SAMPLE_URL         = "http://loc alhost:8080/"
 	SAMPLE_TITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
 	SAMPLE_DESCRIPTION = "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
 	SAMPLE_IMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
 	SAMPLE_USECASE     = "エラー解決"
 	SAMPLE_GENRE       = "プログラミング言語"
-	SAMPLE_ID          = "0000"
+	SAMPLE_USERID      = "0000"
 )
 
-func mappingPost(url, title, description, image, usecase, genre, id string) (p *postpb.Post) {
+func mappingPost(id, url, title, description, image, usecase, genre, userID string) (p *postpb.Post) {
 	p = &postpb.Post{
+		Id:          id,
 		Url:         url,
 		Title:       title,
 		Description: description,
 		Image:       image,
 		Usecase:     usecase,
 		Genre:       genre,
-		UserId:      id,
+		UserId:      userID,
 	}
 	return p
 }
 func (*postServer) CreatePost(ctx context.Context, req *postpb.CreatePostRequest) (*postpb.CreatePostResponse, error) {
 	// 文字列で受け取るのでuintへ変換
-	resId := req.GetPost().GetUserId()
-	id64, _ := strconv.ParseUint(resId, 10, 64)
+	resID := req.GetPost().GetUserId()
+	id64, _ := strconv.ParseUint(resID, 10, 64)
 	id := uint(id64)
 
 	// データベースと接続
@@ -69,6 +71,16 @@ func (*postServer) CreatePost(ctx context.Context, req *postpb.CreatePostRequest
 	}
 	return res, nil
 }
+func (*postServer) DeletePost(ctx context.Context, req *postpb.DeletePostRequest) (*postpb.DeletePostResponse, error) {
+	var post database.Post
+	id64, _ := strconv.ParseUint(req.GetId(), 10, 64)
+	post.ID = uint(id64)
+	// データベースと接続
+	db := database.GormConnect()
+	defer db.Close()
+	db.Delete(&post)
+	return &postpb.DeletePostResponse{Message: "**** DELETE POST ****"}, nil
+}
 func (*postServer) GetAllPostsByUserID(ctx context.Context, req *postpb.GetAllPostsByUserIDRequest) (*postpb.GetAllPostsByUserIDResponse, error) {
 	fmt.Println("GetAllPostsByUserID RUN")
 	var posts []*postpb.Post
@@ -86,21 +98,26 @@ func (*postServer) GetAllPostsByUserID(ctx context.Context, req *postpb.GetAllPo
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
+			SAMPLE_POSTID,
 			SAMPLE_URL,
 			SAMPLE_TITLE,
 			SAMPLE_DESCRIPTION,
 			SAMPLE_IMAGE,
 			SAMPLE_USECASE,
 			SAMPLE_GENRE,
-			SAMPLE_ID)
+			SAMPLE_USERID)
 		posts = append(posts, p)
 		return &postpb.GetAllPostsByUserIDResponse{Posts: posts}, nil
 	}
 	// DBから見つかれば、レスポンス用にマッピング
 	for i := 0; i < len(dbPosts); i++ {
-		i64 := uint64(dbPosts[i].UserID)
-		id := strconv.FormatUint(i64, 10)
-		posts = append(posts, mappingPost(dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, id))
+		u64 := uint64(dbPosts[i].UserID)
+		uid := strconv.FormatUint(u64, 10)
+
+		p64 := uint64(dbPosts[i].ID)
+		pid := strconv.FormatUint(p64, 10)
+
+		posts = append(posts, mappingPost(pid, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, uid))
 	}
 	return &postpb.GetAllPostsByUserIDResponse{Posts: posts}, nil
 }
@@ -122,21 +139,26 @@ func (*postServer) SearchPostsByTitle(ctx context.Context, req *postpb.SearchPos
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
+			SAMPLE_POSTID,
 			SAMPLE_URL,
 			SAMPLE_TITLE,
 			SAMPLE_DESCRIPTION,
 			SAMPLE_IMAGE,
 			SAMPLE_USECASE,
 			SAMPLE_GENRE,
-			SAMPLE_ID)
+			SAMPLE_USERID)
 		posts = append(posts, p)
 		return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
 	}
 	// DBから見つかれば、レスポンス用にマッピング
 	for i := 0; i < len(dbPosts); i++ {
-		i64 := uint64(dbPosts[i].UserID)
-		id := strconv.FormatUint(i64, 10)
-		posts = append(posts, mappingPost(dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, id))
+		u64 := uint64(dbPosts[i].UserID)
+		uid := strconv.FormatUint(u64, 10)
+
+		p64 := uint64(dbPosts[i].ID)
+		pid := strconv.FormatUint(p64, 10)
+
+		posts = append(posts, mappingPost(pid, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, uid))
 	}
 	return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
 }
@@ -157,21 +179,26 @@ func (*postServer) SearchPostsByUsecase(ctx context.Context, req *postpb.SearchP
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
+			SAMPLE_POSTID,
 			SAMPLE_URL,
 			SAMPLE_TITLE,
 			SAMPLE_DESCRIPTION,
 			SAMPLE_IMAGE,
 			SAMPLE_USECASE,
 			SAMPLE_GENRE,
-			SAMPLE_ID)
+			SAMPLE_USERID)
 		posts = append(posts, p)
 		return &postpb.SearchPostsByUsecaseResponse{Posts: posts}, nil
 	}
 	// DBから見つかれば、レスポンス用にマッピング
 	for i := 0; i < len(dbPosts); i++ {
-		i64 := uint64(dbPosts[i].UserID)
-		id := strconv.FormatUint(i64, 10)
-		posts = append(posts, mappingPost(dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, id))
+		u64 := uint64(dbPosts[i].UserID)
+		uid := strconv.FormatUint(u64, 10)
+
+		p64 := uint64(dbPosts[i].ID)
+		pid := strconv.FormatUint(p64, 10)
+
+		posts = append(posts, mappingPost(pid, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, uid))
 	}
 	return &postpb.SearchPostsByUsecaseResponse{Posts: posts}, nil
 }
@@ -192,21 +219,26 @@ func (*postServer) SearchPostsByGenre(ctx context.Context, req *postpb.SearchPos
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
+			SAMPLE_POSTID,
 			SAMPLE_URL,
 			SAMPLE_TITLE,
 			SAMPLE_DESCRIPTION,
 			SAMPLE_IMAGE,
 			SAMPLE_USECASE,
 			SAMPLE_GENRE,
-			SAMPLE_ID)
+			SAMPLE_USERID)
 		posts = append(posts, p)
 		return &postpb.SearchPostsByGenreResponse{Posts: posts}, nil
 	}
 	// DBから見つかれば、レスポンス用にマッピング
 	for i := 0; i < len(dbPosts); i++ {
-		i64 := uint64(dbPosts[i].UserID)
-		id := strconv.FormatUint(i64, 10)
-		posts = append(posts, mappingPost(dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, id))
+		u64 := uint64(dbPosts[i].UserID)
+		uid := strconv.FormatUint(u64, 10)
+
+		p64 := uint64(dbPosts[i].ID)
+		pid := strconv.FormatUint(p64, 10)
+
+		posts = append(posts, mappingPost(pid, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, uid))
 	}
 	return &postpb.SearchPostsByGenreResponse{Posts: posts}, nil
 }

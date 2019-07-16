@@ -29,3 +29,11 @@ services:
     container_name: post
     ports:
     - "50052:50051"
+  user:
+    build:
+      context: ./
+      dockerfile: user/Dockerfile
+    image: clippo-go/user
+    container_name: user
+    ports:
+    - "50053:50051"

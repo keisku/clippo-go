@@ -13,6 +13,6 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go install $SERVICE_PATH
 FROM alpine:3.8
 ENV TZ Asia/Tokyo
 COPY --from=0 /go/bin/front /go/bin/front
-COPY front/static /static
-COPY front/template /template
+COPY ./static /static
+COPY ./template /template
 ENTRYPOINT ["/go/bin/front"]

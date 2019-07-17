@@ -1,6 +1,6 @@
 FROM golang:1.12
 
-ENV PKG_PATH /go/src/github.com/kskumgk63/clippo-go
+ENV PKG_PATH /go/src
 ENV SERVICE_PATH $PKG_PATH/cache
 ENV GO111MODULE on
 WORKDIR $PKG_PATH

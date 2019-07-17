@@ -1,5 +1,9 @@
-module cache
+module github.com/kskumgk63/clippo-go/cache
 
 go 1.12
 
-require github.com/kskumgk63/clippo-go v0.0.0-20190716135003-333b98708057 // indirect
+require (
+	github.com/golang/protobuf v1.3.2
+	github.com/pmylund/go-cache v2.1.0+incompatible // indirect
+	google.golang.org/grpc v1.22.0
+)

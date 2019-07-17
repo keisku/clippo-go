@@ -1,10 +1,7 @@
 version: '3'
 services:
   front:
-    build:
-      context: ./
-      dockerfile: front/Dockerfile
-    image: clippo-go/front
+    image: 390440882363.dkr.ecr.ap-northeast-1.amazonaws.com/front
     container_name: front
     ports:
     - "80:8080"
@@ -14,26 +11,17 @@ services:
     - "PROTOCOL=clippo-rds.cpciso94q1yy.ap-northeast-1.rds.amazonaws.com"
     - "DBNAME=clippo"
   cache:
-    build:
-      context: ./
-      dockerfile: cache/Dockerfile
-    image: clippo-go/cache
+    image: 390440882363.dkr.ecr.ap-northeast-1.amazonaws.com/cache
     container_name: cache
     ports:
     - "50051:50051"
   post:
-    build:
-      context: ./
-      dockerfile: post/Dockerfile
-    image: clippo-go/post
+    image: 390440882363.dkr.ecr.ap-northeast-1.amazonaws.com/post
     container_name: post
     ports:
     - "50052:50051"
   user:
-    build:
-      context: ./
-      dockerfile: user/Dockerfile
-    image: clippo-go/user
+    image: 390440882363.dkr.ecr.ap-northeast-1.amazonaws.com/user
     container_name: user
     ports:
     - "50053:50051"

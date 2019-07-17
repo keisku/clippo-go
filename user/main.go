@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/kskumgk63/clippo-go/database"
+	"github.com/kskumgk63/clippo-go/user/database"
 
 	"github.com/kskumgk63/clippo-go/user/userpb"
 	"google.golang.org/grpc"

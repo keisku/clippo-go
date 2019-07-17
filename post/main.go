@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/kskumgk63/clippo-go/database"
+	"github.com/kskumgk63/clippo-go/post/database"
 
 	goose "github.com/advancedlogic/GoOse"
 	"github.com/kskumgk63/clippo-go/post/postpb"

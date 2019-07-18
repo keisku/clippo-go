@@ -98,7 +98,16 @@ p {
     font-size: 14px;
     margin: 0;
 }
+.clipWrapperBig {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
 
+.clipWrapper {
+    width: 500px;
+    margin: 15px;
+}
 .clipImage {
     object-fit: cover;
     border: 2px solid #FAFAFA;
@@ -116,7 +125,8 @@ p {
     font-weight: bold;
     line-height: 1.5;
     margin: 0;
-    font-size: 14px;
+    font-size: 12px;
+    border-bottom: 1px solid gray;
 }
 
 .clipDescription {
@@ -124,6 +134,7 @@ p {
     margin: 0;
     border: 1px solid#F2F2F2;
     padding: 10px;
+    height: 170px;
 }
 .deleteButton {
     margin-top: 5px;

@@ -2,7 +2,6 @@ package database
 
 import (
 	"log"
-	"os"
 
 	"github.com/jinzhu/gorm"
 	// mysql
@@ -29,17 +28,17 @@ type Post struct {
 
 // GormConnect mysqlとの接続
 func GormConnect() *gorm.DB {
-	DBMS := os.Getenv("DBMS")
-	USER := "root"
-	PASS := os.Getenv("PASS")
-	PROTOCOL := os.Getenv("PROTOCOL")
-	DBNAME := os.Getenv("DBNAME")
-
-	// DBMS := "mysql"
+	// DBMS := os.Getenv("DBMS")
 	// USER := "root"
-	// PASS := "ao6415012"
-	// PROTOCOL := "tcp(127.0.0.1:3306)"
-	// DBNAME := "clippo"
+	// PASS := os.Getenv("PASS")
+	// PROTOCOL := os.Getenv("PROTOCOL")
+	// DBNAME := os.Getenv("DBNAME")
+
+	DBMS := "mysql"
+	USER := "root"
+	PASS := "Root0000"
+	PROTOCOL := "clippo-rds.cpciso94q1yy.ap-northeast-1.rds.amazonaws.com"
+	DBNAME := "clippo"
 
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
 	db, err := gorm.Open(DBMS, CONNECT)

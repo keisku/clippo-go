@@ -34,10 +34,15 @@ func GormConnect() *gorm.DB {
 	// PROTOCOL := os.Getenv("PROTOCOL")
 	// DBNAME := os.Getenv("DBNAME")
 
+	// DBMS := "mysql"
+	// USER := "root"
+	// PASS := "Root0000"
+	// PROTOCOL := "clippo-rds.cpciso94q1yy.ap-northeast-1.rds.amazonaws.com"
+	// DBNAME := "clippo"
 	DBMS := "mysql"
 	USER := "root"
-	PASS := "Root0000"
-	PROTOCOL := "clippo-rds.cpciso94q1yy.ap-northeast-1.rds.amazonaws.com"
+	PASS := "ao6415012"
+	PROTOCOL := "tcp(127.0.0.1:3306)"
 	DBNAME := "clippo"
 
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"

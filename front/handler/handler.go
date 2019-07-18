@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/kskumgk63/clippo-go/front/template"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,7 +14,6 @@ import (
 
 	"github.com/kskumgk63/clippo-go/cache/cachepb"
 	"github.com/kskumgk63/clippo-go/database"
-	"github.com/kskumgk63/clippo-go/front/template"
 	"github.com/kskumgk63/clippo-go/post/postpb"
 )
 
@@ -40,13 +40,13 @@ const (
 	// LOGINUSER ログインユーザーIdのキー
 	LOGINUSER = "login-user"
 
-	SAMPLE_URL         = "http://loc alhost:8080/"
-	SAMPLE_TITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
-	SAMPLE_DESCRIPTION = "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
-	SAMPLE_IMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
-	SAMPLE_USECASE     = "エラー解決"
-	SAMPLE_GENRE       = "プログラミング言語"
-	SAMPLE_ID          = "0000"
+	SAMPLEURL         = "http://loc alhost:8080/"
+	SAMPLETITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
+	SAMPLEDESCRIPTION = "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
+	SAMPLEIMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
+	SAMPLEUSECASE     = "エラー解決"
+	SAMPLEGENRE       = "プログラミング言語"
+	SAMPLEID          = "0000"
 )
 
 // GenerateJWTToken JWT認証トークンを生成
@@ -106,12 +106,12 @@ func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 // TopBeforeLogin returns "/"
 func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
 	post := &database.Post{
-		URL:         SAMPLE_TITLE,
-		Title:       SAMPLE_TITLE,
-		Description: SAMPLE_DESCRIPTION,
-		Image:       SAMPLE_IMAGE,
-		Usecase:     SAMPLE_USECASE,
-		Genre:       SAMPLE_GENRE,
+		URL:         SAMPLETITLE,
+		Title:       SAMPLETITLE,
+		Description: SAMPLEDESCRIPTION,
+		Image:       SAMPLEIMAGE,
+		Usecase:     SAMPLEUSECASE,
+		Genre:       SAMPLEGENRE,
 	}
 	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
 }

@@ -22,7 +22,7 @@
 # 使用予定の技術
 
 - AWS
-  - ECS, ECR, RDS
+  - ECS, ECR, RDS, CloudFormation
 - Docker
 
 サービスをデプロイするためにインフラでは、AWSを使う予定です。

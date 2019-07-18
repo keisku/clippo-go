@@ -51,7 +51,7 @@ func (*userServer) GetUser(ctx context.Context, req *userpb.GetUserRequest) (*us
 func main() {
 	fmt.Println("***** USER SERVER RUNNING *****")
 
-	lis, err := net.Listen("tcp", "0.0.0.0:50053")
+	lis, err := net.Listen("tcp", ":50053")
 	if err != nil {
 		log.Fatalln(err)
 	}

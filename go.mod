@@ -15,6 +15,7 @@ require (
 	github.com/kskumgk63/clippo-go/cache v0.0.0-20190717131239-9743ff8d7016 // indirect
 	github.com/kskumgk63/clippo-go/database v0.0.0-20190717131239-9743ff8d7016
 	github.com/kskumgk63/clippo-go/front v0.0.0-20190717131239-9743ff8d7016 // indirect
+	github.com/kskumgk63/clippo-go/user v0.0.0-20190717221651-af8799859419 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/olekukonko/tablewriter v0.0.1 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect

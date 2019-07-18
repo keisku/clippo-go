@@ -266,7 +266,7 @@ func (*postServer) GetPostDetail(ctx context.Context, req *postpb.PostURLRequest
 func main() {
 	fmt.Println("***** POST SERVER RUNNING *****")
 
-	lis, err := net.Listen("tcp", "0.0.0.0:50052")
+	lis, err := net.Listen("tcp", ":50052")
 	if err != nil {
 		log.Fatalln(err)
 	}

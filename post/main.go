@@ -18,14 +18,22 @@ import (
 type postServer struct{}
 
 const (
-	SAMPLE_POSTID      = "xxxx"
-	SAMPLE_URL         = "http://loc alhost:8080/"
-	SAMPLE_TITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
-	SAMPLE_DESCRIPTION = "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
-	SAMPLE_IMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
-	SAMPLE_USECASE     = "エラー解決"
-	SAMPLE_GENRE       = "プログラミング言語"
-	SAMPLE_USERID      = "0000"
+	// SAMPLEPOSTID サンプル投稿ID
+	SAMPLEPOSTID      = "xxxx"
+	// SAMPLEURL サンプルURL
+	SAMPLEURL         = "http://localhost:8080/"
+	// SAMPLETITLE サンプルタイトル
+	SAMPLETITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
+	// SAMPLEDESCRIPTION サンプルディスクリプション
+	SAMPLEDESCRIPTION = "150文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
+	// SAMPLEIMAGE サンプルイメージ
+	SAMPLEIMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
+	// SAMPLEUSECASE サンプルユースケース
+	SAMPLEUSECASE     = "エラー解決"
+	// SAMPLEGENRE サンプルジャンル
+	SAMPLEGENRE       = "プログラミング言語"
+	// SAMPLEUSERID サンプルユーザーID
+	SAMPLEUSERID      = "0000"
 )
 
 func mappingPost(id, url, title, description, image, usecase, genre, userID string) (p *postpb.Post) {
@@ -98,14 +106,14 @@ func (*postServer) GetAllPostsByUserID(ctx context.Context, req *postpb.GetAllPo
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
-			SAMPLE_POSTID,
-			SAMPLE_URL,
-			SAMPLE_TITLE,
-			SAMPLE_DESCRIPTION,
-			SAMPLE_IMAGE,
-			SAMPLE_USECASE,
-			SAMPLE_GENRE,
-			SAMPLE_USERID)
+			SAMPLEPOSTID,
+			SAMPLEURL,
+			SAMPLETITLE,
+			SAMPLEDESCRIPTION,
+			SAMPLEIMAGE,
+			SAMPLEUSECASE,
+			SAMPLEGENRE,
+			SAMPLEUSERID)
 		posts = append(posts, p)
 		return &postpb.GetAllPostsByUserIDResponse{Posts: posts}, nil
 	}
@@ -139,14 +147,14 @@ func (*postServer) SearchPostsByTitle(ctx context.Context, req *postpb.SearchPos
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
-			SAMPLE_POSTID,
-			SAMPLE_URL,
-			SAMPLE_TITLE,
-			SAMPLE_DESCRIPTION,
-			SAMPLE_IMAGE,
-			SAMPLE_USECASE,
-			SAMPLE_GENRE,
-			SAMPLE_USERID)
+			SAMPLEPOSTID,
+			SAMPLEURL,
+			SAMPLETITLE,
+			SAMPLEDESCRIPTION,
+			SAMPLEIMAGE,
+			SAMPLEUSECASE,
+			SAMPLEGENRE,
+			SAMPLEUSERID)
 		posts = append(posts, p)
 		return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
 	}
@@ -179,14 +187,14 @@ func (*postServer) SearchPostsByUsecase(ctx context.Context, req *postpb.SearchP
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
-			SAMPLE_POSTID,
-			SAMPLE_URL,
-			SAMPLE_TITLE,
-			SAMPLE_DESCRIPTION,
-			SAMPLE_IMAGE,
-			SAMPLE_USECASE,
-			SAMPLE_GENRE,
-			SAMPLE_USERID)
+			SAMPLEPOSTID,
+			SAMPLEURL,
+			SAMPLETITLE,
+			SAMPLEDESCRIPTION,
+			SAMPLEIMAGE,
+			SAMPLEUSECASE,
+			SAMPLEGENRE,
+			SAMPLEUSERID)
 		posts = append(posts, p)
 		return &postpb.SearchPostsByUsecaseResponse{Posts: posts}, nil
 	}
@@ -219,14 +227,14 @@ func (*postServer) SearchPostsByGenre(ctx context.Context, req *postpb.SearchPos
 	// DBから何も見つからなければサンプルを返す
 	if len(dbPosts) == 0 {
 		p := mappingPost(
-			SAMPLE_POSTID,
-			SAMPLE_URL,
-			SAMPLE_TITLE,
-			SAMPLE_DESCRIPTION,
-			SAMPLE_IMAGE,
-			SAMPLE_USECASE,
-			SAMPLE_GENRE,
-			SAMPLE_USERID)
+			SAMPLEPOSTID,
+			SAMPLEURL,
+			SAMPLETITLE,
+			SAMPLEDESCRIPTION,
+			SAMPLEIMAGE,
+			SAMPLEUSECASE,
+			SAMPLEGENRE,
+			SAMPLEUSERID)
 		posts = append(posts, p)
 		return &postpb.SearchPostsByGenreResponse{Posts: posts}, nil
 	}

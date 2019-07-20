@@ -1,10 +1,12 @@
 package handler
 
 import (
-	"github.com/kskumgk63/clippo-go/front/template"
 	"fmt"
 	"log"
 	"net/http"
+	"unicode/utf8"
+
+	"github.com/kskumgk63/clippo-go/front/template"
 
 	"github.com/kskumgk63/clippo-go/user/userpb"
 
@@ -39,14 +41,20 @@ const (
 	TOKENCACHE = "token-cache"
 	// LOGINUSER ログインユーザーIdのキー
 	LOGINUSER = "login-user"
-
-	SAMPLEURL         = "http://loc alhost:8080/"
-	SAMPLETITLE       = "まだ投稿されていないようなので、記事をクリップしてみてください"
-	SAMPLEDESCRIPTION = "250文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
-	SAMPLEIMAGE       = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
-	SAMPLEUSECASE     = "エラー解決"
-	SAMPLEGENRE       = "プログラミング言語"
-	SAMPLEID          = "0000"
+	// SAMPLEURL サンプルのURL
+	SAMPLEURL = "http://localhost:8080/"
+	// SAMPLETITLE サンプルのタイトル
+	SAMPLETITLE = "機能を試してください！URLをタイプして「Clip」するだけです！"
+	// SAMPLEDESCRIPTION サンプルの詳細
+	SAMPLEDESCRIPTION = "150文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
+	// SAMPLEIMAGE サンプルの画像
+	SAMPLEIMAGE = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
+	// SAMPLEUSECASE サンプルのユースケース
+	SAMPLEUSECASE = "お試し"
+	// SAMPLEGENRE サンプルのジャンル
+	SAMPLEGENRE = "Clippo"
+	// SAMPLEID サンプルのID
+	SAMPLEID = 0000
 )
 
 // GenerateJWTToken JWT認証トークンを生成
@@ -106,12 +114,13 @@ func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 // TopBeforeLogin returns "/"
 func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
 	post := &database.Post{
-		URL:         SAMPLETITLE,
+		URL:         SAMPLEURL,
 		Title:       SAMPLETITLE,
 		Description: SAMPLEDESCRIPTION,
 		Image:       SAMPLEIMAGE,
 		Usecase:     SAMPLEUSECASE,
 		Genre:       SAMPLEGENRE,
+		UserID:      SAMPLEID,
 	}
 	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
 }
@@ -140,6 +149,11 @@ func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
 	image := r.FormValue("image")
 	usecase := r.FormValue("usecase")
 	genre := r.FormValue("genre")
+
+	// ディスクリプションが150文字より多かったらリダイレクト
+	if utf8.RuneCountInString(description) > 150 {
+		http.Redirect(w, r, "/test", http.StatusFound)
+	}
 
 	post := &database.Post{
 		URL:         url,
@@ -340,11 +354,6 @@ func (s *FrontServer) UserRegisterDo(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/login", http.StatusFound)
 }
 
-// PostRegister returns "/post/register/init"
-func (s *FrontServer) PostRegister(w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "post/postRegisterForm.tmpl", nil)
-}
-
 // PostRegisterConfirm returns "/post/register/confirm"
 func (s *FrontServer) PostRegisterConfirm(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -369,6 +378,11 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	image := r.FormValue("image")
 	usecase := r.FormValue("usecase")
 	genre := r.FormValue("genre")
+
+	// ディスクリプションが150文字より多かったらリダイレクト
+	if utf8.RuneCountInString(description) > 150 {
+		http.Redirect(w, r, "/post/register/confirm", http.StatusFound)
+	}
 
 	// キャッシュされているログインユーザーのIdを取得
 	reqCache := &cachepb.GetIDRequest{

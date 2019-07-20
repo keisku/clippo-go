@@ -108,7 +108,7 @@ func (*cacheServer) DeleteID(ctx context.Context, req *cachepb.DeleteIDRequest) 
 }
 
 func main() {
-	fmt.Println("***** SERVER RUNNING *****")
+	fmt.Println("***** CACHE SERVER RUNNING *****")
 
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {

@@ -4,17 +4,33 @@ p {
     line-height: 2;
     margin: 0;
 }
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: gray;
+    font-size: 12px;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: gray;
+    font-size: 12px;
+}
+::placeholder{ /* Others */
+    color: gray;
+    font-size: 12px;
+}
 
+.headerClippo {
+    margin:0;
+}
 .headerCover {
-    padding: 15px 0px;
+    padding: 5px 0px;
     margin: 0;
-    background: -webkit-linear-gradient(top, #77d5ff, #e4f6ff);
-    background: linear-gradient(to bottom, #77d5ff, #e4f6ff);
+    background-color: #fff;
+    border-bottom: 2px solid #afd8ff;
 }
 .headerDesign {
     position: fixed;
     width: 100%;
     top: 0;
+    z-index: 999;
 }
 .headerLinks {
     display: flex;
@@ -29,8 +45,7 @@ p {
 }
 
 .headerLinks a {
-    -webkit-text-stroke: 0.5px #c8e7ff;
-    color: white;
+    color: #afd8ff;
     font-weight: bold;
 }
 
@@ -45,35 +60,59 @@ p {
     border: 2px solid;
 }
 
+.signUpButton {
+    border: 1px solid;
+}
+
 .headerInnerLinks {
     display: flex;
 }
 
 .footerCover {
     margin-top: 100px;
-    background: -webkit-linear-gradient(top, #e4f6ff,#77d5ff);
-    background: linear-gradient(to bottom, #e4f6ff,#77d5ff);
+    background-color: #afd8ff;
     text-align: center;
-    height: 100px;
+    height: 70px;
 }
 
 .footerCover h5 {
     -webkit-text-stroke: 0.5px #c8e7ff;
-    line-height: 100px;
+    line-height: 70px;
     color: white;
 }
 .contentCover {
-    padding-top: 125px;
+    padding-top: 75px;
 }
 .content {
     margin: 50px 0px;
 }
 
+.sectionTitle {
+    display: inline-block;
+    padding: 15px;
+}
+
+.sectionUnderline {
+    margin-bottom: 50px!important;
+    border-bottom: 3px solid #FAFAFA;
+}
+
 .clipButton {
     font-weight: 100;
-    border: 1px solid;
-    color: dodgerblue;
-    background-color: aliceblue;
+    color: #afd8ff;
+    border: 2px solid;
+    border-radius: 5px;
+    padding: 3px;
+    font-size: 14px;
+    width: 100px;
+    outline: none;
+}
+
+.postRegisterConfirmImage {
+    margin-left: 20px;
+}
+.postRegisterConfirmImage img {
+    border: 1px solid #FAFAFA;
     border-radius: 5px;
 }
 
@@ -105,12 +144,14 @@ p {
 }
 
 .clipWrapper {
-    width: 500px;
+    width: 450px;
     margin: 15px;
+    border: 1px solid #f4faff;
 }
 .clipImage {
     object-fit: cover;
     border: 2px solid #FAFAFA;
+    border-radius: 10px;
 }
 
 .clipCategory {
@@ -130,11 +171,22 @@ p {
 }
 
 .clipDescription {
-    font-size: 12px;
+    font-size: 10px;
     margin: 0;
     border: 1px solid#F2F2F2;
     padding: 10px;
-    height: 170px;
+    height: 90px;
+}
+.linkToOtherPage {
+    padding: 2px;
+    border: 0px;
+    border-radius: 10px;
+    color: #A9E2F3;
+    font-size: 8px;
+    word-break: break-all;
+}
+.linkToOtherPage:hover {
+    color: #00BFFF;
 }
 .deleteButton {
     margin-top: 5px;
@@ -144,6 +196,91 @@ p {
     color: white;
     font-size: 12px;
     padding: 1px 3px;
+}
+
+.clippoInputConfirm {
+    font-size: 14px;
+    margin-left: 15px;
+    width: 75%;
+    border: 0px;
+    border-bottom: 2px solid aliceblue;
+    padding: 5px;
+    outline: none;
+}
+
+.clippoTextareaConfirm {
+    font-size: 14px;
+    width: 75%;
+    height: 100px;
+    border: 2px solid aliceblue;
+    padding: 10px;
+    outline: none;
+}
+
+.clippoInput {
+    width: 350px;
+    border: 0px;
+    border-bottom: 2px solid aliceblue;
+    padding: 5px;
+    outline: none;
+}
+
+.clippoText {
+    width: 80px;
+    text-align: center;
+    margin: 5px 0px;
+    padding: 3px;
+    border: 1px solid lightskyblue;
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 10px;
+    color: lightskyblue;
+    margin-bottom: 10px;
+}
+
+.clippoCover {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+
+.searchList {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin-bottom: 10px;
+    width: 80%;
+}
+
+.searchList form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.searchList li input {
+    text-align: center;
+    width: 100px;
+    color: gray;
+    font-size: 12px;
+    border: none;
+    border-bottom: 2px solid aliceblue;
+    padding: 5px;
+    margin: 0px  5px 10px 5px;
+    outline: none;
+}
+
+.searchList li input:hover {
+    text-align: center;
+    width: 100px;
+    color: darkslategray;
+    font-size: 12px;
+    border: none;
+    border-bottom: 2px solid lightskyblue;
+    padding: 5px;
+    margin: 0px  5px 10px 5px;
+    outline: none;
 }
 
 /*************************************
@@ -265,7 +402,7 @@ form {
 }
 
 .button-panel .button {
-    background: #2196F3;
+    background: lightskyblue;
     border: 2px solid #FAFAFA;
     border-radius: 10px;
     color:white;

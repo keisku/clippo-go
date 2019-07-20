@@ -10,7 +10,7 @@ import (
 	"github.com/kskumgk63/clippo-go/user/userpb"
 
 	"github.com/gorilla/mux"
-	"github.com/kskumgk63/clippo-go/database"
+	// "github.com/kskumgk63/clippo-go/database"
 	"github.com/kskumgk63/clippo-go/front/handler"
 	"google.golang.org/grpc"
 )
@@ -26,9 +26,9 @@ func getGRPCConnection(port string) *grpc.ClientConn {
 
 func main() {
 	// テーブル作成
-	db := database.GormConnect()
-	database.CreateTable(db)
-	defer db.Close()
+	// db := database.GormConnect()
+	// database.CreateTable(db)
+	// defer db.Close()
 
 	fmt.Println("***** SERVER RUNNING *****")
 
@@ -56,7 +56,6 @@ func main() {
 	r.Path("/user/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.UserRegisterConfirm)
 	r.Path("/user/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.UserRegisterDo)
 
-	r.Path("/post/register/init").Methods(http.MethodGet).HandlerFunc(frontSrv.AuthToken(frontSrv.PostRegister))
 	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostRegisterConfirm))
 	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDo))
 	r.Path("/post/delete").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDelete))
@@ -69,7 +68,8 @@ func main() {
 		.clippo-go/front/
 		上記パスで実行されることを前提とする。
 	*/
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	r.PathPrefix("/static/css/").Handler(http.StripPrefix("/static/css/", http.FileServer(http.Dir("static/css"))))
+	r.PathPrefix("/static/js/").Handler(http.StripPrefix("/static/js/", http.FileServer(http.Dir("static/js"))))
 
 	err := http.ListenAndServe(":8080", r)
 	if err != nil {

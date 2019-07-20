@@ -1,13 +1,15 @@
 {{define "header"}}
 <header class="headerDesign shadow-sm">
-    <ul class="headerCover">
-        <li class="headerLinks">
-            <h1><a class="nav-link" href="/">Clippo</a></h1>
+    <div class="headerCover">
+        <div class="headerLinks">
+            <div>
+                <p class="headerClippo"><a href="/top">Clippo</a></p>
+            </div>
             <div class="headerInnerLinks">
-                <a class="btn headerButton" style="background-color:dodgerblue;" href="/user/register/init">SignUp</a>
+                <a class="btn headerButton signUpButton" href="/user/register/init">SignUp</a>
                 <a class="btn headerButton" href="/login">Login</a>
             </div>
-        </li>
-    </ul>
+        </div>
+    </div>
 </header>
 {{end}}

@@ -1,87 +1,46 @@
 {{ define "content" }}
-<div class="content">
+<div class="clippoCover sectionUnderline">
+    <h5 class="sectionTitle">マイリスト</h5>
     <form method="POST" action="/post/register/confirm">
-        <div class="d-flex">
-            <div class="cp_iptxt">
-                <input class="ef" name="url" type="text" required >
-                <label>クリップしたい記事のURLをタイプ！</label>
-                <span class="focus_line"></span>
-            </div>
-            <div>
-                <input class="clipButton" style="margin-left:25px;width:120px;" type="submit" value="クリップ">
-            </div>
-        </div>
+        <input class="clippoInput" name="url" type="text" placeholder="クリップしたい記事のURLをタイプ！" required />
+        <input class="clipButton" type="submit" value="Clip">
     </form>
 </div>
-<div>
-    <h5>マイリスト</h5>
-</div>
-<div class="content">
+<div class="clippoCover pl-5 pr-5">
+    <p class="clippoText">タイトル検索</p>
     <form method="POST" action="/post/search/title">
-        <div class="d-flex">
-            <div class="cp_iptxt">
-                <input class="ef" name="title" type="text" required >
-                <label>タイトル検索</label>
-                <span class="focus_line"></span>
-            </div>
-            <div>
-                <input class="clipButton" style="margin-left:25px;width:120px;" type="submit" value="検索">
-            </div>
-        </div>
+        <input class="clippoInput" name="title" type="text" placeholder="タイトルで検索" required />
+        <input class="clipButton" type="submit" value="検索">
     </form>
 </div>
-<div>
-    <div class="mb-2">
-        <form method="POST" action="/post/search/usecase">
-            <div class="d-flex">
-                <div class="narrowDownCover">
-                    <p>記事の目的</p>
-                </div>
-                <div class="d-flex">
-                    <div class="narrowDownCover2">
-                        <select name="usecase">
-                            <option value="おもしろい">おもしろい</option>
-                            <option value="エラー解決">エラー解決</option>
-                            <option value="知識">知識</option>
-                            <option value="リファレンス">リファレンス</option>
-                            <option value="チュートリアル">チュートリアル</option>
-                            <option value="その他">その他</option>
-                        </select>
-                    </div>
-                    <div class="narrowDownCover">
-                        <input class="narrowDown" type="submit" value="絞り込む">
-                    </div>
-                </div>
-            </div>
+<div class="clippoCover pl-5 pr-5">
+    <p class="clippoText">記事の目的</p>
+    <ul class="searchList">
+        <form>
+            <li><input name="usecase" type="submit" value="おもしろい" formmethod="post" formaction="/post/search/usecase" /></li>
+            <li><input name="usecase" type="submit" value="エラー解決" formmethod="post" formaction="/post/search/usecase" /></li>
+            <li><input name="usecase" type="submit" value="知識" formmethod="post" formaction="/post/search/usecase" /></li>
+            <li><input name="usecase" type="submit" value="リファレンス" formmethod="post" formaction="/post/search/usecase" /></li>
+            <li><input name="usecase" type="submit" value="チュートリアル" formmethod="post" formaction="/post/search/usecase" /></li>
+            <li><input name="usecase" type="submit" value="その他" formmethod="post" formaction="/post/search/usecase" /></li>
         </form>
-    </div>
-    <div>
-        <form method="POST" action="/post/search/genre">
-            <div class="d-flex">
-                <div class="narrowDownCover">
-                    <p>ジャンル</p>
-                </div>
-                <div class="d-flex">
-                    <div class="narrowDownCover2">
-                        <select name="genre">
-                            <option value="プログラミング言語">プログラミング言語</option>
-                            <option value="フレームワーク">フレームワーク</option>
-                            <option value="ライブラリ">ライブラリ</option>
-                            <option value="OS">OS</option>
-                            <option value="SQL">SQL</option>
-                            <option value="クラウド">クラウド</option>
-                            <option value="コンテナ技術">コンテナ技術</option>
-                            <option value="デザイン">デザイン</option>
-                            <option value="その他">その他</option>
-                        </select>
-                    </div>
-                    <div class="narrowDownCover">
-                        <input class="narrowDown" type="submit" value="絞り込む">
-                    </div>
-                </div>
-            </div>
+    </ul>
+</div>
+<div class="clippoCover pl-5 pr-5">
+    <p class="clippoText">ジャンル</p>
+    <ul class="searchList">
+        <form>
+            <li><input name="genre" type="submit" value="プログラミング言語" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="フレームワーク" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="ライブラリ" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="OS" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="SQL" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="クラウド" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="コンテナ技術" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="デザイン" formmethod="post" formaction="/post/search/genre" /></li>
+            <li><input name="genre" type="submit" value="その他" formmethod="post" formaction="/post/search/genre" /></li>
         </form>
-    </div>
+    </ul>
 </div>
 <div class="clipWrapperBig">
     {{ range . }}
@@ -89,10 +48,10 @@
             <div class="shadow-sm p-2">
                 <div class="d-flex">
                     <div class="text-center">
-                        <img src="{{ .Image }}" width="100px" height="100px" class="clipImage">
+                        <img src="{{ .Image }}" width="75px" height="75px" class="clipImage">
                     </div>
                     <div style="padding:0px 10px">
-                        <a href="{{ .Url }}" style="font-size:8px;word-break: break-all;">{{ .Url }}</a>
+                    	<input type="button" class="linkToOtherPage" value="{{ .Url }}" onClick="window.open('{{ .Url }}');">
                         <p class="clipTitle">{{ .Title }}</p>
                     </div>
                 </div>

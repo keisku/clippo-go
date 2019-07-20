@@ -1,5 +1,5 @@
 {{ define "content" }}
-<div class="clippoCover sectionUnderline">
+<div class="clippoCover sectionUnderline justify-content-center">
     <h5 class="sectionTitle">マイリスト</h5>
     <form method="POST" action="/post/register/confirm">
         <input class="clippoInput" name="url" type="text" placeholder="クリップしたい記事のURLをタイプ！" required />
@@ -8,7 +8,7 @@
 </div>
 <div class="clippoCover pl-5 pr-5">
     <p class="clippoText">タイトル検索</p>
-    <form method="POST" action="/post/search/title">
+    <form method="POST" action="/post/search/title" id="titleSearchForm">
         <input class="clippoInput" name="title" type="text" placeholder="タイトルで検索" required />
         <input class="clipButton" type="submit" value="検索">
     </form>

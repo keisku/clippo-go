@@ -1,25 +1,25 @@
 {{ define "content" }}
 <form method="POST" action="/test/do">
-    <div class="form-group">
-        <label>タイトル</label><br>
-        <input class="form-control" type="text" name="title" value="{{.Title}}" required />
+    <div class="clippoCover">
+        <p class="clippoText mr-3">タイトル</p>
+        <input class="clippoInputConfirm" type="text" name="title" value="{{.Title}}" required />
     </div>
-    <div class="form-group">
-        <label>URL</label><br>
-        <span><a href="{{.Url}}">{{.Url}}</a></span>
-        <input class="form-control" type="hidden" name="url" value="{{.Url}}" required />
+    <div class="clippoCover">
+        <p class="clippoText mr-3">URL</p>
+        <input class="linkToOtherPage" type="button" class="linkToOtherPage" value="{{ .Url }}" onClick="window.open('{{ .Url }}');">
+        <input type="hidden" name="url" value="{{.Url}}" required />
     </div>
-    <div class="form-group">
-        <label>イメージ画像</label><br>
-        <input class="form-control" type="hidden" name="image" value="{{.Image}}" required />
-        <div>
-            <img src="{{.Image}}" width="200px" height="200px">
+    <div class="clippoCover">
+        <p class="clippoText mr-3">イメージ画像</p>
+        <input class="linkToOtherPage" type="button" class="linkToOtherPage" value="{{ .Image }}" onClick="window.open('{{ .Image }}');">
+        <input type="hidden" name="image" value="{{.Image}}" required />
+        <div class="postRegisterConfirmImage">
+            <img src="{{.Image}}" width="75px" height="75px">
         </div>
-        <span><a href="{{.Image}}">{{.Image}}</a></span>
     </div>
-    <div class="form-group">
+    <div class="clippoCover">
         <div class="dropdown dropright">
-            <label>記事の目的</label>
+            <p class="clippoText mr-3">記事の目的</p>
             <select name="usecase">
                 <option value="おもしろい">おもしろい</option>
                 <option value="エラー解決">エラー解決</option>
@@ -30,8 +30,8 @@
             </select>
         </div>
     </div>
-    <div class="form-group">
-        <label>ジャンル</label>
+    <div class="clippoCover">
+        <p class="clippoText mr-3">ジャンル</p>
         <select name="genre">
             <option value="プログラミング言語">プログラミング言語</option>
             <option value="フレームワーク">フレームワーク</option>
@@ -44,11 +44,11 @@
             <option value="その他">その他</option>
         </select>
     </div>
-    <div class="form-group">
-        <label>記事の要約</label><br>
-        <textarea class="form-control" type="text" name="description" value="{{.Description}}" required></textarea>
+    <div class="clippoCover">
+        <p class="clippoText mr-3">記事の要約</p>
+        <textarea class="clippoTextareaConfirm" type="text" maxlength="150" name="description" placeholder="150文字以内でクリップしたい記事の要約を書いてください" required>{{.Description}}</textarea>
     </div>
-    <div>
+    <div class="text-center mt-5">
         <input class="clipButton" type="submit" value="投稿する">
     </div>
 </form>

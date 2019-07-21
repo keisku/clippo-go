@@ -10,17 +10,6 @@ import (
 
 // GormConnect mysqlとの接続
 func GormConnect() *gorm.DB {
-	// DBMS := os.Getenv("DBMS")
-	// USER := "root"
-	// PASS := os.Getenv("PASS")
-	// PROTOCOL := os.Getenv("PROTOCOL")
-	// DBNAME := os.Getenv("DBNAME")
-
-	// DBMS := "mysql"
-	// USER := "root"
-	// PASS := "Root0000"
-	// PROTOCOL := "clippo-rds.cpciso94q1yy.ap-northeast-1.rds.amazonaws.com"
-	// DBNAME := "clippo"
 	DBMS := "mysql"
 	USER := "root"
 	PASS := "ao6415012"

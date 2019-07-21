@@ -140,7 +140,7 @@ p {
 .clipWrapperBig {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .clipWrapper {
@@ -159,23 +159,23 @@ p {
     border-radius: 10px;
     color: lightskyblue;
     padding: 5px;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .clipTitle {
     font-weight: bold;
     line-height: 1.5;
     margin: 0;
-    font-size: 12px;
+    font-size: 14px;
     border-bottom: 1px solid gray;
 }
 
 .clipDescription {
-    font-size: 10px;
+    font-size: 12px;
     margin: 0;
     border: 1px solid#F2F2F2;
     padding: 10px;
-    height: 90px;
+    height: 150px;
 }
 .linkToOtherPage {
     padding: 2px;
@@ -226,14 +226,14 @@ p {
 }
 
 .clippoText {
-    width: 80px;
+    width: 100px;
     text-align: center;
     margin: 5px 0px;
     padding: 3px;
     border: 1px solid lightskyblue;
     border-radius: 10px;
     display: inline-block;
-    font-size: 10px;
+    font-size: 12px;
     color: lightskyblue;
     margin-bottom: 10px;
 }

@@ -110,7 +110,7 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 	user := resUser.User
 
 	// パスワードの正誤判断
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))

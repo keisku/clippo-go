@@ -23,7 +23,7 @@
                         <span class="clipCategory">{{ .Genre }}</span>
                     </div>
                     <p class="clipDescription">{{ .Description }}</p>
-                    <form method="POST" action="/post/delete" style="text-align: right;padding:0!important">
+                    <form method="POST" action="/test/delete" style="text-align: right;padding:0!important">
                         <input type="hidden" name="post_id" value="{{ .ID }}">
                         <input type="submit" class="deleteButton" value="Delete">
                     </form>

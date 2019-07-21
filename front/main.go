@@ -45,6 +45,7 @@ func main() {
 	r.Path("/").Methods(http.MethodGet).HandlerFunc(frontSrv.TopBeforeLogin)
 	r.Path("/test").Methods(http.MethodPost).HandlerFunc(frontSrv.Test)
 	r.Path("/test/do").Methods(http.MethodPost).HandlerFunc(frontSrv.TestDo)
+	r.Path("/test/delete").Methods(http.MethodPost).HandlerFunc(frontSrv.TopBeforeLogin)
 	r.Path("/login").Methods(http.MethodGet).HandlerFunc(frontSrv.Login)
 	r.Path("/logout").Methods(http.MethodGet).HandlerFunc(frontSrv.Logout)
 	r.Path("/login/success").Methods(http.MethodPost).HandlerFunc(frontSrv.LoginSuccess)

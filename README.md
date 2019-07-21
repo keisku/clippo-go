@@ -31,8 +31,8 @@
 # ブランチに関して補足
 
 - master
-    ブランチではECSでのデプロイを意識した構成です。
-- Local
+    ブランチではECSでのデプロイした構成です。
+- local
     デモ用にローカル環境でWebアプリケーションが作動する構成です。
 
 # デモGIF（ローカル環境での動作をキャプチャ）
@@ -42,19 +42,19 @@
 使用している技術
 - JWT認証
 
-![ユーザー登録〜ログイン](https://github.com/kskumgk63/clippo-go/blob/Local/GIF/clippo-signup-login.gif)
+![ユーザー登録〜ログイン](https://github.com/kskumgk63/clippo-go/blob/local/GIF/signup-login-top.gif)
 
 ## Webページのクリップ
 
 使用している技術
 - Webスクレイピング
 
-![Webページのクリップ](https://github.com/kskumgk63/clippo-go/blob/Local/GIF/clippo-clip.gif)
+![Webページのクリップ](https://github.com/kskumgk63/clippo-go/blob/local/GIF/clip.gif)
 
 ## クリップした記事のタイトル検索
 
-![タイトル検索](https://github.com/kskumgk63/clippo-go/blob/Local/GIF/clippo-search.gif)
+![タイトル検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/searchTitle.gif)
 
 ## クリップした記事のタグ検索
 
-![タグ検索](https://github.com/kskumgk63/clippo-go/blob/Local/GIF/clippo-search-tag.gif)
+![タグ検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/search.gif)

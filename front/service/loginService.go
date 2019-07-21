@@ -103,7 +103,10 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 	reqUser := &userpb.GetUserRequest{
 		Email: email,
 	}
-	resUser, _ := s.UserClient.GetUser(r.Context(), reqUser)
+	resUser, err := s.UserClient.GetUser(r.Context(), reqUser)
+	if err != nil {
+		log.Println(err)
+	}
 	user := resUser.User
 
 	// パスワードの正誤判断

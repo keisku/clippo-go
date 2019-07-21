@@ -213,15 +213,21 @@ func (*PostServer) GetPostDetail(ctx context.Context, req *postpb.PostURLRequest
 	url := req.GetUrl()
 
 	g := goose.New()
-	article, _ := g.ExtractFromURL(url)
+	article, err := g.ExtractFromURL(url)
+	if err != nil {
+		return &postpb.PostResponse{
+			Url:         "",
+			Title:       "",
+			Description: "",
+			Image:       "",
+		}, err
+	}
 
 	// gRPCレスポンスの作成
-	res := &postpb.PostResponse{
+	return &postpb.PostResponse{
 		Url:         url,
 		Title:       article.Title,
 		Description: article.MetaDescription,
 		Image:       article.TopImage,
-	}
-
-	return res, nil
+	}, nil
 }

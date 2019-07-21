@@ -21,7 +21,9 @@ func (s *FrontServer) PostRegisterConfirm(w http.ResponseWriter, r *http.Request
 	}
 	res, err := s.PostClient.GetPostDetail(r.Context(), req)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		http.Redirect(w, r, "/top", http.StatusFound)
+		return
 	}
 	template.Render(w, "post/postRegisterConfirmForm.tmpl", res)
 }
@@ -38,7 +40,9 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 
 	// ディスクリプションが150文字より多かったらリダイレクト
 	if utf8.RuneCountInString(description) > 150 {
-		http.Redirect(w, r, "/post/register/confirm", http.StatusFound)
+		log.Printf("descriotion is too long | n = %v\n", utf8.RuneCountInString(description))
+		http.Redirect(w, r, "/top", http.StatusFound)
+		return
 	}
 
 	// キャッシュされているログインユーザーのIdを取得

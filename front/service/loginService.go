@@ -53,6 +53,7 @@ func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 			log.SetFlags(log.Lshortfile)
 			log.Printf("*** %v\n", "JWT Token is empty.")
 			http.Redirect(w, r, "/login", http.StatusFound)
+			return
 		}
 		bearerToken := res.Token
 		token, err := jwt.Parse(bearerToken, func(token *jwt.Token) (interface{}, error) {

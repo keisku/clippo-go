@@ -5,12 +5,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kskumgk63/clippo-go/cache/cachepb"
-	"github.com/kskumgk63/clippo-go/post/postpb"
-	"github.com/kskumgk63/clippo-go/user/userpb"
+	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
+	"github.com/kskumgk63/clippo-go/front/proto/postpb"
+	"github.com/kskumgk63/clippo-go/front/proto/userpb"
 
 	"github.com/gorilla/mux"
-	// "github.com/kskumgk63/clippo-go/repository"
+	"github.com/kskumgk63/clippo-go/front/repository"
 	"github.com/kskumgk63/clippo-go/front/service"
 	"google.golang.org/grpc"
 )
@@ -26,7 +26,7 @@ func getGRPCConnection(port string) *grpc.ClientConn {
 
 func main() {
 	// テーブル作成
-	// repository.CreateTable()
+	repository.CreateTable()
 
 	fmt.Println("***** SERVER RUNNING *****")
 

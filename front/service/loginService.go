@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/kskumgk63/clippo-go/cache/cachepb"
+	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
 	"github.com/kskumgk63/clippo-go/front/template"
-	"github.com/kskumgk63/clippo-go/post/postpb"
-	"github.com/kskumgk63/clippo-go/user/userpb"
+	"github.com/kskumgk63/clippo-go/front/proto/postpb"
+	"github.com/kskumgk63/clippo-go/front/proto/userpb"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -7,7 +7,7 @@ import (
 
 	"github.com/kskumgk63/clippo-go/front/entity"
 	"github.com/kskumgk63/clippo-go/front/template"
-	"github.com/kskumgk63/clippo-go/user/userpb"
+	"github.com/kskumgk63/clippo-go/front/proto/userpb"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"unicode/utf8"
 
-	"github.com/kskumgk63/clippo-go/cache/cachepb"
+	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
 	"github.com/kskumgk63/clippo-go/front/template"
-	"github.com/kskumgk63/clippo-go/post/postpb"
+	"github.com/kskumgk63/clippo-go/front/proto/postpb"
 )
 
 // PostRegisterConfirm returns "/post/register/confirm"

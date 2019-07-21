@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/kskumgk63/clippo-go/cache/cachepb"
-	"github.com/kskumgk63/clippo-go/post/postpb"
-	"github.com/kskumgk63/clippo-go/user/userpb"
+	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
+	"github.com/kskumgk63/clippo-go/front/proto/postpb"
+	"github.com/kskumgk63/clippo-go/front/proto/userpb"
 )
 
 // FrontServer クライアントスタブを作成

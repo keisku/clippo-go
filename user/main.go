@@ -48,6 +48,24 @@ func (*userServer) GetUser(ctx context.Context, req *userpb.GetUserRequest) (*us
 		}}, nil
 }
 
+func (*userServer) IsUserByEmailExisted(ctx context.Context, req *userpb.IsUserByEmailExistedRequest) (*userpb.IsUserByEmailExistedResponse, error) {
+	var dbUser database.User
+	email := req.GetEmail()
+	// MySQLからユーザーの取得
+	db := database.GormConnect()
+	defer db.Close()
+	err := db.Find(&dbUser, "email=?", email).Error
+	if err != nil {
+		log.Println(err)
+		return &userpb.IsUserByEmailExistedResponse{
+			Flag: false,
+		}, nil
+	}
+	return &userpb.IsUserByEmailExistedResponse{
+		Flag: true,
+	}, nil
+}
+
 func main() {
 	fmt.Println("***** USER SERVER RUNNING *****")
 

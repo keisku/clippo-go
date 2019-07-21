@@ -31,7 +31,15 @@ message GetUserResponse {
     string id = 2;
 }
 
+message IsUserByEmailExistedRequest {
+    string email = 1;
+}
+message IsUserByEmailExistedResponse {
+    bool flag = 1;
+}
+
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {};
     rpc GetUser(GetUserRequest) returns (GetUserResponse) {};
+    rpc IsUserByEmailExisted(IsUserByEmailExistedRequest) returns (IsUserByEmailExistedResponse) {};
 }

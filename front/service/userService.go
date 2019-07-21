@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/kskumgk63/clippo-go/front/entity"
-	"github.com/kskumgk63/clippo-go/front/repository"
 	"github.com/kskumgk63/clippo-go/front/template"
 	"github.com/kskumgk63/clippo-go/user/userpb"
 	"golang.org/x/crypto/bcrypt"
@@ -19,20 +18,13 @@ func (s *FrontServer) UserRegister(w http.ResponseWriter, r *http.Request) {
 
 // UserRegisterConfirm returns "user/register/confirm"
 func (s *FrontServer) UserRegisterConfirm(w http.ResponseWriter, r *http.Request) {
-	var user entity.User
-
 	// フォームから取得した値
 	r.ParseForm()
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	confirmPassword := r.FormValue("confirmPassword")
 
-	// 入力されたEメールがすでに存在しているかエラーハンドリング
-	if !(repository.IsUserByEmailExisted(user, email)) {
-		log.Println("This email is already registered")
-		http.Redirect(w, r, "/login", http.StatusFound)
-		return
-	}
+	// 入力された値が空ならリダイレクト
 	if email == "" {
 		http.Redirect(w, r, "/user/register/init", http.StatusFound)
 		return
@@ -46,6 +38,16 @@ func (s *FrontServer) UserRegisterConfirm(w http.ResponseWriter, r *http.Request
 			Email:    email,
 			Password: "",
 		})
+		return
+	}
+
+	// 入力されたEメールがすでに存在しているかエラーハンドリング
+	req := &userpb.IsUserByEmailExistedRequest{
+		Email: email,
+	}
+	res, _ := s.UserClient.IsUserByEmailExisted(r.Context(), req)
+	if res.Flag {
+		http.Redirect(w, r, "/user/register/init", http.StatusFound)
 		return
 	}
 

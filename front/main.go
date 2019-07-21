@@ -10,8 +10,8 @@ import (
 	"github.com/kskumgk63/clippo-go/user/userpb"
 
 	"github.com/gorilla/mux"
-	// "github.com/kskumgk63/clippo-go/database"
-	"github.com/kskumgk63/clippo-go/front/handler"
+	// "github.com/kskumgk63/clippo-go/repository"
+	"github.com/kskumgk63/clippo-go/front/service"
 	"google.golang.org/grpc"
 )
 
@@ -26,9 +26,7 @@ func getGRPCConnection(port string) *grpc.ClientConn {
 
 func main() {
 	// テーブル作成
-	// db := database.GormConnect()
-	// database.CreateTable(db)
-	// defer db.Close()
+	// repository.CreateTable()
 
 	fmt.Println("***** SERVER RUNNING *****")
 
@@ -38,7 +36,7 @@ func main() {
 	postClient := postpb.NewPostServiceClient(getGRPCConnection(":50052"))
 	userClient := userpb.NewUserServiceClient(getGRPCConnection(":50053"))
 
-	frontSrv := &handler.FrontServer{
+	frontSrv := &service.FrontServer{
 		PostClient:  postClient,
 		CacheClient: cacheClient,
 		UserClient:  userClient,

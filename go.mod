@@ -15,7 +15,7 @@ require (
 	github.com/jinzhu/gorm v1.9.10
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/olekukonko/tablewriter v0.0.1 // indirect
-	github.com/pmylund/go-cache v2.1.0+incompatible // indirect
+	github.com/pmylund/go-cache v2.1.0+incompatible
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
 	google.golang.org/grpc v1.22.0

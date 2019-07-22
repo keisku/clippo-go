@@ -1,8 +1,9 @@
-# プロダクト "clippo"
+# プロダクト名 "clippo"
 
 #### 「検索したページをメモと一緒に残しておきたい」
 
 エラー解決や学習のために読んだWebページをページ内容の要約と共に保存しておけるエンジニアのためのサービスです。
+「Pocket」「はてなブックマーク」を意識したサービスです。
 
 # アーキテクチャ
 #### entity
@@ -50,7 +51,7 @@ Protocol Buffersの定義
 
 # デモGIF（ローカル環境での動作をキャプチャ）
 
-## ユーザー登録〜ログイン（フルスクラッチで開発）
+### ユーザー登録〜ログイン（フルスクラッチで開発）
 
 #### 使用している技術
 - JWT認証
@@ -72,7 +73,7 @@ Protocol Buffersの定義
 
 ![ユーザー登録〜ログイン](https://github.com/kskumgk63/clippo-go/blob/local/GIF/signup-login-top.gif)
 
-## Webページのクリップ
+### Webページのクリップ
 
 #### 使用している技術
 - Webスクレイピング
@@ -86,16 +87,16 @@ Protocol Buffersの定義
 
 ![Webページのクリップ](https://github.com/kskumgk63/clippo-go/blob/local/GIF/clip.gif)
 
-## クリップした記事のタイトル検索
+### クリップした記事のタイトル検索
 
 #### 処理の流れ
-- タイトルからクリップした記事を検索
+- ユーザーの入力したタイトルからクリップした記事を検索
 
 ![タイトル検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/searchTitle.gif)
 
-## クリップした記事のタグ検索
+### クリップした記事のタグ検索
 
 #### 処理の流れ
-- タグからクリップした記事を検索
+- クリックされたタグからクリップした記事を検索
 
 ![タグ検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/search.gif)

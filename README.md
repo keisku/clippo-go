@@ -33,14 +33,14 @@ Protocol Buffersの定義
 - JWT認証
 - Webスクレイピング
 
-# 使用予定の技術
+# インフラ構築
 
 - AWS
-  - ECS, ECR, RDS, CloudFormation
+  - ECS, ECR, RDS, ALB,  CloudFormation
 - Docker
 
-お見せするまでにサーバへアプリケーションをデプロイしたかったのですが、現状はローカル環境で動作するレベルです。
-今後、上記のインフラでデプロイを予定しております。
+現状、サービスはインターネット環境で動作していませんが、
+CloudFormationのスタックを実行することで、すぐにデプロイできます。
 
 # ブランチに関して補足
 

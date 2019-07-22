@@ -19,26 +19,34 @@ Parameters:
       r3.8xlarge, i2.xlarge, i2.2xlarge, i2.4xlarge, i2.8xlarge]
     ConstraintDescription: Please choose a valid instance type.
 Mappings:
+  # 2019_7/22 時点での最新 ECS-optimized AMI
   AWSRegionToAMI:
     us-east-1:
-      AMIID: ami-eca289fb
+      AMIID: ami-0fac5486e4cff37f4
     us-east-2:
-      AMIID: ami-446f3521
+      AMIID: ami-0dca97e7cde7be3d5
     us-west-1:
-      AMIID: ami-9fadf8ff
+      AMIID: ami-0c6e63b58aac1048e
     us-west-2:
-      AMIID: ami-7abc111a
+      AMIID: ami-0c6e63b58aac1048e
     eu-west-1:
-      AMIID: ami-a1491ad2
+      AMIID: ami-0ae254c8a2d3346a7
     eu-central-1:
-      AMIID: ami-54f5303b
-    # 2019_7/22 時点での最新 ECS-optimized AMI
+      AMIID: ami-0650e7d86452db33b
     ap-northeast-1:
       AMIID: ami-084d4626fec6f3ca3
     ap-southeast-1:
-      AMIID: ami-a900a3ca
+      AMIID: ami-05c6d22d98f97471c
     ap-southeast-2:
-      AMIID: ami-5781be34
+      AMIID: ami-039bb4c3a7946ce19
+
+# ------------------------------------------------------------#
+# スタック実行後にやること
+# - セキュリティグループのインバウンドルールでアプリケーションでリッスン予定のポートを開放する
+# - ターゲットグループ作成
+# - CFで作成したALBへリスナーを追加する
+# - ECSのサービスを作成する
+# ------------------------------------------------------------#
 
 Resources:
 # ------------------------------------------------------------#
@@ -87,11 +95,6 @@ Resources:
 # ------------------------------------------------------------#
 # ロードバランサー
 # - Auto Scaling グループ
-# ------------------------------------------------------------#
-# スタック実行後にやること
-# - ターゲットグループ作成
-# - CFで作成したALBへリスナーを追加する
-# - ECSのサービスを作成する
 # ------------------------------------------------------------#
   ECSALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer

@@ -32,8 +32,9 @@ Mappings:
       AMIID: ami-a1491ad2
     eu-central-1:
       AMIID: ami-54f5303b
+    # 2019_7/22 時点での最新 ECS-optimized AMI
     ap-northeast-1:
-      AMIID: ami-9cd57ffd
+      AMIID: ami-084d4626fec6f3ca3
     ap-southeast-1:
       AMIID: ami-a900a3ca
     ap-southeast-2:
@@ -82,6 +83,7 @@ Resources:
     Properties:
       LogGroupName: !Join ['-', [ECSLogGroup, !Ref 'AWS::StackName']]
       RetentionInDays: 14
+
 # ------------------------------------------------------------#
 # ロードバランサー
 # - Auto Scaling グループ
@@ -123,7 +125,7 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       # キーペア 環境によって変える必要あり
-      KeyName: ecs-test
+      KeyName: accessKey0721
       ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
       SecurityGroups: [!Ref 'EcsSecurityGroup']
       InstanceType: !Ref 'InstanceType'

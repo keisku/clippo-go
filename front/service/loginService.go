@@ -7,20 +7,10 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
-	"github.com/kskumgk63/clippo-go/front/template"
 	"github.com/kskumgk63/clippo-go/front/proto/postpb"
 	"github.com/kskumgk63/clippo-go/front/proto/userpb"
+	"github.com/kskumgk63/clippo-go/front/template"
 	"golang.org/x/crypto/bcrypt"
-)
-
-// JWT 認証用トークン
-type JWT struct {
-	Token string `json:"token"`
-}
-
-const (
-	// TOKENCACHE 認証トークンのキー
-	TOKENCACHE = "token-cache"
 )
 
 // GenerateJWTToken JWT認証トークンを生成

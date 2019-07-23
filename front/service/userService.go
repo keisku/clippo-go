@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/kskumgk63/clippo-go/front/entity"
-	"github.com/kskumgk63/clippo-go/front/template"
 	"github.com/kskumgk63/clippo-go/front/proto/userpb"
+	"github.com/kskumgk63/clippo-go/front/template"
 	"golang.org/x/crypto/bcrypt"
 )
 

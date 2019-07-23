@@ -7,8 +7,8 @@ import (
 	"unicode/utf8"
 
 	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
-	"github.com/kskumgk63/clippo-go/front/template"
 	"github.com/kskumgk63/clippo-go/front/proto/postpb"
+	"github.com/kskumgk63/clippo-go/front/template"
 )
 
 // PostRegisterConfirm returns "/post/register/confirm"

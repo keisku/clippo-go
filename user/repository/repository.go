@@ -2,19 +2,28 @@ package repository
 
 import (
 	"log"
+	"os"
 
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
+
 	// mysql
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 // GormConnect mysqlとの接続
 func GormConnect() *gorm.DB {
-	DBMS := "mysql"
-	USER := "root"
-	PASS := "Root0000"
-	PROTOCOL := "tcp(clippo-rds.cpciso94q1yy.ap-northeast-1.rds.amazonaws.com:3306)"
-	DBNAME := "clippo"
+	err := godotenv.Load()
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Fatalln(err)
+		return nil
+	}
+	DBMS := os.Getenv("DBMS")
+	USER := os.Getenv("USER")
+	PASS := os.Getenv("PASS")
+	PROTOCOL := os.Getenv("PROTOCOL")
+	DBNAME := os.Getenv("DBNAME")
 
 	CONNECT := USER + ":" + PASS + "@" + PROTOCOL + "/" + DBNAME + "?parseTime=true"
 	db, err := gorm.Open(DBMS, CONNECT)
@@ -23,6 +32,7 @@ func GormConnect() *gorm.DB {
 		log.Printf("CONNECT = %v\n", CONNECT)
 		log.SetFlags(log.Lshortfile)
 		log.Fatalln(err)
+		return nil
 	}
 	return db
 }

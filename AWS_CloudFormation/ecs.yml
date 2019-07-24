@@ -128,7 +128,7 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       # キーペア 環境によって変える必要あり
-      KeyName: accessKey0721
+      KeyName: accessKey0725
       ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
       SecurityGroups: [!Ref 'EcsSecurityGroup']
       InstanceType: !Ref 'InstanceType'

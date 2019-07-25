@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"log"
 	"strconv"
-	"time"
 
 	"github.com/kskumgk63/clippo-go/post/entity"
 	"github.com/kskumgk63/clippo-go/post/postpb"
@@ -30,8 +30,6 @@ func Create(req *postpb.CreatePostRequest) error {
 	if err != nil {
 		return err
 	}
-	db.Model(&post).Update("CreatedAt", time.Now().Add(9*time.Hour))
-	db.Model(&post).Update("UpdatedAt", time.Now().Add(9*time.Hour))
 
 	return nil
 }
@@ -60,10 +58,14 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []entity.Post {
 	defer db.Close()
 
 	// 投稿一覧取得
-	Posts := []entity.Post{}
-	db.Find(&Posts)
-	db.Where("user_id = ?", id).Find(&Posts)
-	return Posts
+	posts := []entity.Post{}
+	err := db.Where("user_id = ?", id).Find(&posts).Error
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Println(err)
+		return nil
+	}
+	return posts
 }
 
 // SearchByTitle 投稿のタイトル検索
@@ -76,9 +78,14 @@ func SearchByTitle(req *postpb.SearchPostsByTitleRequest) []entity.Post {
 	db := GormConnect()
 	defer db.Close()
 	// 投稿一覧取得
-	Posts := []entity.Post{}
-	db.Where("user_id = ? AND title LIKE ?", id, "%"+title+"%").Find(&Posts)
-	return Posts
+	posts := []entity.Post{}
+	err := db.Where("user_id = ? AND title LIKE ?", id, "%"+title+"%").Find(&posts).Error
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Println(err)
+		return nil
+	}
+	return posts
 }
 
 // SearchByUsecase 投稿のタイトル検索
@@ -91,9 +98,14 @@ func SearchByUsecase(req *postpb.SearchPostsByUsecaseRequest) []entity.Post {
 	db := GormConnect()
 	defer db.Close()
 	// 投稿一覧取得
-	Posts := []entity.Post{}
-	db.Where("user_id = ? AND usecase LIKE ?", id, "%"+usecase+"%").Find(&Posts)
-	return Posts
+	posts := []entity.Post{}
+	err := db.Where("user_id = ? AND usecase LIKE ?", id, "%"+usecase+"%").Find(&posts)
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Println(err)
+		return nil
+	}
+	return posts
 }
 
 // SearchByGenre 投稿のタイトル検索
@@ -106,7 +118,11 @@ func SearchByGenre(req *postpb.SearchPostsByGenreRequest) []entity.Post {
 	db := GormConnect()
 	defer db.Close()
 	// 投稿一覧取得
-	Posts := []entity.Post{}
-	db.Where("user_id = ? AND genre LIKE ?", id, "%"+genre+"%").Find(&Posts)
-	return Posts
+	posts := []entity.Post{}
+	err := db.Where("user_id = ? AND genre LIKE ?", id, "%"+genre+"%").Find(&posts).Error
+	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		return nil
+	}
+	return posts
 }

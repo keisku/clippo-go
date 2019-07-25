@@ -21,7 +21,7 @@ func GormConnect() *gorm.DB {
 		return nil
 	}
 	DBMS := os.Getenv("DBMS")
-	USER := os.Getenv("USER")
+	USER := os.Getenv("USERNAME")
 	PASS := os.Getenv("PASS")
 	PROTOCOL := os.Getenv("PROTOCOL")
 	DBNAME := os.Getenv("DBNAME")

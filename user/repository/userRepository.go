@@ -2,7 +2,6 @@ package repository
 
 import (
 	"log"
-	"time"
 
 	"github.com/kskumgk63/clippo-go/user/entity"
 	"github.com/kskumgk63/clippo-go/user/userpb"
@@ -23,8 +22,6 @@ func Create(req *userpb.CreateUserRequest) error {
 	if err != nil {
 		return err
 	}
-	db.Model(&user).Update("CreatedAt", time.Now().Add(9*time.Hour))
-	db.Model(&user).Update("UpdatedAt", time.Now().Add(9*time.Hour))
 
 	return nil
 }

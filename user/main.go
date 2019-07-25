@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/kskumgk63/clippo-go/user/repository"
 	"fmt"
 	"log"
 	"net"
@@ -13,7 +12,6 @@ import (
 )
 
 func main() {
-	log.Println(repository.GormConnect())
 	fmt.Println("***** USER SERVER RUNNING *****")
 
 	lis, err := net.Listen("tcp", ":50053")

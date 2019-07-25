@@ -59,7 +59,7 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []entity.Post {
 
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	err := db.Where("user_id = ?", id).Find(&posts).Error
+	err := db.Order("ID desc").Where("user_id = ?", id).Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
@@ -79,7 +79,7 @@ func SearchByTitle(req *postpb.SearchPostsByTitleRequest) []entity.Post {
 	defer db.Close()
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	err := db.Where("user_id = ? AND title LIKE ?", id, "%"+title+"%").Find(&posts).Error
+	err := db.Order("ID desc").Where("user_id = ? AND title LIKE ?", id, "%"+title+"%").Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
@@ -99,7 +99,7 @@ func SearchByUsecase(req *postpb.SearchPostsByUsecaseRequest) []entity.Post {
 	defer db.Close()
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	err := db.Where("user_id = ? AND usecase LIKE ?", id, "%"+usecase+"%").Find(&posts)
+	err := db.Order("ID desc").Where("user_id = ? AND usecase LIKE ?", id, "%"+usecase+"%").Find(&posts)
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
@@ -119,7 +119,7 @@ func SearchByGenre(req *postpb.SearchPostsByGenreRequest) []entity.Post {
 	defer db.Close()
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	err := db.Where("user_id = ? AND genre LIKE ?", id, "%"+genre+"%").Find(&posts).Error
+	err := db.Order("ID desc").Where("user_id = ? AND genre LIKE ?", id, "%"+genre+"%").Find(&posts).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		return nil

@@ -25,7 +25,7 @@ func GenerateJWTToken(user *userpb.User) (string, error) {
 	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
-		log.Printf("*** %v\n", fmt.Sprint(err))
+		log.Fatalln(err)
 	}
 
 	return tokenString, nil
@@ -96,7 +96,10 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 	}
 	resUser, err := s.UserClient.GetUser(r.Context(), reqUser)
 	if err != nil {
-		log.Println(err)
+		log.SetFlags(log.Lshortfile)
+		log.Printf("*** %v\n", fmt.Sprint(err))
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
 	}
 	user := resUser.User
 
@@ -122,6 +125,7 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 		Key:   TOKENCACHE,
 	}
 	res, _ := s.CacheClient.SetToken(r.Context(), reqToken)
+	log.Println("HERE")
 	log.Println(res.Message)
 
 	// ログインユーザーのIdをキャッシュに格納
@@ -138,7 +142,7 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 	}
 	resPost, err := s.PostClient.GetAllPostsByUserID(r.Context(), reqPost)
 	if err != nil {
-		log.Println(err)
+		log.Fatalln(err)
 	}
 
 	template.Render(w, "top/top.tmpl", resPost.Posts)

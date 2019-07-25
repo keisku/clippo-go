@@ -20,6 +20,8 @@ func Create(req *userpb.CreateUserRequest) error {
 	user.Password = password
 	err := db.Create(&user).Error
 	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Fatalln(err)
 		return err
 	}
 
@@ -33,8 +35,10 @@ func Get(req *userpb.GetUserRequest) (entity.User, error) {
 	// MySQLからユーザーの取得
 	db := GormConnect()
 	defer db.Close()
-	err := db.Find(&user, "email=?", email).Error
+	err := db.Where("email = ?", email).Find(&user).Error
 	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Println(err)
 		return user, err
 	}
 	return user, nil
@@ -47,8 +51,9 @@ func IsEmailExisted(req *userpb.IsUserByEmailExistedRequest) bool {
 	// MySQLからユーザーの取得
 	db := GormConnect()
 	defer db.Close()
-	err := db.Find(&user, "email=?", email).Error
+	err := db.Where("email = ?", email).Find(&user).Error
 	if err != nil {
+		log.SetFlags(log.Lshortfile)
 		log.Println(err)
 		return false
 	}

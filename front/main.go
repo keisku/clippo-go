@@ -10,7 +10,7 @@ import (
 	"github.com/kskumgk63/clippo-go/front/proto/userpb"
 
 	"github.com/gorilla/mux"
-	"github.com/kskumgk63/clippo-go/front/repository"
+	// "github.com/kskumgk63/clippo-go/front/repository"
 	"github.com/kskumgk63/clippo-go/front/service"
 	"google.golang.org/grpc"
 )
@@ -26,7 +26,7 @@ func getGRPCConnection(port string) *grpc.ClientConn {
 
 func main() {
 	// テーブル作成
-	repository.CreateTable()
+	// repository.CreateTable()
 
 	fmt.Println("***** SERVER RUNNING *****")
 

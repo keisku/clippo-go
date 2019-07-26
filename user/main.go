@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/kskumgk63/clippo-go/user/repository"
 	"github.com/kskumgk63/clippo-go/user/service"
 
 	"github.com/kskumgk63/clippo-go/user/userpb"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	repository.CreateUserTable()
 	fmt.Println("***** USER SERVER RUNNING *****")
 
 	lis, err := net.Listen("tcp", ":50053")

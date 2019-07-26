@@ -17,10 +17,8 @@ const (
 	SAMPLEDESCRIPTION = "150文字以内で記事の簡単なサマリーを書いてください。この記事は何を目的としているか、ジャンルは何かひと目でわかるようになっています。できるだけシンプルにサマリーを書くことをおすすめします。"
 	// SAMPLEIMAGE サンプルの画像
 	SAMPLEIMAGE = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
-	// SAMPLEUSECASE サンプルのユースケース
-	SAMPLEUSECASE = "お試し"
-	// SAMPLEGENRE サンプルのジャンル
-	SAMPLEGENRE = "Clippo"
+	// SAMPLETAG サンプルのタグ
+	SAMPLETAG = "お試し"
 	// SAMPLEID サンプルのID
 	SAMPLEID = 0000
 

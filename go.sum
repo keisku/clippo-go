@@ -160,6 +160,7 @@ github.com/kskumgk63/clippo-go/user v0.0.0-20190725135928-cc03b3de5b59 h1:F/dQHM
 github.com/kskumgk63/clippo-go/user v0.0.0-20190725135928-cc03b3de5b59/go.mod h1:cnYO64CSBsBSfLp0Kgty1u/uwXazqe6P01VdlHZJ6gk=
 github.com/kskumgk63/clippo-go/user v0.0.0-20190725153727-8e41d5043e3d h1:Y4d99UI4hEW29sEdOgYOzY/iMIOfy4v0XpvyTzSUtyE=
 github.com/kskumgk63/clippo-go/user v0.0.0-20190725153727-8e41d5043e3d/go.mod h1:cnYO64CSBsBSfLp0Kgty1u/uwXazqe6P01VdlHZJ6gk=
+github.com/kskumgk63/clippo-go/user v0.0.0-20190726135114-7a160027b34a h1:ivLiPfHTq7JCy5iIiJ6r3MqFQni1WZwmtwu87BsWwrI=
 github.com/kskumgk63/clippo-go/user v0.0.0-20190726135114-7a160027b34a/go.mod h1:cnYO64CSBsBSfLp0Kgty1u/uwXazqe6P01VdlHZJ6gk=
 github.com/lib/pq v1.1.1 h1:sJZmqHoEaY7f+NPP8pgLB/WxulyR3fewgCM2qaSlBb4=
 github.com/lib/pq v1.1.1/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=

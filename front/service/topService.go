@@ -43,8 +43,7 @@ func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
 		Title:       SAMPLETITLE,
 		Description: SAMPLEDESCRIPTION,
 		Image:       SAMPLEIMAGE,
-		Usecase:     SAMPLEUSECASE,
-		Genre:       SAMPLEGENRE,
+		TagID:       SAMPLETAG,
 		UserID:      SAMPLEID,
 	}
 	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
@@ -72,8 +71,7 @@ func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	description := r.FormValue("description")
 	image := r.FormValue("image")
-	usecase := r.FormValue("usecase")
-	genre := r.FormValue("genre")
+	tagName := r.FormValue("tag_name")
 
 	// ディスクリプションが150文字より多かったらリダイレクト
 	if utf8.RuneCountInString(description) > 150 {
@@ -85,8 +83,7 @@ func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
 		Title:       title,
 		Description: description,
 		Image:       image,
-		Usecase:     usecase,
-		Genre:       genre,
+		TagID:       tagName,
 	}
 	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
 }

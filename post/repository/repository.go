@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/kskumgk63/clippo-go/post/entity"
+
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 
@@ -35,4 +37,25 @@ func GormConnect() *gorm.DB {
 		return nil
 	}
 	return db
+}
+
+// CreatePostsAndTagsTable create posts and tags table
+func CreatePostsAndTagsTable() {
+	db := GormConnect()
+	if db.HasTable("posts") {
+		log.Println("*** REcreate POSTS table ***")
+		db.DropTable("posts")
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Post{})
+	} else {
+		log.Println("*** Create POSTS table ***")
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Post{})
+	}
+	if db.HasTable("tags") {
+		log.Println("*** REcreate TAGS table ***")
+		db.DropTable("tags")
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tag{})
+	} else {
+		log.Println("*** Create TAGS table ***")
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tsg{})
+	}
 }

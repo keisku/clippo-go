@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/kskumgk63/clippo-go/user/entity"
+
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 
@@ -35,4 +37,18 @@ func GormConnect() *gorm.DB {
 		return nil
 	}
 	return db
+}
+
+
+// CreateUserTable create users table
+func CreateUserTable() {
+	db := GormConnect()
+	if db.HasTable("users") {
+		log.Println("*** REcreate USERS table ***")
+		db.DropTable("users")
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.User{})
+	} else {
+		log.Println("*** Create USERS table ***")
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.User{})
+	}
 }

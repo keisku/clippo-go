@@ -6,9 +6,9 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-// Post 投稿モデル
+// Post 投稿
 type Post struct {
 	gorm.Model
-	URL, Title, Description, Image, Usecase, Genre string
-	UserID                                         uint
+	URL, Title, Description, Image, TagID string
+	UserID                                uint
 }

@@ -7,6 +7,6 @@ import (
 // Post 投稿
 type Post struct {
 	gorm.Model
-	URL, Title, Description, Image, Usecase, Genre string
-	UserID                                         uint
+	URL, Title, Description, Image, TagID string
+	UserID                                uint
 }

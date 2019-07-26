@@ -53,4 +53,10 @@ func CreateTable() {
 	} else {
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Post{})
 	}
+	if db.HasTable("tags") {
+		db.DropTable("tags")
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tag{})
+	} else {
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tsg{})
+	}
 }

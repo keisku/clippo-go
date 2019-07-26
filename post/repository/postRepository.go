@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 
@@ -27,8 +26,7 @@ func Create(req *postpb.CreatePostRequest) error {
 	}
 
 	db := GormConnect()
-	err := db.Create(&post).Error
-	if err != nil {
+	if err := db.Create(&post).Error; err != nil {
 		return err
 	}
 
@@ -43,8 +41,7 @@ func Delete(req *postpb.DeletePostRequest) error {
 	// データベースと接続
 	db := GormConnect()
 	defer db.Close()
-	err := db.Delete(&post).Error
-	if err != nil {
+	if err := db.Delete(&post).Error; err != nil {
 		return err
 	}
 	return nil
@@ -60,8 +57,7 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []entity.Post {
 
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	err := db.Order("ID desc").Where("user_id = ?", id).Find(&posts).Error
-	if err != nil {
+	if err := db.Order("ID desc").Where("user_id = ?", id).Find(&posts).Error; err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
 		return nil
@@ -73,39 +69,27 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []entity.Post {
 func SearchByTitle(req *postpb.SearchPostsByTitleRequest) []entity.Post {
 	// このユーザーIDを基にDB検索
 	id := req.GetUserId()
-	title := req.GetTitle()
-
-	// データベースと接続
-	db := GormConnect()
-	defer db.Close()
-	// 投稿一覧取得
-	posts := []entity.Post{}
-	// db.Order("ID desc").Where("title IN (?)", []string{"jinzhu", "jinzhu 2"}).Find(&posts)
-	err := db.Order("ID desc").Where("user_id = ? AND title LIKE ?", id, "%"+title+"%").Find(&posts).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Println(err)
-		return nil
-	}
-	return posts
-}
-
-// SearchByMultiTitles 投稿のタイトル検索
-func SearchByMultiTitles(req *postpb.SearchPostsByMultiTitlesRequest) []entity.Post {
-	// このユーザーIDを基にDB検索
-	id := req.GetUserId()
 	words := req.GetTitles()
 
-	for _, word := range words {
-		fmt.Println(word)
+	// 複数の検索ワードで検索できるように配列の文字列を加工
+	var query string
+	for i, word := range words {
+		if i == len(words)-1 {
+			w := "%" + word + "%"
+			query += w
+		} else {
+			w := "%" + word
+			query += w
+		}
 	}
 
 	// データベースと接続
 	db := GormConnect()
 	defer db.Close()
+
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	if err := db.Order("ID desc").Where("user_id = ?", id).Where("title IN (?)", words).Find(&posts).Error; err != nil {
+	if err := db.Where("user_id = ?", id).Where("title LIKE ?", query).Find(&posts).Error; err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
 		return nil
@@ -122,10 +106,10 @@ func SearchByUsecase(req *postpb.SearchPostsByUsecaseRequest) []entity.Post {
 	// データベースと接続
 	db := GormConnect()
 	defer db.Close()
+
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	err := db.Order("ID desc").Where("user_id = ? AND usecase LIKE ?", id, "%"+usecase+"%").Find(&posts)
-	if err != nil {
+	if err := db.Order("ID desc").Where("user_id = ? AND usecase LIKE ?", id, "%"+usecase+"%").Find(&posts).Error; err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
 		return nil
@@ -142,10 +126,10 @@ func SearchByGenre(req *postpb.SearchPostsByGenreRequest) []entity.Post {
 	// データベースと接続
 	db := GormConnect()
 	defer db.Close()
+
 	// 投稿一覧取得
 	posts := []entity.Post{}
-	err := db.Order("ID desc").Where("user_id = ? AND genre LIKE ?", id, "%"+genre+"%").Find(&posts).Error
-	if err != nil {
+	if err := db.Order("ID desc").Where("user_id = ? AND genre LIKE ?", id, "%"+genre+"%").Find(&posts).Error; err != nil {
 		log.SetFlags(log.Lshortfile)
 		return nil
 	}

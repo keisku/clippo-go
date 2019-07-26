@@ -139,6 +139,39 @@ func (*PostServer) SearchPostsByTitle(ctx context.Context, req *postpb.SearchPos
 	return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
 }
 
+// SearchPostsByMultiTitles 投稿の複数キーワードタイトル検索
+func (*PostServer) SearchPostsByMultiTitles(ctx context.Context, req *postpb.SearchPostsByMultiTitlesRequest) (*postpb.SearchPostsByMultiTitlesResponse, error) {
+	fmt.Println("SearchPostsByMultiTitles RUN")
+	var posts []*postpb.Post
+
+	dbPosts := repository.SearchByMultiTitles(req)
+	// DBから何も見つからなければサンプルを返す
+	if len(dbPosts) == 0 {
+		p := mappingPost(
+			SAMPLEPOSTID,
+			SAMPLEURL,
+			SAMPLETITLE,
+			SAMPLEDESCRIPTION,
+			SAMPLEIMAGE,
+			SAMPLEUSECASE,
+			SAMPLEGENRE,
+			SAMPLEUSERID)
+		posts = append(posts, p)
+		return &postpb.SearchPostsByMultiTitlesResponse{Posts: posts}, nil
+	}
+	// DBから見つかれば、レスポンス用にマッピング
+	for i := 0; i < len(dbPosts); i++ {
+		u64 := uint64(dbPosts[i].UserID)
+		uid := strconv.FormatUint(u64, 10)
+
+		p64 := uint64(dbPosts[i].ID)
+		pid := strconv.FormatUint(p64, 10)
+
+		posts = append(posts, mappingPost(pid, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].Usecase, dbPosts[i].Genre, uid))
+	}
+	return &postpb.SearchPostsByMultiTitlesResponse{Posts: posts}, nil
+}
+
 // SearchPostsByUsecase 投稿のユースケース検索
 func (*PostServer) SearchPostsByUsecase(ctx context.Context, req *postpb.SearchPostsByUsecaseRequest) (*postpb.SearchPostsByUsecaseResponse, error) {
 	fmt.Println("SearchPostsByUsecase RUN")

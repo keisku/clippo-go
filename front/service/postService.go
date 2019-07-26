@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
@@ -96,6 +97,8 @@ func (s *FrontServer) PostDelete(w http.ResponseWriter, r *http.Request) {
 func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	title := r.FormValue("title")
+	words := strings.Fields(title)
+	fmt.Println(words[:])
 
 	// キャッシュされているログインユーザーのIdを取得
 	req := &cachepb.GetIDRequest{
@@ -109,11 +112,11 @@ func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 投稿一覧取得
-	reqPost := &postpb.SearchPostsByTitleRequest{
+	reqPost := &postpb.SearchPostsByMultiTitlesRequest{
 		UserId: res.Id,
-		Title:  title,
+		Titles: words,
 	}
-	resPost, _ := s.PostClient.SearchPostsByTitle(r.Context(), reqPost)
+	resPost, _ := s.PostClient.SearchPostsByMultiTitles(r.Context(), reqPost)
 
 	template.Render(w, "top/top.tmpl", resPost.Posts)
 }

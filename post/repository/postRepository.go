@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -79,8 +80,32 @@ func SearchByTitle(req *postpb.SearchPostsByTitleRequest) []entity.Post {
 	defer db.Close()
 	// 投稿一覧取得
 	posts := []entity.Post{}
+	// db.Order("ID desc").Where("title IN (?)", []string{"jinzhu", "jinzhu 2"}).Find(&posts)
 	err := db.Order("ID desc").Where("user_id = ? AND title LIKE ?", id, "%"+title+"%").Find(&posts).Error
 	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Println(err)
+		return nil
+	}
+	return posts
+}
+
+// SearchByMultiTitles 投稿のタイトル検索
+func SearchByMultiTitles(req *postpb.SearchPostsByMultiTitlesRequest) []entity.Post {
+	// このユーザーIDを基にDB検索
+	id := req.GetUserId()
+	words := req.GetTitles()
+
+	for _, word := range words {
+		fmt.Println(word)
+	}
+
+	// データベースと接続
+	db := GormConnect()
+	defer db.Close()
+	// 投稿一覧取得
+	posts := []entity.Post{}
+	if err := db.Order("ID desc").Where("user_id = ?", id).Where("title IN (?)", words).Find(&posts).Error; err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
 		return nil

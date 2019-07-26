@@ -125,7 +125,6 @@ func (s *FrontServer) LoginSuccess(w http.ResponseWriter, r *http.Request) {
 		Key:   TOKENCACHE,
 	}
 	res, _ := s.CacheClient.SetToken(r.Context(), reqToken)
-	log.Println("HERE")
 	log.Println(res.Message)
 
 	// ログインユーザーのIdをキャッシュに格納

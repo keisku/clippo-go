@@ -53,6 +53,15 @@ message SearchPostsByTitleResponse {
     repeated Post posts = 1;
 }
 
+// タイトル検索
+message SearchPostsByMultiTitlesRequest {
+    string user_id = 1;
+    repeated string titles = 2;
+}
+message SearchPostsByMultiTitlesResponse {
+    repeated Post posts = 1;
+}
+
 // ユースケース検索
 message SearchPostsByUsecaseRequest {
     string user_id = 1;
@@ -94,6 +103,8 @@ service PostService {
     rpc GetAllPostsByUserID (GetAllPostsByUserIDRequest) returns (GetAllPostsByUserIDResponse) {};
     // タイトル検索
     rpc SearchPostsByTitle (SearchPostsByTitleRequest) returns (SearchPostsByTitleResponse) {};
+    // 複数キーワードでタイトル検索
+    rpc SearchPostsByMultiTitles (SearchPostsByMultiTitlesRequest) returns (SearchPostsByMultiTitlesResponse) {};
     // ユースケース検索
     rpc SearchPostsByUsecase (SearchPostsByUsecaseRequest) returns (SearchPostsByUsecaseResponse) {};
     // ジャンル検索

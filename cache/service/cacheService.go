@@ -32,7 +32,6 @@ func (*CacheServer) GetToken(ctx context.Context, req *cachepb.GetTokenRequest) 
 	key := req.GetKey()
 	// キャッシュを取り出す
 	cached, found := cache.Get(key)
-	log.Println(cached)
 	// 見つからなければリダイレクト
 	if !found {
 		res := &cachepb.GetTokenResponse{
@@ -64,7 +63,7 @@ func (*CacheServer) SetID(ctx context.Context, req *cachepb.SetIDRequest) (*cach
 	key := req.GetKey()
 	cache.Set(key, id, gocache.DefaultExpiration)
 	res := &cachepb.SetIDResponse{
-		Message: "Set ID",
+		Message: "SetID success",
 	}
 	return res, nil
 }

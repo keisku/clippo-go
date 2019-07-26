@@ -40,7 +40,7 @@ require (
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028 // indirect
 	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80 // indirect
 	golang.org/x/sys v0.0.0-20190712062909-fae7ac547cb7 // indirect
-	golang.org/x/tools v0.0.0-20190724185037-8aa4eac1a7c1 // indirect
-	google.golang.org/grpc v1.22.0
+	golang.org/x/tools v0.0.0-20190725161231-2e34cfcb95cb // indirect
+	google.golang.org/grpc v1.22.1
 	gopkg.in/jcmturner/gokrb5.v7 v7.3.0 // indirect
 )

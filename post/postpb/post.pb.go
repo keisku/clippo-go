@@ -6,10 +6,9 @@ package postpb
 import (
 	context "context"
 	fmt "fmt"
-	math "math"
-
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -30,9 +29,8 @@ type Post struct {
 	Title                string   `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	Description          string   `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Image                string   `protobuf:"bytes,5,opt,name=image,proto3" json:"image,omitempty"`
-	Usecase              string   `protobuf:"bytes,6,opt,name=usecase,proto3" json:"usecase,omitempty"`
-	Genre                string   `protobuf:"bytes,7,opt,name=genre,proto3" json:"genre,omitempty"`
-	UserId               string   `protobuf:"bytes,8,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TagId                string   `protobuf:"bytes,6,opt,name=tag_id,json=tagId,proto3" json:"tag_id,omitempty"`
+	UserId               string   `protobuf:"bytes,7,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -98,16 +96,9 @@ func (m *Post) GetImage() string {
 	return ""
 }
 
-func (m *Post) GetUsecase() string {
+func (m *Post) GetTagId() string {
 	if m != nil {
-		return m.Usecase
-	}
-	return ""
-}
-
-func (m *Post) GetGenre() string {
-	if m != nil {
-		return m.Genre
+		return m.TagId
 	}
 	return ""
 }
@@ -443,180 +434,6 @@ func (m *SearchPostsByTitleResponse) GetPosts() []*Post {
 	return nil
 }
 
-// ユースケース検索
-type SearchPostsByUsecaseRequest struct {
-	UserId               string   `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Usecase              string   `protobuf:"bytes,2,opt,name=usecase,proto3" json:"usecase,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *SearchPostsByUsecaseRequest) Reset()         { *m = SearchPostsByUsecaseRequest{} }
-func (m *SearchPostsByUsecaseRequest) String() string { return proto.CompactTextString(m) }
-func (*SearchPostsByUsecaseRequest) ProtoMessage()    {}
-func (*SearchPostsByUsecaseRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2037b85c7cbf25b6, []int{9}
-}
-
-func (m *SearchPostsByUsecaseRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SearchPostsByUsecaseRequest.Unmarshal(m, b)
-}
-func (m *SearchPostsByUsecaseRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SearchPostsByUsecaseRequest.Marshal(b, m, deterministic)
-}
-func (m *SearchPostsByUsecaseRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SearchPostsByUsecaseRequest.Merge(m, src)
-}
-func (m *SearchPostsByUsecaseRequest) XXX_Size() int {
-	return xxx_messageInfo_SearchPostsByUsecaseRequest.Size(m)
-}
-func (m *SearchPostsByUsecaseRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_SearchPostsByUsecaseRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_SearchPostsByUsecaseRequest proto.InternalMessageInfo
-
-func (m *SearchPostsByUsecaseRequest) GetUserId() string {
-	if m != nil {
-		return m.UserId
-	}
-	return ""
-}
-
-func (m *SearchPostsByUsecaseRequest) GetUsecase() string {
-	if m != nil {
-		return m.Usecase
-	}
-	return ""
-}
-
-type SearchPostsByUsecaseResponse struct {
-	Posts                []*Post  `protobuf:"bytes,1,rep,name=posts,proto3" json:"posts,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *SearchPostsByUsecaseResponse) Reset()         { *m = SearchPostsByUsecaseResponse{} }
-func (m *SearchPostsByUsecaseResponse) String() string { return proto.CompactTextString(m) }
-func (*SearchPostsByUsecaseResponse) ProtoMessage()    {}
-func (*SearchPostsByUsecaseResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2037b85c7cbf25b6, []int{10}
-}
-
-func (m *SearchPostsByUsecaseResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SearchPostsByUsecaseResponse.Unmarshal(m, b)
-}
-func (m *SearchPostsByUsecaseResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SearchPostsByUsecaseResponse.Marshal(b, m, deterministic)
-}
-func (m *SearchPostsByUsecaseResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SearchPostsByUsecaseResponse.Merge(m, src)
-}
-func (m *SearchPostsByUsecaseResponse) XXX_Size() int {
-	return xxx_messageInfo_SearchPostsByUsecaseResponse.Size(m)
-}
-func (m *SearchPostsByUsecaseResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_SearchPostsByUsecaseResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_SearchPostsByUsecaseResponse proto.InternalMessageInfo
-
-func (m *SearchPostsByUsecaseResponse) GetPosts() []*Post {
-	if m != nil {
-		return m.Posts
-	}
-	return nil
-}
-
-// ジャンル検索
-type SearchPostsByGenreRequest struct {
-	UserId               string   `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Genre                string   `protobuf:"bytes,2,opt,name=genre,proto3" json:"genre,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *SearchPostsByGenreRequest) Reset()         { *m = SearchPostsByGenreRequest{} }
-func (m *SearchPostsByGenreRequest) String() string { return proto.CompactTextString(m) }
-func (*SearchPostsByGenreRequest) ProtoMessage()    {}
-func (*SearchPostsByGenreRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2037b85c7cbf25b6, []int{11}
-}
-
-func (m *SearchPostsByGenreRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SearchPostsByGenreRequest.Unmarshal(m, b)
-}
-func (m *SearchPostsByGenreRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SearchPostsByGenreRequest.Marshal(b, m, deterministic)
-}
-func (m *SearchPostsByGenreRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SearchPostsByGenreRequest.Merge(m, src)
-}
-func (m *SearchPostsByGenreRequest) XXX_Size() int {
-	return xxx_messageInfo_SearchPostsByGenreRequest.Size(m)
-}
-func (m *SearchPostsByGenreRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_SearchPostsByGenreRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_SearchPostsByGenreRequest proto.InternalMessageInfo
-
-func (m *SearchPostsByGenreRequest) GetUserId() string {
-	if m != nil {
-		return m.UserId
-	}
-	return ""
-}
-
-func (m *SearchPostsByGenreRequest) GetGenre() string {
-	if m != nil {
-		return m.Genre
-	}
-	return ""
-}
-
-type SearchPostsByGenreResponse struct {
-	Posts                []*Post  `protobuf:"bytes,1,rep,name=posts,proto3" json:"posts,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *SearchPostsByGenreResponse) Reset()         { *m = SearchPostsByGenreResponse{} }
-func (m *SearchPostsByGenreResponse) String() string { return proto.CompactTextString(m) }
-func (*SearchPostsByGenreResponse) ProtoMessage()    {}
-func (*SearchPostsByGenreResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2037b85c7cbf25b6, []int{12}
-}
-
-func (m *SearchPostsByGenreResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SearchPostsByGenreResponse.Unmarshal(m, b)
-}
-func (m *SearchPostsByGenreResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SearchPostsByGenreResponse.Marshal(b, m, deterministic)
-}
-func (m *SearchPostsByGenreResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SearchPostsByGenreResponse.Merge(m, src)
-}
-func (m *SearchPostsByGenreResponse) XXX_Size() int {
-	return xxx_messageInfo_SearchPostsByGenreResponse.Size(m)
-}
-func (m *SearchPostsByGenreResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_SearchPostsByGenreResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_SearchPostsByGenreResponse proto.InternalMessageInfo
-
-func (m *SearchPostsByGenreResponse) GetPosts() []*Post {
-	if m != nil {
-		return m.Posts
-	}
-	return nil
-}
-
 // URLからスクレイピングしてくれる
 type PostURLRequest struct {
 	Url                  string   `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
@@ -629,7 +446,7 @@ func (m *PostURLRequest) Reset()         { *m = PostURLRequest{} }
 func (m *PostURLRequest) String() string { return proto.CompactTextString(m) }
 func (*PostURLRequest) ProtoMessage()    {}
 func (*PostURLRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2037b85c7cbf25b6, []int{13}
+	return fileDescriptor_2037b85c7cbf25b6, []int{9}
 }
 
 func (m *PostURLRequest) XXX_Unmarshal(b []byte) error {
@@ -671,7 +488,7 @@ func (m *PostResponse) Reset()         { *m = PostResponse{} }
 func (m *PostResponse) String() string { return proto.CompactTextString(m) }
 func (*PostResponse) ProtoMessage()    {}
 func (*PostResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2037b85c7cbf25b6, []int{14}
+	return fileDescriptor_2037b85c7cbf25b6, []int{10}
 }
 
 func (m *PostResponse) XXX_Unmarshal(b []byte) error {
@@ -730,10 +547,6 @@ func init() {
 	proto.RegisterType((*GetAllPostsByUserIDResponse)(nil), "postpb.GetAllPostsByUserIDResponse")
 	proto.RegisterType((*SearchPostsByTitleRequest)(nil), "postpb.SearchPostsByTitleRequest")
 	proto.RegisterType((*SearchPostsByTitleResponse)(nil), "postpb.SearchPostsByTitleResponse")
-	proto.RegisterType((*SearchPostsByUsecaseRequest)(nil), "postpb.SearchPostsByUsecaseRequest")
-	proto.RegisterType((*SearchPostsByUsecaseResponse)(nil), "postpb.SearchPostsByUsecaseResponse")
-	proto.RegisterType((*SearchPostsByGenreRequest)(nil), "postpb.SearchPostsByGenreRequest")
-	proto.RegisterType((*SearchPostsByGenreResponse)(nil), "postpb.SearchPostsByGenreResponse")
 	proto.RegisterType((*PostURLRequest)(nil), "postpb.PostURLRequest")
 	proto.RegisterType((*PostResponse)(nil), "postpb.PostResponse")
 }
@@ -741,42 +554,37 @@ func init() {
 func init() { proto.RegisterFile("post/postpb/post.proto", fileDescriptor_2037b85c7cbf25b6) }
 
 var fileDescriptor_2037b85c7cbf25b6 = []byte{
-	// 558 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x55, 0x4d, 0x6f, 0xd3, 0x40,
-	0x10, 0x8d, 0x1d, 0xc7, 0x85, 0x49, 0x5b, 0xd1, 0x25, 0x0a, 0x5b, 0x97, 0x83, 0xd9, 0x70, 0xe0,
-	0x14, 0xa4, 0xa2, 0x9e, 0xa1, 0x21, 0x28, 0x02, 0xf5, 0x50, 0xa5, 0xe4, 0x82, 0x84, 0xc0, 0xb5,
-	0x47, 0xc5, 0x92, 0x1b, 0x1b, 0xef, 0x06, 0x89, 0x5f, 0xc7, 0x6f, 0xe1, 0x9f, 0x54, 0xbb, 0xb6,
-	0xe3, 0x75, 0xfd, 0x11, 0xe5, 0x92, 0x78, 0x66, 0xdf, 0xbc, 0x99, 0xb7, 0x9e, 0x27, 0xc3, 0x38,
-	0x89, 0xb9, 0x78, 0x2b, 0x7f, 0x92, 0x5b, 0xf5, 0x37, 0x4d, 0xd2, 0x58, 0xc4, 0xc4, 0xce, 0x52,
-	0xec, 0x9f, 0x01, 0xd6, 0x75, 0xcc, 0x05, 0x39, 0x06, 0x33, 0x0c, 0xa8, 0xe1, 0x1a, 0x6f, 0x9e,
-	0x2e, 0xcd, 0x30, 0x20, 0xcf, 0xa0, 0xbf, 0x49, 0x23, 0x6a, 0xaa, 0x84, 0x7c, 0x24, 0x23, 0x18,
-	0x88, 0x50, 0x44, 0x48, 0xfb, 0x2a, 0x97, 0x05, 0xc4, 0x85, 0x61, 0x80, 0xdc, 0x4f, 0xc3, 0x44,
-	0x84, 0xf1, 0x9a, 0x5a, 0xea, 0x4c, 0x4f, 0xc9, 0xba, 0xf0, 0xde, 0xbb, 0x43, 0x3a, 0xc8, 0xea,
-	0x54, 0x40, 0x28, 0x1c, 0x6c, 0x38, 0xfa, 0x1e, 0x47, 0x6a, 0xab, 0x7c, 0x11, 0x4a, 0xfc, 0x1d,
-	0xae, 0x53, 0xa4, 0x07, 0x19, 0x5e, 0x05, 0xe4, 0x85, 0xc2, 0xa7, 0x3f, 0xc2, 0x80, 0x3e, 0x51,
-	0x79, 0x5b, 0x86, 0x9f, 0x03, 0x76, 0x01, 0x27, 0x1f, 0x53, 0xf4, 0x04, 0x4a, 0x19, 0x4b, 0xfc,
-	0xbd, 0x41, 0x2e, 0x88, 0x0b, 0x96, 0x14, 0xa8, 0xf4, 0x0c, 0xcf, 0x0f, 0xa7, 0x99, 0xda, 0xa9,
-	0x82, 0xa8, 0x13, 0x36, 0x05, 0xa2, 0x97, 0xf1, 0x24, 0x5e, 0x73, 0x35, 0xd5, 0x3d, 0x72, 0x2e,
-	0xa7, 0xcd, 0xae, 0xa2, 0x08, 0xd9, 0x04, 0x4e, 0xe6, 0x18, 0x61, 0xb5, 0xcd, 0xa3, 0x4b, 0x93,
-	0xa4, 0x3a, 0x68, 0x27, 0xe9, 0x05, 0x38, 0x0b, 0x14, 0x97, 0x51, 0x24, 0xf1, 0x7c, 0xf6, 0x77,
-	0x25, 0x25, 0xcd, 0x0b, 0x76, 0x4d, 0xb2, 0x51, 0x91, 0x7c, 0x09, 0x67, 0x8d, 0x65, 0x79, 0x3f,
-	0x06, 0x03, 0x29, 0x91, 0x53, 0xc3, 0xed, 0xd7, 0xd4, 0x67, 0x47, 0xec, 0x0a, 0x4e, 0x6f, 0xd0,
-	0x4b, 0xfd, 0x5f, 0x39, 0xc5, 0x57, 0xf9, 0x32, 0x77, 0x35, 0x26, 0x63, 0xb0, 0xd5, 0x5b, 0xe7,
-	0xd4, 0x74, 0xfb, 0x32, 0x9f, 0x45, 0xec, 0x03, 0x38, 0x4d, 0x6c, 0x7b, 0xcc, 0x73, 0x0d, 0x67,
-	0x15, 0x86, 0x55, 0xb6, 0x0c, 0x3b, 0x27, 0xd2, 0xd6, 0xc8, 0xac, 0xac, 0x11, 0x9b, 0xc1, 0xcb,
-	0x66, 0xc6, 0x3d, 0xa6, 0xfa, 0xf2, 0xe8, 0x96, 0x16, 0x72, 0x15, 0x77, 0xce, 0xb4, 0x5d, 0x60,
-	0x53, 0x5b, 0xe0, 0xda, 0x1d, 0xe5, 0x5c, 0x7b, 0x4c, 0xc3, 0xe0, 0x58, 0x86, 0xab, 0xe5, 0x55,
-	0x31, 0x42, 0x6e, 0x52, 0x63, 0x6b, 0x52, 0xb6, 0x86, 0xc3, 0xca, 0xee, 0xd5, 0x10, 0xa5, 0x8d,
-	0xcd, 0x0e, 0x1b, 0xf7, 0x3b, 0x6c, 0x6c, 0x69, 0x36, 0x3e, 0xff, 0x6f, 0xc1, 0x50, 0x36, 0xbc,
-	0xc1, 0xf4, 0x4f, 0xe8, 0x23, 0x79, 0x0f, 0x47, 0x0b, 0x14, 0x32, 0x33, 0x47, 0xe1, 0x85, 0x11,
-	0x19, 0xeb, 0x4a, 0xca, 0xd1, 0x9d, 0x51, 0x45, 0x61, 0x3e, 0x2e, 0xeb, 0x91, 0x4f, 0x00, 0xa5,
-	0x2f, 0xc9, 0x69, 0x81, 0xaa, 0x59, 0xdc, 0x71, 0x9a, 0x8e, 0x74, 0x9a, 0xd2, 0x89, 0x25, 0x4d,
-	0xcd, 0xc2, 0x25, 0x4d, 0xdd, 0xb8, 0xac, 0x47, 0x7e, 0xc2, 0xf3, 0x06, 0xa7, 0x11, 0x56, 0x14,
-	0xb5, 0xbb, 0xd7, 0x99, 0x74, 0x62, 0xb6, 0x1d, 0xbe, 0x03, 0xa9, 0x5b, 0x87, 0xbc, 0x2a, 0x8a,
-	0x5b, 0x4d, 0xea, 0xb0, 0x2e, 0xc8, 0x96, 0xde, 0x87, 0x51, 0x93, 0x0b, 0xc8, 0xa4, 0xb1, 0xba,
-	0xea, 0x3a, 0xe7, 0x75, 0x37, 0xa8, 0x55, 0x83, 0x5a, 0xed, 0x16, 0x0d, 0xba, 0x85, 0x5a, 0x34,
-	0x54, 0x9c, 0xc1, 0x7a, 0xb3, 0xa3, 0x6f, 0x43, 0xed, 0x2b, 0x76, 0x6b, 0xab, 0x2f, 0xd8, 0xbb,
-	0x87, 0x00, 0x00, 0x00, 0xff, 0xff, 0xcc, 0xe6, 0x8d, 0x6d, 0xdb, 0x06, 0x00, 0x00,
+	// 475 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0xad, 0xed, 0xc4, 0x11, 0x93, 0xb6, 0xa2, 0x43, 0x09, 0x5b, 0x73, 0x31, 0xdb, 0x0b, 0xa7,
+	0x20, 0x15, 0xf5, 0x0c, 0x2d, 0x41, 0x55, 0xa5, 0x1e, 0x50, 0x4a, 0x2f, 0x48, 0x08, 0xdc, 0x78,
+	0x14, 0x56, 0x72, 0x63, 0xe3, 0xdd, 0x20, 0xf1, 0x31, 0x5c, 0xf9, 0x4e, 0x34, 0x6b, 0xbb, 0xde,
+	0xe0, 0x34, 0x51, 0x2f, 0x89, 0xe7, 0xcd, 0xcc, 0x9b, 0x79, 0xbb, 0x4f, 0x0b, 0xa3, 0x22, 0xd7,
+	0xe6, 0x0d, 0xff, 0x14, 0xb7, 0xf6, 0x6f, 0x5c, 0x94, 0xb9, 0xc9, 0x31, 0xac, 0x20, 0xf9, 0xd7,
+	0x83, 0xde, 0xa7, 0x5c, 0x1b, 0xdc, 0x07, 0x5f, 0xa5, 0xc2, 0x8b, 0xbd, 0xd7, 0x4f, 0xa6, 0xbe,
+	0x4a, 0xf1, 0x29, 0x04, 0xcb, 0x32, 0x13, 0xbe, 0x05, 0xf8, 0x13, 0x0f, 0xa1, 0x6f, 0x94, 0xc9,
+	0x48, 0x04, 0x16, 0xab, 0x02, 0x8c, 0x61, 0x98, 0x92, 0x9e, 0x95, 0xaa, 0x30, 0x2a, 0x5f, 0x88,
+	0x9e, 0xcd, 0xb9, 0x10, 0xf7, 0xa9, 0xbb, 0x64, 0x4e, 0xa2, 0x5f, 0xf5, 0xd9, 0x00, 0x9f, 0x43,
+	0x68, 0x92, 0xf9, 0x37, 0x95, 0x8a, 0xb0, 0xa6, 0x4b, 0xe6, 0x97, 0x29, 0xbe, 0x80, 0xc1, 0x52,
+	0x53, 0xc9, 0xf8, 0xc0, 0xe2, 0x21, 0x87, 0x97, 0xa9, 0x3c, 0x85, 0x83, 0x0f, 0x25, 0x25, 0x86,
+	0x78, 0xdb, 0x29, 0xfd, 0x5c, 0x92, 0x36, 0x18, 0x43, 0x8f, 0x75, 0xd8, 0xb5, 0x87, 0x27, 0xbb,
+	0xe3, 0x4a, 0xd4, 0xd8, 0x96, 0xd8, 0x8c, 0x1c, 0x03, 0xba, 0x6d, 0xba, 0xc8, 0x17, 0x9a, 0x50,
+	0xc0, 0xe0, 0x8e, 0xb4, 0xe6, 0xa5, 0x2a, 0xc5, 0x4d, 0x28, 0x8f, 0xe1, 0x60, 0x42, 0x19, 0xad,
+	0x8e, 0xf9, 0xef, 0x6c, 0x98, 0xd4, 0x2d, 0xda, 0x4a, 0x7a, 0x0a, 0xd1, 0x05, 0x99, 0xb3, 0x2c,
+	0xe3, 0x7a, 0x7d, 0xfe, 0xfb, 0x86, 0x25, 0x4d, 0x1a, 0x76, 0x47, 0xb2, 0xb7, 0x22, 0xf9, 0x0c,
+	0x5e, 0xae, 0x6d, 0xab, 0xe7, 0x49, 0xe8, 0xb3, 0x44, 0x2d, 0xbc, 0x38, 0xe8, 0xa8, 0xaf, 0x52,
+	0xf2, 0x0a, 0x8e, 0xae, 0x29, 0x29, 0x67, 0x3f, 0x6a, 0x8a, 0xcf, 0x7c, 0x67, 0xdb, 0x06, 0xe3,
+	0x08, 0x42, 0x7b, 0xb9, 0x5a, 0xf8, 0x71, 0xc0, 0x78, 0x15, 0xc9, 0xf7, 0x10, 0xad, 0x63, 0x7b,
+	0xc4, 0x3e, 0x12, 0xf6, 0x39, 0xbc, 0x99, 0x5e, 0x35, 0x4b, 0xd4, 0x3e, 0xf3, 0xee, 0x7d, 0x26,
+	0x17, 0xb0, 0xbb, 0x72, 0xae, 0x9d, 0x8a, 0xd6, 0x89, 0xfe, 0x06, 0x27, 0x06, 0x1b, 0x9c, 0xd8,
+	0x73, 0x9c, 0x78, 0xf2, 0x27, 0x80, 0x21, 0x0f, 0xbc, 0xa6, 0xf2, 0x97, 0x9a, 0x11, 0xbe, 0x83,
+	0xbd, 0x0b, 0x32, 0x8c, 0x4c, 0xc8, 0x24, 0x2a, 0xc3, 0x91, 0xab, 0xa4, 0x5d, 0x3d, 0x3a, 0x5c,
+	0x51, 0x58, 0xaf, 0x2b, 0x77, 0xf0, 0x23, 0x40, 0xeb, 0x39, 0x3c, 0x6a, 0xaa, 0x3a, 0xf6, 0x8d,
+	0xa2, 0x75, 0x29, 0x97, 0xa6, 0x75, 0x59, 0x4b, 0xd3, 0xb1, 0x67, 0x4b, 0xd3, 0x35, 0xa5, 0xdc,
+	0xc1, 0xef, 0xf0, 0x6c, 0x8d, 0x8b, 0x50, 0x36, 0x4d, 0x0f, 0x3b, 0x33, 0x3a, 0xde, 0x58, 0x73,
+	0x3f, 0xe1, 0x2b, 0x60, 0xd7, 0x16, 0xf8, 0xaa, 0x69, 0x7e, 0xd0, 0x80, 0x91, 0xdc, 0x54, 0xd2,
+	0xd0, 0x9f, 0xef, 0x7d, 0x19, 0x3a, 0x8f, 0xd8, 0x6d, 0x68, 0x1f, 0xb0, 0xb7, 0xff, 0x02, 0x00,
+	0x00, 0xff, 0xff, 0xc8, 0x5e, 0xff, 0x64, 0xda, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -801,10 +609,6 @@ type PostServiceClient interface {
 	GetAllPostsByUserID(ctx context.Context, in *GetAllPostsByUserIDRequest, opts ...grpc.CallOption) (*GetAllPostsByUserIDResponse, error)
 	// タイトル検索
 	SearchPostsByTitle(ctx context.Context, in *SearchPostsByTitleRequest, opts ...grpc.CallOption) (*SearchPostsByTitleResponse, error)
-	// ユースケース検索
-	SearchPostsByUsecase(ctx context.Context, in *SearchPostsByUsecaseRequest, opts ...grpc.CallOption) (*SearchPostsByUsecaseResponse, error)
-	// ジャンル検索
-	SearchPostsByGenre(ctx context.Context, in *SearchPostsByGenreRequest, opts ...grpc.CallOption) (*SearchPostsByGenreResponse, error)
 }
 
 type postServiceClient struct {
@@ -860,24 +664,6 @@ func (c *postServiceClient) SearchPostsByTitle(ctx context.Context, in *SearchPo
 	return out, nil
 }
 
-func (c *postServiceClient) SearchPostsByUsecase(ctx context.Context, in *SearchPostsByUsecaseRequest, opts ...grpc.CallOption) (*SearchPostsByUsecaseResponse, error) {
-	out := new(SearchPostsByUsecaseResponse)
-	err := c.cc.Invoke(ctx, "/postpb.PostService/SearchPostsByUsecase", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *postServiceClient) SearchPostsByGenre(ctx context.Context, in *SearchPostsByGenreRequest, opts ...grpc.CallOption) (*SearchPostsByGenreResponse, error) {
-	out := new(SearchPostsByGenreResponse)
-	err := c.cc.Invoke(ctx, "/postpb.PostService/SearchPostsByGenre", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // PostServiceServer is the server API for PostService service.
 type PostServiceServer interface {
 	// URLからスクレイピングしてくれる
@@ -890,10 +676,6 @@ type PostServiceServer interface {
 	GetAllPostsByUserID(context.Context, *GetAllPostsByUserIDRequest) (*GetAllPostsByUserIDResponse, error)
 	// タイトル検索
 	SearchPostsByTitle(context.Context, *SearchPostsByTitleRequest) (*SearchPostsByTitleResponse, error)
-	// ユースケース検索
-	SearchPostsByUsecase(context.Context, *SearchPostsByUsecaseRequest) (*SearchPostsByUsecaseResponse, error)
-	// ジャンル検索
-	SearchPostsByGenre(context.Context, *SearchPostsByGenreRequest) (*SearchPostsByGenreResponse, error)
 }
 
 func RegisterPostServiceServer(s *grpc.Server, srv PostServiceServer) {
@@ -990,42 +772,6 @@ func _PostService_SearchPostsByTitle_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PostService_SearchPostsByUsecase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchPostsByUsecaseRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PostServiceServer).SearchPostsByUsecase(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/postpb.PostService/SearchPostsByUsecase",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PostServiceServer).SearchPostsByUsecase(ctx, req.(*SearchPostsByUsecaseRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PostService_SearchPostsByGenre_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchPostsByGenreRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PostServiceServer).SearchPostsByGenre(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/postpb.PostService/SearchPostsByGenre",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PostServiceServer).SearchPostsByGenre(ctx, req.(*SearchPostsByGenreRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _PostService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "postpb.PostService",
 	HandlerType: (*PostServiceServer)(nil),
@@ -1049,14 +795,6 @@ var _PostService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchPostsByTitle",
 			Handler:    _PostService_SearchPostsByTitle_Handler,
-		},
-		{
-			MethodName: "SearchPostsByUsecase",
-			Handler:    _PostService_SearchPostsByUsecase_Handler,
-		},
-		{
-			MethodName: "SearchPostsByGenre",
-			Handler:    _PostService_SearchPostsByGenre_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

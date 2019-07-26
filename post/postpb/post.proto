@@ -15,9 +15,8 @@ message Post {
     string title = 3;
     string description = 4;
     string image = 5;
-    string usecase = 6;
-    string genre = 7;
-    string user_id = 8;
+    string tag_id = 6;
+    string user_id = 7;
 }
 
 // 投稿の作成
@@ -53,24 +52,6 @@ message SearchPostsByTitleResponse {
     repeated Post posts = 1;
 }
 
-// ユースケース検索
-message SearchPostsByUsecaseRequest {
-    string user_id = 1;
-    string usecase = 2;
-}
-message SearchPostsByUsecaseResponse {
-    repeated Post posts = 1;
-}
-
-// ジャンル検索
-message SearchPostsByGenreRequest {
-    string user_id = 1;
-    string genre = 2;
-}
-message SearchPostsByGenreResponse {
-    repeated Post posts = 1;
-}
-
 // URLからスクレイピングしてくれる
 message PostURLRequest {
     string url = 1;
@@ -94,8 +75,4 @@ service PostService {
     rpc GetAllPostsByUserID (GetAllPostsByUserIDRequest) returns (GetAllPostsByUserIDResponse) {};
     // タイトル検索
     rpc SearchPostsByTitle (SearchPostsByTitleRequest) returns (SearchPostsByTitleResponse) {};
-    // ユースケース検索
-    rpc SearchPostsByUsecase (SearchPostsByUsecaseRequest) returns (SearchPostsByUsecaseResponse) {};
-    // ジャンル検索
-    rpc SearchPostsByGenre (SearchPostsByGenreRequest) returns (SearchPostsByGenreResponse) {};
 }

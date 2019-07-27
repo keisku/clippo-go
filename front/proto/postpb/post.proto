@@ -15,7 +15,7 @@ message Post {
     string title = 3;
     string description = 4;
     string image = 5;
-    string tag_id = 6;
+    repeated string tag_id = 6;
     string user_id = 7;
 }
 

@@ -13,8 +13,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-// GormConnect mysqlとの接続
-func GormConnect() *gorm.DB {
+// gormConnect mysqlとの接続
+func gormConnect() *gorm.DB {
 	err := godotenv.Load()
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
@@ -41,7 +41,7 @@ func GormConnect() *gorm.DB {
 
 // CreatePostsAndTagsTable create posts and tags table
 func CreatePostsAndTagsTable() {
-	db := GormConnect()
+	db := gormConnect()
 	if db.HasTable("posts") {
 		log.Println("*** REcreate POSTS table ***")
 		db.DropTable("posts")
@@ -56,6 +56,6 @@ func CreatePostsAndTagsTable() {
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tag{})
 	} else {
 		log.Println("*** Create TAGS table ***")
-		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tsg{})
+		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tag{})
 	}
 }

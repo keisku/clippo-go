@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// Tag 投稿
+// Tag tag will be used for search
 type Tag struct {
 	gorm.Model
 	TagName, TagID string

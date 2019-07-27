@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kskumgk63/clippo-go/front/entity"
 	"github.com/kskumgk63/clippo-go/front/proto/userpb"
 	"github.com/kskumgk63/clippo-go/front/template"
 	"golang.org/x/crypto/bcrypt"
@@ -34,7 +33,7 @@ func (s *FrontServer) UserRegisterConfirm(w http.ResponseWriter, r *http.Request
 		return
 	}
 	if password != confirmPassword {
-		template.Render(w, "user/userRegisterForm.tmpl", entity.User{
+		template.Render(w, "user/userRegisterForm.tmpl", User{
 			Email:    email,
 			Password: "",
 		})
@@ -51,7 +50,7 @@ func (s *FrontServer) UserRegisterConfirm(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	template.Render(w, "user/userRegisterConfirmForm.tmpl", &entity.User{
+	template.Render(w, "user/userRegisterConfirmForm.tmpl", &User{
 		Email:    email,
 		Password: password,
 	})

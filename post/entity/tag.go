@@ -8,5 +8,4 @@ import (
 type Tag struct {
 	gorm.Model
 	TagName, TagID string
-	UserID         uint
 }

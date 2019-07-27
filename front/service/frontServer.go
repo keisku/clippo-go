@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
 	"github.com/kskumgk63/clippo-go/front/proto/postpb"
 	"github.com/kskumgk63/clippo-go/front/proto/userpb"
@@ -25,6 +26,27 @@ const (
 	// TOKENCACHE 認証トークンのキー
 	TOKENCACHE = "token-cache"
 )
+
+// TestPost 投稿の見本
+type TestPost struct {
+	URL, Title, Description, Image string
+	TagNames                       []string
+}
+
+// User ユーザーモデル
+type User struct {
+	gorm.Model
+	Email    string `gorm:"type:varchar(255);unique_index;not null"`
+	Password string `gorm:"type:varchar(60);not null"`
+	Posts    []Post
+}
+
+// Post 投稿
+type Post struct {
+	gorm.Model
+	URL, Title, Description, Image, TagID string
+	UserID                                uint
+}
 
 // JWT 認証用トークン
 type JWT struct {

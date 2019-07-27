@@ -4,10 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/kskumgk63/clippo-go/post/entity"
-
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
+	"github.com/kskumgk63/clippo-go/post/entity"
 
 	// mysql
 	_ "github.com/jinzhu/gorm/dialects/mysql"

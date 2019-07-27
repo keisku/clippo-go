@@ -37,7 +37,6 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	description := r.FormValue("description")
 	image := r.FormValue("image")
 	tag := r.FormValue("tag_name")
-	tags := strings.Fields(tag)
 
 	// ディスクリプションが150文字より多かったらリダイレクト
 	if utf8.RuneCountInString(description) > 150 {
@@ -59,7 +58,7 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 			Title:       title,
 			Description: description,
 			Image:       image,
-			TagId:       tags,
+			TagId:       tag,
 			UserId:      resCache.Id,
 		},
 	}

@@ -3,9 +3,9 @@ package service
 import (
 	"log"
 	"net/http"
+	"strings"
 	"unicode/utf8"
 
-	"github.com/kskumgk63/clippo-go/front/entity"
 	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
 	"github.com/kskumgk63/clippo-go/front/proto/postpb"
 	"github.com/kskumgk63/clippo-go/front/template"
@@ -38,13 +38,14 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 
 // TopBeforeLogin returns "/"
 func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
-	post := &entity.Post{
+	var array []string
+	array = append(array, SAMPLETAG)
+	post := &TestPost{
 		URL:         SAMPLEURL,
 		Title:       SAMPLETITLE,
 		Description: SAMPLEDESCRIPTION,
 		Image:       SAMPLEIMAGE,
-		TagID:       SAMPLETAG,
-		UserID:      SAMPLEID,
+		TagNames:    array,
 	}
 	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
 }
@@ -71,19 +72,21 @@ func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	description := r.FormValue("description")
 	image := r.FormValue("image")
-	tagName := r.FormValue("tag_name")
+	tagNames := r.FormValue("tag_name")
+	tags := strings.Fields(tagNames)
+	log.Println(tags)
 
 	// ディスクリプションが150文字より多かったらリダイレクト
 	if utf8.RuneCountInString(description) > 150 {
 		http.Redirect(w, r, "/test", http.StatusFound)
 	}
 
-	post := &entity.Post{
+	post := &TestPost{
 		URL:         url,
 		Title:       title,
 		Description: description,
 		Image:       image,
-		TagID:       tagName,
+		TagNames:    tags,
 	}
 	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
 }

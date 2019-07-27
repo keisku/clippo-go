@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/kskumgk63/clippo-go/post/entity"
 	"github.com/kskumgk63/clippo-go/post/postpb"
-
 	"github.com/speps/go-hashids"
+
+	// mysql
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 // Create 投稿を作成
@@ -23,7 +26,8 @@ func Create(req *postpb.CreatePostRequest) error {
 	id := uint(id64)
 
 	tags := entity.Tag{}
-	tagNames := req.GetPost().GetTagId()
+	tagNames := strings.Fields(req.GetPost().GetTagId())
+
 	var tagID string
 	for i, tagName := range tagNames {
 		// check if the tag_name is existed, if not create new
@@ -34,9 +38,8 @@ func Create(req *postpb.CreatePostRequest) error {
 			h, _ := hashids.NewWithData(hd)
 			e, _ := h.Encode([]int{45, 434, 1313, 99})
 			fmt.Println(e)
-
 			// create new tag
-			db.Create(&tags{
+			db.Create(&entity.Tag{
 				TagName: tagName,
 				TagID:   e,
 			})

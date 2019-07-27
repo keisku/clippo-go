@@ -18,6 +18,10 @@
         </div>
     </div>
     <div class="clippoCover">
+        <p class="clippoText mr-3">タグ</p>
+        <input class="clippoInputConfirm" type="text" name="tag_name" placeholder="スペース区切りで入力してください" required />
+    </div>
+    <!-- <div class="clippoCover">
         <div class="dropdown dropright">
             <p class="clippoText mr-3">記事の目的</p>
             <select name="usecase">
@@ -43,7 +47,7 @@
             <option value="デザイン">デザイン</option>
             <option value="その他">その他</option>
         </select>
-    </div>
+    </div> -->
     <div class="clippoCover">
         <p class="clippoText mr-3">記事の要約</p>
         <textarea class="clippoTextareaConfirm" type="text" maxlength="150" name="description" placeholder="150文字以内でクリップしたい記事の要約を書いてください" required>{{.Description}}</textarea>

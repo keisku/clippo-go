@@ -19,12 +19,12 @@
                 </div>
                 <div>
                     <div class="m-2">
-                        <span class="clipCategory">{{ .Usecase }}</span>
-                        <span class="clipCategory">{{ .Genre }}</span>
+                        {{ range .TagNames }}
+                            <span class="clipCategory">{{ . }}</span>
+                        {{end}}
                     </div>
                     <p class="clipDescription">{{ .Description }}</p>
                     <form method="POST" action="/test/delete" style="text-align: right;padding:0!important">
-                        <input type="hidden" name="post_id" value="{{ .ID }}">
                         <input type="submit" class="deleteButton" value="Delete">
                     </form>
                 </div>

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 
@@ -15,7 +14,7 @@ import (
 
 func main() {
 	repository.CreatePostsAndTagsTable()
-	fmt.Println("***** POST SERVER RUNNING *****")
+	log.Println("***** POST SERVER RUNNING *****")
 
 	lis, err := net.Listen("tcp", ":50052")
 	if err != nil {

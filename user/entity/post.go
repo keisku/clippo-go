@@ -2,8 +2,6 @@ package entity
 
 import (
 	"github.com/jinzhu/gorm"
-	// mysql
-	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 // Post 投稿

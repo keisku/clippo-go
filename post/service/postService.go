@@ -4,10 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strconv"
-	"strings"
-
-	"github.com/kskumgk63/clippo-go/post/entity"
 
 	"github.com/kskumgk63/clippo-go/post/repository"
 
@@ -17,30 +13,6 @@ import (
 
 // PostServer 投稿サーバー
 type PostServer struct{}
-
-func convertPost(post *entity.Post) (pb *postpb.Post) {
-	// convert uint to string
-	post64 := uint64(post.ID)
-	postID := strconv.FormatUint(post64, 10)
-
-	// convert uint to string
-	user64 := uint64(post.UserID)
-	userID := strconv.FormatUint(user64, 10)
-
-	// convert string to string array
-	tagArray := strings.Split(post.Tag, "/")
-
-	pb = &postpb.Post{
-		Id:          postID,
-		Url:         post.URL,
-		Title:       post.Title,
-		Description: post.Description,
-		Image:       post.Image,
-		Tag:         tagArray,
-		UserId:      userID,
-	}
-	return pb
-}
 
 // CreatePost 投稿作成
 func (*PostServer) CreatePost(ctx context.Context, req *postpb.CreatePostRequest) (*postpb.CreatePostResponse, error) {

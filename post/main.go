@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/kskumgk63/clippo-go/post/repository"
+	// "github.com/kskumgk63/clippo-go/post/repository"
 
 	"github.com/kskumgk63/clippo-go/post/service"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	repository.CreatePostsAndTagsTable()
+	// repository.CreatePostsAndTagsTable()
 	log.Println("***** POST SERVER RUNNING *****")
 
 	lis, err := net.Listen("tcp", ":50052")

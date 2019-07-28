@@ -63,14 +63,13 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 	// send the request
-	resPost, err := s.PostClient.CreatePost(r.Context(), reqPost)
+	_, err := s.PostClient.CreatePost(r.Context(), reqPost)
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Printf("*** %v\n", fmt.Sprint(err))
 		http.Redirect(w, r, "/post/register/init", http.StatusFound)
 		return
 	}
-	log.Println(resPost.GetMessage())
 
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
@@ -92,29 +91,38 @@ func (s *FrontServer) PostDelete(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
 
-// PostSearchTitle return Posts which is match with input
-func (s *FrontServer) PostSearchTitle(w http.ResponseWriter, r *http.Request) {
+// PostSearch return Posts which is match with input
+func (s *FrontServer) PostSearch(w http.ResponseWriter, r *http.Request) {
+	var keywords []string
 	r.ParseForm()
-	title := r.FormValue("title")
-	words := strings.Fields(title)
-
-	// キャッシュされているログインユーザーのIdを取得
+	// check how to search posts by title or tags
+	how := r.FormValue("HowSearch")
+	if how == "title" {
+		title := r.FormValue("title")
+		keywords = strings.Fields(title)
+	}
+	if how == "tag" {
+		tags := r.FormValue("tag_name")
+		keywords = strings.Fields(tags)
+	}
+	// get user_id from cache
 	req := &cachepb.GetIDRequest{
 		Key: LOGINUSER,
 	}
 	res, _ := s.CacheClient.GetID(r.Context(), req)
-	log.Println(res.Id)
 	if res.Id == "" {
 		log.Println("token is empty")
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	// 投稿一覧取得
-	reqPost := &postpb.SearchPostsByTitleRequest{
-		UserId: res.Id,
-		Titles: words,
+	// make a request
+	reqPost := &postpb.SearchPostsRequest{
+		UserId:   res.Id,
+		How:      how,
+		Keywords: keywords,
 	}
-	resPost, _ := s.PostClient.SearchPostsByTitle(r.Context(), reqPost)
+	// send a request
+	resPost, _ := s.PostClient.SearchPosts(r.Context(), reqPost)
 
 	template.Render(w, "top/top.tmpl", resPost.Posts)
 }

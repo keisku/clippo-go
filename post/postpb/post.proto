@@ -8,7 +8,7 @@ syntax = "proto3";
 package postpb;
 option go_package="post/postpb";
 
-// 投稿の定義
+// defenition of post
 message Post {
     string id = 1;
     string url = 2;
@@ -19,7 +19,7 @@ message Post {
     string user_id = 7;
 }
 
-// 投稿の作成
+// create a new post
 message CreatePostRequest {
     Post post = 1;
 }
@@ -27,7 +27,7 @@ message CreatePostResponse {
     string message = 1;
 }
 
-// 投稿の削除
+// delete a post
 message DeletePostRequest {
     string id = 1;
 }
@@ -35,7 +35,7 @@ message DeletePostResponse {
     string message = 1;
 }
 
-// ユーザーIDを紐付いたすべての投稿を取得
+// get all posts by user_id
 message GetAllPostsByUserIDRequest {
     string user_id = 1;
 }
@@ -43,16 +43,17 @@ message GetAllPostsByUserIDResponse {
     repeated Post posts = 1;
 }
 
-// タイトル検索
-message SearchPostsByTitleRequest {
+// Search Posts
+message SearchPostsRequest {
     string user_id = 1;
-    repeated string titles = 2;
+    string how = 2;
+    repeated string keywords = 3;
 }
-message SearchPostsByTitleResponse {
+message SearchPostsResponse {
     repeated Post posts = 1;
 }
 
-// URLからスクレイピングしてくれる
+// scraping by URL
 message PostURLRequest {
     string url = 1;
 }
@@ -65,14 +66,14 @@ message PostResponse {
 }
 
 service PostService {
-    // URLからスクレイピングしてくれる
-    rpc GetPostDetail(PostURLRequest) returns (PostResponse) {};
-    // 投稿の作成
+    // create a new post
     rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {};
-    // 投稿の削除
+    // delete a post
     rpc DeletePost (DeletePostRequest) returns (DeletePostResponse) {};
-    // ユーザーIDを紐付いたすべての投稿を取得
+    // get all posts by user_id
     rpc GetAllPostsByUserID (GetAllPostsByUserIDRequest) returns (GetAllPostsByUserIDResponse) {};
-    // タイトル検索
-    rpc SearchPostsByTitle (SearchPostsByTitleRequest) returns (SearchPostsByTitleResponse) {};
+    // Search Posts
+    rpc SearchPosts (SearchPostsRequest) returns (SearchPostsResponse) {};
+    // scraping by URL
+    rpc GetPostDetail(PostURLRequest) returns (PostResponse) {};
 }

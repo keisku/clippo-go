@@ -8,15 +8,17 @@
 </div>
 <div class="clippoCover pl-5 pr-5">
     <p class="clippoText">タイトル検索</p>
-    <form method="POST" action="/post/search/title" id="titleSearchForm">
+    <form method="POST" action="/post/search" id="titleSearchForm">
         <input class="clippoInput" name="title" type="text" placeholder="タイトルで検索" required />
+        <input type="hidden" name="HowSearch" value="title">
         <input class="clipButton" type="submit" value="検索">
     </form>
 </div>
 <div class="clippoCover pl-5 pr-5">
     <p class="clippoText">タグ検索</p>
-    <form method="POST" action="/post/search/tag" id="titleSearchForm">
+    <form method="POST" action="/post/search" id="titleSearchForm">
         <input class="clippoInput" name="tag_name" type="text" placeholder="半角または全角スペースで区切ってください" required />
+        <input type="hidden" name="HowSearch" value="tag">
         <input class="clipButton" type="submit" value="検索">
     </form>
 </div>

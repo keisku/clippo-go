@@ -113,13 +113,13 @@ func (*PostServer) GetAllPostsByUserID(ctx context.Context, req *postpb.GetAllPo
 	return &postpb.GetAllPostsByUserIDResponse{Posts: posts}, nil
 }
 
-// SearchPostsByTitle 投稿のタイトル検索
-func (*PostServer) SearchPostsByTitle(ctx context.Context, req *postpb.SearchPostsByTitleRequest) (*postpb.SearchPostsByTitleResponse, error) {
-	fmt.Println("SearchPostsByTitle RUN")
+// SearchPosts search posts with keywords of title or tags
+func (*PostServer) SearchPosts(ctx context.Context, req *postpb.SearchPostsRequest) (*postpb.SearchPostsResponse, error) {
+	fmt.Println("SearchPosts RUN")
 	var posts []*postpb.Post
 
 	// search posts grom DB
-	dbPosts := repository.SearchByTitle(req)
+	dbPosts := repository.Search(req)
 
 	// if posts from DB are not found, return SAMPLE
 	if len(dbPosts) == 0 {
@@ -135,7 +135,7 @@ func (*PostServer) SearchPostsByTitle(ctx context.Context, req *postpb.SearchPos
 			tagArray,
 		)
 		posts = append(posts, p)
-		return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
+		return &postpb.SearchPostsResponse{Posts: posts}, nil
 	}
 	// if posts from DB are EXISTED, return posts after convert
 	for i := 0; i < len(dbPosts); i++ {
@@ -153,7 +153,7 @@ func (*PostServer) SearchPostsByTitle(ctx context.Context, req *postpb.SearchPos
 		// make posts array
 		posts = append(posts, mappingPost(postID, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, userID, tagArray))
 	}
-	return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
+	return &postpb.SearchPostsResponse{Posts: posts}, nil
 }
 
 // GetPostDetail URLを基にWebスクレイピング

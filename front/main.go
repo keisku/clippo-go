@@ -58,7 +58,7 @@ func main() {
 	r.Path("/post/register/confirm").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostRegisterConfirm))
 	r.Path("/post/register/do").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDo))
 	r.Path("/post/delete").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostDelete))
-	r.Path("/post/search/title").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearchTitle))
+	r.Path("/post/search").Methods(http.MethodPost).HandlerFunc(frontSrv.AuthToken(frontSrv.PostSearch))
 
 	/*
 		static フォルダの読み取り

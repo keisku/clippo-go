@@ -28,6 +28,9 @@ func Create(req *postpb.CreatePostRequest) error {
 
 	// array to string
 	for i, tagName := range tagNames {
+		// TODO: handle SQL problem
+		// the last word of array never be found in DB, it necessarily save
+
 		// check if the tag_name is existed, if not create new
 		if err := db.Where("tag_name = ?", tagName).Find(&tag).Error; err != nil {
 			// save tag in DB
@@ -90,13 +93,13 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []entity.Post {
 	return posts
 }
 
-// SearchByTitle 投稿のタイトル検索
-func SearchByTitle(req *postpb.SearchPostsByTitleRequest) []entity.Post {
-	// このユーザーIDを基にDB検索
+// Search search posts by title or tags
+func Search(req *postpb.SearchPostsRequest) []entity.Post {
 	id := req.GetUserId()
-	words := req.GetTitles()
+	how := req.GetHow()
+	words := req.GetKeywords()
 
-	// 複数の検索ワードで検索できるように配列の文字列を加工
+	// process keywords for query
 	var query string
 	for i, word := range words {
 		if i == len(words)-1 {
@@ -108,16 +111,29 @@ func SearchByTitle(req *postpb.SearchPostsByTitleRequest) []entity.Post {
 		}
 	}
 
-	// データベースと接続
+	// connect with DB
 	db := gormConnect()
 	defer db.Close()
 
-	// 投稿一覧取得
+	// get posts
 	posts := []entity.Post{}
-	if err := db.Where("user_id = ?", id).Where("title LIKE ?", query).Find(&posts).Error; err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Println(err)
-		return nil
+
+	// check how to search
+	if how == "title" {
+		if err := db.Where("user_id = ?", id).Where("title LIKE ?", query).Find(&posts).Error; err != nil {
+			log.SetFlags(log.Lshortfile)
+			log.Println(err)
+			return nil
+		}
+		return posts
+	}
+	if how == "tag" {
+		if err := db.Where("user_id = ?", id).Where("tag LIKE ?", query).Find(&posts).Error; err != nil {
+			log.SetFlags(log.Lshortfile)
+			log.Println(err)
+			return nil
+		}
+		return posts
 	}
 	return posts
 }

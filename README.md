@@ -42,13 +42,6 @@ Protocol Buffersの定義
 
 現状、サービスは本番環境で動作していませんが、インフラでのデプロイを目指しています。
 
-# ブランチに関して補足
-
-- master
-    ブランチではECSでのデプロイした構成です。
-- local
-    デモ用にローカル環境でWebアプリケーションが作動する構成です。
-
 # デモGIF（ローカル環境での動作をキャプチャ）
 
 ### ユーザー登録〜ログイン
@@ -86,15 +79,15 @@ Protocol Buffersの定義
     - 投稿に対してタグを作成
 - DBへ保存
 
-![Webページのクリップ](https://github.com/kskumgk63/clippo-go/blob/local/GIF/clip.gif)
+![Webページのクリップ](https://github.com/kskumgk63/clippo-go/GIF/createPost.gif)
 
 ### クリップした記事の検索
 
 #### 処理の流れ
 - ユーザーが入力したタイトルからクリップした記事を検索
 
-![タイトル検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/searchTitle.gif)
+![タイトル検索](https://github.com/kskumgk63/clippo-go/GIF/searchPostsByTitle.gif)
 
 - ユーザーが入力したタグからクリップした記事を検索
 
-![タグ検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/search.gif)
+![タイトル検索](https://github.com/kskumgk63/clippo-go/GIF/searchPostsByTag.gif)

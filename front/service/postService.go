@@ -87,7 +87,7 @@ func (s *FrontServer) PostDelete(w http.ResponseWriter, r *http.Request) {
 		Id: postID,
 	}
 	res, _ := s.PostClient.DeletePost(r.Context(), req)
-	log.Panicln(res.GetMessage())
+	log.Println(res.GetMessage())
 	http.Redirect(w, r, "/top", http.StatusFound)
 }
 

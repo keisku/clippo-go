@@ -18,7 +18,6 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 		Key: LOGINUSER,
 	}
 	res, _ := s.CacheClient.GetID(r.Context(), req)
-	log.Println(res.Id)
 	if res.Id == "" {
 		log.Println("id is empty")
 		http.Redirect(w, r, "/login", http.StatusFound)

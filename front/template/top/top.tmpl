@@ -16,40 +16,10 @@
 <div class="clippoCover pl-5 pr-5">
     <p class="clippoText">タグ検索</p>
     <form method="POST" action="/post/search/tag" id="titleSearchForm">
-        <input class="clippoInput" name="tag_name" type="text" placeholder="タグで検索" required />
+        <input class="clippoInput" name="tag_name" type="text" placeholder="半角または全角スペースで区切ってください" required />
         <input class="clipButton" type="submit" value="検索">
     </form>
 </div>
-
-<!-- <div class="clippoCover pl-5 pr-5">
-    <p class="clippoText">記事の目的</p>
-    <ul class="searchList">
-        <form>
-            <li><input name="usecase" type="submit" value="おもしろい" formmethod="post" formaction="/post/search/usecase" /></li>
-            <li><input name="usecase" type="submit" value="エラー解決" formmethod="post" formaction="/post/search/usecase" /></li>
-            <li><input name="usecase" type="submit" value="知識" formmethod="post" formaction="/post/search/usecase" /></li>
-            <li><input name="usecase" type="submit" value="リファレンス" formmethod="post" formaction="/post/search/usecase" /></li>
-            <li><input name="usecase" type="submit" value="チュートリアル" formmethod="post" formaction="/post/search/usecase" /></li>
-            <li><input name="usecase" type="submit" value="その他" formmethod="post" formaction="/post/search/usecase" /></li>
-        </form>
-    </ul>
-</div>
-<div class="clippoCover pl-5 pr-5">
-    <p class="clippoText">ジャンル</p>
-    <ul class="searchList">
-        <form>
-            <li><input name="genre" type="submit" value="プログラミング言語" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="フレームワーク" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="ライブラリ" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="OS" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="SQL" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="クラウド" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="コンテナ技術" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="デザイン" formmethod="post" formaction="/post/search/genre" /></li>
-            <li><input name="genre" type="submit" value="その他" formmethod="post" formaction="/post/search/genre" /></li>
-        </form>
-    </ul>
-</div> -->
 
 <div class="clipWrapperBig">
     {{ range . }}

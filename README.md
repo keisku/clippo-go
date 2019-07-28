@@ -23,7 +23,8 @@ Protocol Buffersの定義
 - ログイン
 - ユーザー登録
 - 投稿
-- 投稿検索
+- タグ作成
+- 投稿検索（タイトルまたはタグ）
 
 # 使用技術
 
@@ -82,20 +83,18 @@ Protocol Buffersの定義
 - クリップしたい記事のURLをタイプして、「Clip」ボタンを押下
     - URL先のタイトル、イメージ画像、ディスクリプションをスクレイピング
     - 投稿確認画面にて修正がある場合は修正
+    - 投稿に対してタグを作成
 - DBへ保存
 
 ![Webページのクリップ](https://github.com/kskumgk63/clippo-go/blob/local/GIF/clip.gif)
 
-### クリップした記事のタイトル検索
+### クリップした記事の検索
 
 #### 処理の流れ
-- ユーザーの入力したタイトルからクリップした記事を検索
+- ユーザーが入力したタイトルからクリップした記事を検索
 
 ![タイトル検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/searchTitle.gif)
 
-### クリップした記事のタグ検索
-
-#### 処理の流れ
-- クリックされたタグからクリップした記事を検索
+- ユーザーが入力したタグからクリップした記事を検索
 
 ![タグ検索](https://github.com/kskumgk63/clippo-go/blob/local/GIF/search.gif)

@@ -79,15 +79,15 @@ Protocol Buffersの定義
     - 投稿に対してタグを作成
 - DBへ保存
 
-![Webページのクリップ](https://github.com/kskumgk63/clippo-go/GIF/createPost.gif)
+![Webページのクリップ](https://github.com/kskumgk63/clippo-go/blob/master/GIF/createPost.gif)
 
 ### クリップした記事の検索
 
 #### 処理の流れ
 - ユーザーが入力したタイトルからクリップした記事を検索
 
-![タイトル検索](https://github.com/kskumgk63/clippo-go/GIF/searchPostsByTitle.gif)
+![タイトル検索](https://github.com/kskumgk63/clippo-go/blob/master/GIF/searchPostsByTitle.gif)
 
 - ユーザーが入力したタグからクリップした記事を検索
 
-![タイトル検索](https://github.com/kskumgk63/clippo-go/GIF/searchPostsByTag.gif)
+![タイトル検索](https://github.com/kskumgk63/clippo-go/blob/master/GIF/searchPostsByTag.gif)

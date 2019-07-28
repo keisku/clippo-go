@@ -1,14 +1,11 @@
 package repository
 
 import (
-	"fmt"
 	"log"
 	"strconv"
-	"strings"
 
 	"github.com/kskumgk63/clippo-go/post/entity"
 	"github.com/kskumgk63/clippo-go/post/postpb"
-	"github.com/speps/go-hashids"
 
 	// mysql
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -20,35 +17,28 @@ func Create(req *postpb.CreatePostRequest) error {
 	db := gormConnect()
 	defer db.Close()
 
-	// 文字列で受け取るのでuintへ変換
+	// convert string to uint
 	resID := req.GetPost().GetUserId()
 	id64, _ := strconv.ParseUint(resID, 10, 64)
 	id := uint(id64)
 
-	tags := entity.Tag{}
-	tagNames := strings.Fields(req.GetPost().GetTagId())
+	tag := entity.Tag{}
+	tagNames := req.GetPost().GetTag()
+	var postTag string
 
-	var tagID string
+	// array to string
 	for i, tagName := range tagNames {
 		// check if the tag_name is existed, if not create new
-		if err := db.Where("tag_name = ?", tagName).Find(&tags).Error; err != nil {
-			// generate short uuid
-			hd := hashids.NewData()
-			hd.MinLength = 8
-			h, _ := hashids.NewWithData(hd)
-			e, _ := h.Encode([]int{45, 434, 1313, 99})
-			fmt.Println(e)
-			// create new tag
+		if err := db.Where("tag_name = ?", tagName).Find(&tag).Error; err != nil {
+			// save tag in DB
 			db.Create(&entity.Tag{
 				TagName: tagName,
-				TagID:   e,
 			})
-			log.Println(err)
 		}
 		if i == 0 {
-			tagID += tags.TagID
+			postTag += tagName
 		} else {
-			tagID += "/" + tags.TagID
+			postTag += "/" + tagName
 		}
 	}
 
@@ -57,7 +47,7 @@ func Create(req *postpb.CreatePostRequest) error {
 		Title:       req.GetPost().GetTitle(),
 		Description: req.GetPost().GetDescription(),
 		Image:       req.GetPost().GetImage(),
-		TagID:       tagID,
+		Tag:         postTag,
 		UserID:      id,
 	}
 

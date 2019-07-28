@@ -14,6 +14,14 @@
     </form>
 </div>
 <div class="clippoCover pl-5 pr-5">
+    <p class="clippoText">タグ検索</p>
+    <form method="POST" action="/post/search/tag" id="titleSearchForm">
+        <input class="clippoInput" name="tag_name" type="text" placeholder="タグで検索" required />
+        <input class="clipButton" type="submit" value="検索">
+    </form>
+</div>
+
+<!-- <div class="clippoCover pl-5 pr-5">
     <p class="clippoText">記事の目的</p>
     <ul class="searchList">
         <form>
@@ -41,7 +49,8 @@
             <li><input name="genre" type="submit" value="その他" formmethod="post" formaction="/post/search/genre" /></li>
         </form>
     </ul>
-</div>
+</div> -->
+
 <div class="clipWrapperBig">
     {{ range . }}
         <div class="clipWrapper">
@@ -57,8 +66,9 @@
                 </div>
                 <div>
                     <div class="m-2">
-                        <span class="clipCategory">{{ .Usecase }}</span>
-                        <span class="clipCategory">{{ .Genre }}</span>
+                        {{ range .Tag }}
+                            <span class="clipCategory">{{ . }}</span>
+                        {{end}}
                     </div>
                     <p class="clipDescription">{{ .Description }}</p>
                     <form method="POST" action="/post/delete" style="text-align: right;padding:0!important">

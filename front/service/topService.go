@@ -74,7 +74,6 @@ func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
 	image := r.FormValue("image")
 	tagNames := r.FormValue("tag_name")
 	tags := strings.Fields(tagNames)
-	log.Println(tags)
 
 	// ディスクリプションが150文字より多かったらリダイレクト
 	if utf8.RuneCountInString(description) > 150 {

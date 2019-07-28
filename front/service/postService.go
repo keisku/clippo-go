@@ -38,30 +38,31 @@ func (s *FrontServer) PostDo(w http.ResponseWriter, r *http.Request) {
 	image := r.FormValue("image")
 	tag := r.FormValue("tag_name")
 
-	// ディスクリプションが150文字より多かったらリダイレクト
+	// chech if description is more than 150
 	if utf8.RuneCountInString(description) > 150 {
 		log.Printf("descriotion is too long | n = %v\n", utf8.RuneCountInString(description))
 		http.Redirect(w, r, "/top", http.StatusFound)
 		return
 	}
 
-	// キャッシュされているログインユーザーのIdを取得
+	// get userID from cache
 	reqCache := &cachepb.GetIDRequest{
 		Key: LOGINUSER,
 	}
 	resCache, _ := s.CacheClient.GetID(r.Context(), reqCache)
 
-	// 投稿を作成するgRPCリクエスト
+	// create gRPC request
 	reqPost := &postpb.CreatePostRequest{
 		Post: &postpb.Post{
 			Url:         url,
 			Title:       title,
 			Description: description,
 			Image:       image,
-			TagId:       tag,
+			Tag:         strings.Fields(tag),
 			UserId:      resCache.Id,
 		},
 	}
+	// send the request
 	resPost, err := s.PostClient.CreatePost(r.Context(), reqPost)
 	if err != nil {
 		log.SetFlags(log.Lshortfile)

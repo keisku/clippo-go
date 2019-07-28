@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/kskumgk63/clippo-go/post/repository"
 
@@ -28,19 +29,19 @@ const (
 	SAMPLEIMAGE = "http://designers-tips.com/wp-content/uploads/2015/03/paper-clip6.jpg"
 	// SAMPLEUSERID サンプルユーザーID
 	SAMPLEUSERID = "0000"
-	// SAMPLETAGID サンプルタグID
-	SAMPLETAGID = "xxxxxxx"
+	// SAMPLETAG サンプルタグ
+	SAMPLETAG = "サンプル"
 )
 
-func mappingPost(id, url, title, description, image, tagID, userID string) (p *postpb.Post) {
+func mappingPost(id, url, title, description, image, userID string, tag []string) (p *postpb.Post) {
 	p = &postpb.Post{
 		Id:          id,
 		Url:         url,
 		Title:       title,
 		Description: description,
 		Image:       image,
-		TagId:       tagID,
 		UserId:      userID,
+		Tag:         tag,
 	}
 	return p
 }
@@ -69,7 +70,7 @@ func (*PostServer) DeletePost(ctx context.Context, req *postpb.DeletePostRequest
 	return &postpb.DeletePostResponse{Message: "**** DELETE POST ****"}, nil
 }
 
-// GetAllPostsByUserID ユーザーIDに紐づく投稿を全取得
+// GetAllPostsByUserID get all posts by user_id
 func (*PostServer) GetAllPostsByUserID(ctx context.Context, req *postpb.GetAllPostsByUserIDRequest) (*postpb.GetAllPostsByUserIDResponse, error) {
 	fmt.Println("GetAllPostsByUserID RUN")
 	var posts []*postpb.Post
@@ -77,29 +78,37 @@ func (*PostServer) GetAllPostsByUserID(ctx context.Context, req *postpb.GetAllPo
 	// search posts grom DB
 	dbPosts := repository.GetByUserID(req)
 
-	// DBから何も見つからなければサンプルを返す
+	// if posts from DB are not found, return SAMPLE
 	if len(dbPosts) == 0 {
+		var tagArray []string
+		tagArray = append(tagArray, SAMPLETAG)
 		p := mappingPost(
 			SAMPLEPOSTID,
 			SAMPLEURL,
 			SAMPLETITLE,
 			SAMPLEDESCRIPTION,
 			SAMPLEIMAGE,
-			SAMPLETAGID,
 			SAMPLEUSERID,
+			tagArray,
 		)
 		posts = append(posts, p)
 		return &postpb.GetAllPostsByUserIDResponse{Posts: posts}, nil
 	}
-	// DBから見つかれば、レスポンス用にマッピング
+	// if posts from DB are EXISTED, return posts after convert
 	for i := 0; i < len(dbPosts); i++ {
-		u64 := uint64(dbPosts[i].UserID)
-		uid := strconv.FormatUint(u64, 10)
+		// convert uint to string
+		post64 := uint64(dbPosts[i].ID)
+		postID := strconv.FormatUint(post64, 10)
 
-		p64 := uint64(dbPosts[i].ID)
-		pid := strconv.FormatUint(p64, 10)
+		// convert uint to string
+		user64 := uint64(dbPosts[i].UserID)
+		userID := strconv.FormatUint(user64, 10)
 
-		posts = append(posts, mappingPost(pid, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, uid, dbPosts[i].TagID))
+		// convert string to string array
+		tagArray := strings.Split(dbPosts[i].Tag, "/")
+
+		// make posts array
+		posts = append(posts, mappingPost(postID, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, userID, tagArray))
 	}
 	return &postpb.GetAllPostsByUserIDResponse{Posts: posts}, nil
 }
@@ -112,29 +121,37 @@ func (*PostServer) SearchPostsByTitle(ctx context.Context, req *postpb.SearchPos
 	// search posts grom DB
 	dbPosts := repository.SearchByTitle(req)
 
-	// DBから何も見つからなければサンプルを返す
+	// if posts from DB are not found, return SAMPLE
 	if len(dbPosts) == 0 {
+		var tagArray []string
+		tagArray = append(tagArray, SAMPLETAG)
 		p := mappingPost(
 			SAMPLEPOSTID,
 			SAMPLEURL,
 			SAMPLETITLE,
 			SAMPLEDESCRIPTION,
 			SAMPLEIMAGE,
-			SAMPLETAGID,
 			SAMPLEUSERID,
+			tagArray,
 		)
 		posts = append(posts, p)
 		return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
 	}
-	// DBから見つかれば、レスポンス用にマッピング
+	// if posts from DB are EXISTED, return posts after convert
 	for i := 0; i < len(dbPosts); i++ {
-		u64 := uint64(dbPosts[i].UserID)
-		uid := strconv.FormatUint(u64, 10)
+		// convert uint to string
+		post64 := uint64(dbPosts[i].ID)
+		postID := strconv.FormatUint(post64, 10)
 
-		p64 := uint64(dbPosts[i].ID)
-		pid := strconv.FormatUint(p64, 10)
+		// convert uint to string
+		user64 := uint64(dbPosts[i].UserID)
+		userID := strconv.FormatUint(user64, 10)
 
-		posts = append(posts, mappingPost(pid, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, dbPosts[i].TagID, uid))
+		// convert string to string array
+		tagArray := strings.Split(dbPosts[i].Tag, "/")
+
+		// make posts array
+		posts = append(posts, mappingPost(postID, dbPosts[i].URL, dbPosts[i].Title, dbPosts[i].Description, dbPosts[i].Image, userID, tagArray))
 	}
 	return &postpb.SearchPostsByTitleResponse{Posts: posts}, nil
 }

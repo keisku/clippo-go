@@ -5,8 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/kskumgk63/clippo-go/cache/cachepb"
 	gocache "github.com/pmylund/go-cache"
+
+	"github.com/kskumgk63/clippo-go/cache/cachepb"
 )
 
 // CacheServer キャッシュサーバー

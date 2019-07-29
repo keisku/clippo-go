@@ -49,7 +49,7 @@ func convertPost(post *entity.Post) *postpb.Post {
 	}
 }
 
-// Create 投稿を作成
+// Create create new post
 func Create(req *postpb.CreatePostRequest) error {
 	// connect with db
 	db := gormConnect()
@@ -60,15 +60,12 @@ func Create(req *postpb.CreatePostRequest) error {
 	id64, _ := strconv.ParseUint(resID, 10, 64)
 	id := uint(id64)
 
-	tag := entity.Tag{}
 	tagNames := req.GetPost().GetTag()
 	var postTag string
 
 	// array to string
 	for i, tagName := range tagNames {
-		// TODO: handle SQL problem
-		// the last word of array never be found in DB, it necessarily save
-
+		tag := entity.Tag{}
 		// check if the tag_name is existed, if not create new
 		if err := db.Where("tag_name = ?", tagName).Find(&tag).Error; err != nil {
 			// save tag in DB

@@ -11,24 +11,24 @@ import (
 	"github.com/kskumgk63/clippo-go/post/postpb"
 )
 
-// PostServer 投稿サーバー
+// PostServer post server
 type PostServer struct{}
 
-// CreatePost 投稿作成
+// CreatePost create a new post
 func (*PostServer) CreatePost(ctx context.Context, req *postpb.CreatePostRequest) (*postpb.CreatePostResponse, error) {
 	fmt.Println("CreatePost RUN")
 	err := repository.Create(req)
 	if err != nil {
 		log.Println(err)
 	}
-	// 投稿作成レスポンスメッセージ
+	// create a respponse message
 	res := &postpb.CreatePostResponse{
 		Message: "**** SAVE POST ****",
 	}
 	return res, nil
 }
 
-// DeletePost 投稿削除
+// DeletePost delete a post
 func (*PostServer) DeletePost(ctx context.Context, req *postpb.DeletePostRequest) (*postpb.DeletePostResponse, error) {
 	fmt.Println("DeletePost RUN")
 	err := repository.Delete(req)
@@ -58,16 +58,19 @@ func (*PostServer) SearchPosts(ctx context.Context, req *postpb.SearchPostsReque
 	return &postpb.SearchPostsResponse{Posts: posts}, nil
 }
 
-// GetPostDetail URLを基にWebスクレイピング
+// GetPostDetail get title, description and image from URL
 func (*PostServer) GetPostDetail(ctx context.Context, req *postpb.PostURLRequest) (*postpb.PostResponse, error) {
 	fmt.Printf("GetPostDetail RUN %v\n", req)
 
-	// リクエストURLのタイトルとディスクリプションをスクレイピング
+	// scraping this URL
 	url := req.GetUrl()
 
 	g := goose.New()
 	article, err := g.ExtractFromURL(url)
+	// if it is not available to scrape, return empty
 	if err != nil {
+		log.SetFlags(log.Lshortfile)
+		log.Println(err)
 		return &postpb.PostResponse{
 			Url:         "",
 			Title:       "",
@@ -76,7 +79,7 @@ func (*PostServer) GetPostDetail(ctx context.Context, req *postpb.PostURLRequest
 		}, err
 	}
 
-	// gRPCレスポンスの作成
+	// create gRPC response
 	return &postpb.PostResponse{
 		Url:         url,
 		Title:       article.Title,

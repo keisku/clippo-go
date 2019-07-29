@@ -13,7 +13,7 @@ import (
 
 // Top returns "/top"
 func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
-	// トークンをキャッシュに格納
+	// set the token in cache
 	req := &cachepb.GetIDRequest{
 		Key: LOGINUSER,
 	}
@@ -23,7 +23,7 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	// 投稿一覧取得
+	// get all posts by user_id
 	reqPost := &postpb.GetAllPostsByUserIDRequest{
 		UserId: res.Id,
 	}
@@ -37,16 +37,8 @@ func (s *FrontServer) Top(w http.ResponseWriter, r *http.Request) {
 
 // TopBeforeLogin returns "/"
 func (s *FrontServer) TopBeforeLogin(w http.ResponseWriter, r *http.Request) {
-	var array []string
-	array = append(array, SAMPLETAG)
-	post := &TestPost{
-		URL:         SAMPLEURL,
-		Title:       SAMPLETITLE,
-		Description: SAMPLEDESCRIPTION,
-		Image:       SAMPLEIMAGE,
-		TagNames:    array,
-	}
-	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", post)
+	var t TestPost
+	template.RenderBeforeLogin(w, "top/topBeforeLogin.tmpl", t.makeTestPost())
 }
 
 // Test returns "/test"
@@ -74,9 +66,10 @@ func (s *FrontServer) TestDo(w http.ResponseWriter, r *http.Request) {
 	tagNames := r.FormValue("tag_name")
 	tags := strings.Fields(tagNames)
 
-	// ディスクリプションが150文字より多かったらリダイレクト
+	// check the description if its length is more than 150
 	if utf8.RuneCountInString(description) > 150 {
 		http.Redirect(w, r, "/test", http.StatusFound)
+		return
 	}
 
 	post := &TestPost{

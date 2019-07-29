@@ -26,7 +26,7 @@ func makeSamplePost() *postpb.Post {
 	}
 }
 
-func convertPost(post *entity.Post) (pb *postpb.Post) {
+func convertPost(post *entity.Post) *postpb.Post {
 	// convert uint to string
 	post64 := uint64(post.ID)
 	postID := strconv.FormatUint(post64, 10)
@@ -38,7 +38,7 @@ func convertPost(post *entity.Post) (pb *postpb.Post) {
 	// convert string to string array
 	tagArray := strings.Split(post.Tag, "/")
 
-	pb = &postpb.Post{
+	return &postpb.Post{
 		Id:          postID,
 		Url:         post.URL,
 		Title:       post.Title,
@@ -47,7 +47,6 @@ func convertPost(post *entity.Post) (pb *postpb.Post) {
 		Tag:         tagArray,
 		UserId:      userID,
 	}
-	return pb
 }
 
 // Create 投稿を作成
@@ -100,12 +99,12 @@ func Create(req *postpb.CreatePostRequest) error {
 	return nil
 }
 
-// Delete 投稿を削除
+// Delete delete a post
 func Delete(req *postpb.DeletePostRequest) error {
 	var post entity.Post
 	id64, _ := strconv.ParseUint(req.GetId(), 10, 64)
 	post.ID = uint(id64)
-	// データベースと接続
+	// connect with DB
 	db := gormConnect()
 	defer db.Close()
 	if err := db.Delete(&post).Error; err != nil {
@@ -114,7 +113,7 @@ func Delete(req *postpb.DeletePostRequest) error {
 	return nil
 }
 
-// GetByUserID ユーザーIDに紐づく投稿を全取得
+// GetByUserID get posts by user_id
 func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []*postpb.Post {
 	var pbs []*postpb.Post
 
@@ -126,16 +125,18 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []*postpb.Post {
 
 	// get posts
 	posts := []entity.Post{}
-	if err := db.Order("ID desc").Where("user_id = ?", id).Find(&posts).Error; err != nil {
+	err := db.Order("ID desc").Where("user_id = ?", id).Find(&posts).Error
+
+	// if not found any posts in DB, return sample
+	if len(posts) == 0 {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
-		// if posts from DB are not found, return SAMPLE
 		pb := makeSamplePost()
 		pbs = append(pbs, pb)
-		return pbs
-	}
-	for _, post := range posts {
-		pbs = append(pbs, convertPost(&post))
+	} else {
+		for _, post := range posts {
+			pbs = append(pbs, convertPost(&post))
+		}
 	}
 	return pbs
 }
@@ -169,30 +170,34 @@ func Search(req *postpb.SearchPostsRequest) []*postpb.Post {
 
 	// check how to search
 	if how == "title" {
-		if err := db.Where("user_id = ?", id).Where("title LIKE ?", query).Find(&posts).Error; err != nil {
+		err := db.Where("user_id = ?", id).Where("title LIKE ?", query).Find(&posts).Error
+		// if not found any posts in DB, return sample
+		if len(posts) == 0 {
 			log.SetFlags(log.Lshortfile)
 			log.Println(err)
-			// if posts from DB are not found, return SAMPLE
 			pb := makeSamplePost()
 			pbs = append(pbs, pb)
-			return pbs
+		} else {
+			for _, post := range posts {
+				pbs = append(pbs, convertPost(&post))
+			}
 		}
-		for _, post := range posts {
-			pbs = append(pbs, convertPost(&post))
-		}
+		return pbs
 	}
 	if how == "tag" {
-		if err := db.Where("user_id = ?", id).Where("tag LIKE ?", query).Find(&posts).Error; err != nil {
+		err := db.Where("user_id = ?", id).Where("tag LIKE ?", query).Find(&posts).Error
+		if len(posts) == 0 {
 			log.SetFlags(log.Lshortfile)
 			log.Println(err)
 			// if posts from DB are not found, return SAMPLE
 			pb := makeSamplePost()
 			pbs = append(pbs, pb)
-			return pbs
+		} else {
+			for _, post := range posts {
+				pbs = append(pbs, convertPost(&post))
+			}
 		}
-		for _, post := range posts {
-			pbs = append(pbs, convertPost(&post))
-		}
+		return pbs
 	}
 	return pbs
 }

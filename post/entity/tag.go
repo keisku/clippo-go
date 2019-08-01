@@ -7,5 +7,5 @@ import (
 // Tag tag will be used for search
 type Tag struct {
 	gorm.Model
-	TagName string
+	TagName string `gorm:"not null"`
 }

@@ -41,20 +41,28 @@ func gormConnect() *gorm.DB {
 // CreatePostsAndTagsTable create posts and tags table
 func CreatePostsAndTagsTable() {
 	db := gormConnect()
+	// create post_tags if not existed
+	// MUST run first
+	if db.HasTable("post_tags") {
+		log.Println("** DELETE POST_TAGS table **")
+		db.DropTable("post_tags")
+	}
+	// create posts if not existed
 	if db.HasTable("posts") {
-		log.Println("*** REcreate POSTS table ***")
+		log.Println("** REcreate POSTS table **")
 		db.DropTable("posts")
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Post{})
 	} else {
-		log.Println("*** Create POSTS table ***")
+		log.Println("** Create POSTS table **")
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Post{})
 	}
+	// create tags if not existed
 	if db.HasTable("tags") {
-		log.Println("*** REcreate TAGS table ***")
+		log.Println("** REcreate TAGS table **")
 		db.DropTable("tags")
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tag{})
 	} else {
-		log.Println("*** Create TAGS table ***")
+		log.Println("** Create TAGS table **")
 		db.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&entity.Tag{})
 	}
 }

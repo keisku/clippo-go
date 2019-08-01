@@ -3,7 +3,6 @@ package repository
 import (
 	"log"
 	"strconv"
-	"strings"
 
 	"github.com/kskumgk63/clippo-go/post/entity"
 	"github.com/kskumgk63/clippo-go/post/postpb"
@@ -35,8 +34,13 @@ func convertPost(post *entity.Post) *postpb.Post {
 	user64 := uint64(post.UserID)
 	userID := strconv.FormatUint(user64, 10)
 
-	// convert string to string array
-	tagArray := strings.Split(post.Tag, "/")
+	var tagArray []string
+	tags := post.Tags
+
+	// convert struct to []string for the view
+	for _, tag := range tags {
+		tagArray = append(tagArray, tag.TagName)
+	}
 
 	return &postpb.Post{
 		Id:          postID,
@@ -51,6 +55,8 @@ func convertPost(post *entity.Post) *postpb.Post {
 
 // Create create new post
 func Create(req *postpb.CreatePostRequest) error {
+	var tags []entity.Tag
+
 	// connect with db
 	db := gormConnect()
 	defer db.Close()
@@ -61,23 +67,17 @@ func Create(req *postpb.CreatePostRequest) error {
 	id := uint(id64)
 
 	tagNames := req.GetPost().GetTag()
-	var postTag string
 
 	// array to string
-	for i, tagName := range tagNames {
+	for _, tagName := range tagNames {
 		tag := entity.Tag{}
 		// check if the tag_name is existed, if not create new
 		if err := db.Where("tag_name = ?", tagName).Find(&tag).Error; err != nil {
 			// save tag in DB
-			db.Create(&entity.Tag{
-				TagName: tagName,
-			})
+			tag.TagName = tagName
+			db.Create(&tag)
 		}
-		if i == 0 {
-			postTag += tagName
-		} else {
-			postTag += "/" + tagName
-		}
+		tags = append(tags, tag)
 	}
 
 	post := entity.Post{
@@ -85,7 +85,7 @@ func Create(req *postpb.CreatePostRequest) error {
 		Title:       req.GetPost().GetTitle(),
 		Description: req.GetPost().GetDescription(),
 		Image:       req.GetPost().GetImage(),
-		Tag:         postTag,
+		Tags:        tags,
 		UserID:      id,
 	}
 
@@ -120,14 +120,15 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []*postpb.Post {
 	db := gormConnect()
 	defer db.Close()
 
-	// get posts
+	// get posts related to tags
 	posts := []entity.Post{}
-	err := db.Order("ID desc").Where("user_id = ?", id).Find(&posts).Error
-
-	// if not found any posts in DB, return sample
-	if len(posts) == 0 {
+	err := db.Preload("Tags").Order("ID desc").Where("user_id = ?", id).Find(&posts).Error
+	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
+	}
+	// if not found any posts in DB, return sample
+	if len(posts) == 0 {
 		pb := makeSamplePost()
 		pbs = append(pbs, pb)
 	} else {
@@ -182,10 +183,27 @@ func Search(req *postpb.SearchPostsRequest) []*postpb.Post {
 		return pbs
 	}
 	if how == "tag" {
-		err := db.Where("user_id = ?", id).Where("tag LIKE ?", query).Find(&posts).Error
-		if len(posts) == 0 {
+		var tags []entity.Tag
+
+		// search tags by tag_name
+		for _, word := range words {
+			var tag entity.Tag
+			err := db.Where("tag_name = ?", word).Find(&tag).Error
+			if err != nil {
+				log.SetFlags(log.Lshortfile)
+				log.Println(err)
+			} else {
+				tags = append(tags, tag)
+			}
+		}
+
+		// search posts by tag_id
+		err := db.Model(&posts).Related(&tags, "Tags").Error
+		if err != nil {
 			log.SetFlags(log.Lshortfile)
 			log.Println(err)
+		}
+		if len(posts) == 0 {
 			// if posts from DB are not found, return SAMPLE
 			pb := makeSamplePost()
 			pbs = append(pbs, pb)

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/kskumgk63/clippo-go/front/proto/cachepb"
 	"github.com/kskumgk63/clippo-go/front/proto/postpb"
 	"github.com/kskumgk63/clippo-go/front/proto/userpb"
@@ -13,12 +12,6 @@ const (
 	// TOKENCACHE key for jwt token
 	TOKENCACHE = "token-cache"
 )
-
-// TestPost post for test
-type TestPost struct {
-	URL, Title, Description, Image string
-	TagNames                       []string
-}
 
 func (t TestPost) makeTestPost() *TestPost {
 	var tagArray []string
@@ -33,19 +26,16 @@ func (t TestPost) makeTestPost() *TestPost {
 	return &t
 }
 
-// User user
+// User user struct for view not for DB
 type User struct {
-	gorm.Model
-	Email    string `gorm:"type:varchar(255);unique_index;not null"`
-	Password string `gorm:"type:varchar(60);not null"`
-	Posts    []Post
+	Email    string
+	Password string
 }
 
-// Post post
-type Post struct {
-	gorm.Model
-	URL, Title, Description, Image, TagID string
-	UserID                                uint
+// TestPost post for test
+type TestPost struct {
+	URL, Title, Description, Image string
+	TagNames                       []string
 }
 
 // JWT token for authorization

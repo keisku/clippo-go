@@ -9,5 +9,5 @@ type Post struct {
 	gorm.Model
 	URL, Title, Description, Image string `gorm:"not null"`
 	UserID                         uint   `gorm:"not null"`
-	Tags                           []Tag  `gorm:"many2many:post_tags"`
+	Tags                           []Tag  `gorm:"many2many:posts_contacts_tags"`
 }

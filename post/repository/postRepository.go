@@ -53,6 +53,19 @@ func convertPost(post *entity.Post) *postpb.Post {
 	}
 }
 
+func unique(array []uint) []uint {
+	m := map[uint]bool{}
+	uniq := []uint{}
+
+	for _, element := range array {
+		if !m[element] {
+			m[element] = true
+			uniq = append(uniq, element)
+		}
+	}
+	return uniq
+}
+
 // Create create new post
 func Create(req *postpb.CreatePostRequest) error {
 	var tags []entity.Tag
@@ -142,39 +155,34 @@ func GetByUserID(req *postpb.GetAllPostsByUserIDRequest) []*postpb.Post {
 // Search search posts by title or tags
 func Search(req *postpb.SearchPostsRequest) []*postpb.Post {
 	var pbs []*postpb.Post
+	posts := []entity.Post{}
 
-	id := req.GetUserId()
+	userID := req.GetUserId()
 	how := req.GetHow()
 	words := req.GetKeywords()
-
-	// process keywords for query
-	var query string
-	for i, word := range words {
-		if i == len(words)-1 {
-			w := "%" + word + "%"
-			query += w
-		} else {
-			w := "%" + word
-			query += w
-		}
-	}
 
 	// connect with DB
 	db := gormConnect()
 	defer db.Close()
 
-	// get posts
-	posts := []entity.Post{}
-
-	// check how to search
+	// search by title
 	if how == "title" {
-		err := db.Where("user_id = ?", id).Where("title LIKE ?", query).Find(&posts).Error
+		// process keywords for query
+		var query string
+		for i, word := range words {
+			if i == len(words)-1 {
+				w := "%" + word + "%"
+				query += w
+			} else {
+				w := "%" + word
+				query += w
+			}
+		}
+		err := db.Where("user_id = ?", userID).Where("title LIKE ?", query).Find(&posts).Error
 		// if not found any posts in DB, return sample
 		if len(posts) == 0 {
 			log.SetFlags(log.Lshortfile)
 			log.Println(err)
-			pb := makeSamplePost()
-			pbs = append(pbs, pb)
 		} else {
 			for _, post := range posts {
 				pbs = append(pbs, convertPost(&post))
@@ -182,8 +190,12 @@ func Search(req *postpb.SearchPostsRequest) []*postpb.Post {
 		}
 		return pbs
 	}
+
+	// search by tag
 	if how == "tag" {
-		var tags []entity.Tag
+		// var postsTags entity.PostsContactsTags
+		var postIDs []uint
+		multiPostsTags := []entity.PostsContactsTags{}
 
 		// search tags by tag_name
 		for _, word := range words {
@@ -193,23 +205,30 @@ func Search(req *postpb.SearchPostsRequest) []*postpb.Post {
 				log.SetFlags(log.Lshortfile)
 				log.Println(err)
 			} else {
-				tags = append(tags, tag)
+				if err := db.Where("tag_id = ?", tag.ID).Find(&multiPostsTags).Error; err != nil {
+					log.SetFlags(log.Lshortfile)
+					log.Println(err)
+				} else {
+					for _, v := range multiPostsTags {
+						postIDs = append(postIDs, v.PostID)
+					}
+				}
 			}
 		}
 
-		// search posts by tag_id
-		err := db.Model(&posts).Related(&tags, "Tags").Error
-		if err != nil {
-			log.SetFlags(log.Lshortfile)
-			log.Println(err)
-		}
-		if len(posts) == 0 {
-			// if posts from DB are not found, return SAMPLE
-			pb := makeSamplePost()
-			pbs = append(pbs, pb)
-		} else {
-			for _, post := range posts {
-				pbs = append(pbs, convertPost(&post))
+		// delete repwated post_id
+		uniqPostIDs := unique(postIDs)
+
+		// search posts by user_id and post_id
+		for _, postID := range uniqPostIDs {
+			// preload tags because there is empty tags unless preload
+			db.Preload("Tags").Where("id = ? AND user_id = ?", postID, userID).Find(&posts)
+			if len(posts) == 0 {
+				log.Println("Not found any posts")
+				pb := makeSamplePost()
+				pbs = append(pbs, pb)
+			} else {
+				pbs = append(pbs, convertPost(&posts[0]))
 			}
 		}
 		return pbs

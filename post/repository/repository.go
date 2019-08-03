@@ -43,9 +43,9 @@ func CreatePostsAndTagsTable() {
 	db := gormConnect()
 	// create post_tags if not existed
 	// MUST run first
-	if db.HasTable("post_tags") {
-		log.Println("** DELETE POST_TAGS table **")
-		db.DropTable("post_tags")
+	if db.HasTable("posts_contacts_tags") {
+		log.Println("** DELETE POSTS_CONTACTS_TAGS table **")
+		db.DropTable("posts_contacts_tags")
 	}
 	// create posts if not existed
 	if db.HasTable("posts") {

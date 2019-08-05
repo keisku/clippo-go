@@ -170,14 +170,7 @@ func (*PostServer) GetPostDetail(ctx context.Context, req *postpb.PostURLRequest
 	article, err := g.ExtractFromURL(url)
 	// if it is not available to scrape, return empty
 	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Println(err)
-		return &postpb.PostResponse{
-			Url:         "",
-			Title:       "",
-			Description: "",
-			Image:       "",
-		}, err
+		return nil, err
 	}
 
 	// create gRPC response

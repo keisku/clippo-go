@@ -59,9 +59,9 @@ func (*UserServer) IsUserByEmailExisted(ctx context.Context, req *userpb.IsUserB
 		return &userpb.IsUserByEmailExistedResponse{
 			Flag: false,
 		}, nil
-	} else {
-		return &userpb.IsUserByEmailExistedResponse{
-			Flag: true,
-		}, nil
 	}
+	return &userpb.IsUserByEmailExistedResponse{
+		Flag: true,
+	}, nil
+
 }

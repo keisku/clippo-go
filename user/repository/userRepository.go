@@ -7,8 +7,7 @@ import (
 )
 
 // Create create a new user
-func Create(email, password string) error {
-	var user entity.User
+func Create(user *entity.User) error {
 	// connect with DB
 	db := GormConnect()
 	defer db.Close()
@@ -24,33 +23,25 @@ func Create(email, password string) error {
 	return nil
 }
 
-// Get ユーザーの取得
-func Get(email string) (entity.User, error) {
-	var user entity.User
+// Get get a user
+func Get(user *entity.User) *entity.User {
 	// connect with DB
 	db := GormConnect()
 	defer db.Close()
 	// get the user by email
-	err := db.Where("email = ?", email).Find(&user).Error
+	err := db.Where("email = ?", user.Email).Find(&user).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
 		log.Println(err)
-		return user, err
+		return nil
 	}
-	return user, nil
+	return user
 }
 
-// IsEmailExisted メールアドレスに紐づくユーザーは登録されているか精査
-func IsEmailExisted(email string) bool {
-	var user entity.User
-	// MySQLからユーザーの取得
+// IsEmailExisted check if user is existed
+func IsEmailExisted(user *entity.User) bool {
+	// connect with DB
 	db := GormConnect()
 	defer db.Close()
-	err := db.Where("email = ?", email).Find(&user).Error
-	if err != nil {
-		log.SetFlags(log.Lshortfile)
-		log.Println(err)
-		return false
-	}
-	return true
+	return db.Where("email = ?", user.Email).Find(&user).RecordNotFound()
 }

@@ -9,9 +9,9 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-func unique(array []*uint) []*uint {
-	m := map[*uint]bool{}
-	uniq := []*uint{}
+func unique(array []uint) []uint {
+	m := map[uint]bool{}
+	uniq := []uint{}
 
 	for _, element := range array {
 		if !m[element] {
@@ -50,9 +50,7 @@ func Create(post *entity.Post) error {
 }
 
 // Delete delete a post
-func Delete(id uint) error {
-	var post entity.Post
-	post.ID = id
+func Delete(post *entity.Post) error {
 	// connect with DB
 	db := gormConnect()
 	defer db.Close()
@@ -63,17 +61,17 @@ func Delete(id uint) error {
 }
 
 // GetByUserID get posts by user_id
-func GetByUserID(userID string) []*entity.Post {
+func GetByUserID(post *entity.Post) []*entity.Post {
 	// connect with DB
 	db := gormConnect()
 	defer db.Close()
 
 	// get posts related to tags
 	posts := []*entity.Post{}
-	err := db.Preload("Tags").Order("ID desc").Where("user_id = ?", userID).Find(&posts).Error
-	if err != nil {
+	db.Preload("Tags").Order("ID desc").Where("user_id = ?", post.UserID).Find(&posts).RecordNotFound()
+	if len(posts) == 0 {
 		log.SetFlags(log.Lshortfile)
-		log.Println(err)
+		log.Println("RecordNotFound")
 		return nil
 	}
 	return posts
@@ -89,11 +87,11 @@ func Search(how, userID string, words []string) []*entity.Post {
 
 	// search by title
 	if how == "title" {
-		err := db.Where("user_id = ?", userID).Where("title LIKE ?", queryText(words)).Find(&posts).Error
+		db.Where("user_id = ?", userID).Where("title LIKE ?", queryText(words)).Find(&posts).RecordNotFound()
 		// if not found any posts in DB, return sample
-		if posts == nil {
+		if len(posts) == 0 {
 			log.SetFlags(log.Lshortfile)
-			log.Println(err)
+			log.Println("RecordNotFound")
 			return nil
 		}
 		return posts
@@ -102,7 +100,7 @@ func Search(how, userID string, words []string) []*entity.Post {
 	// search by tag
 	if how == "tag" {
 		var postID *uint
-		var postIDs []*uint
+		var postIDs []uint
 
 		// search tags by tag_name
 		for _, word := range words {
@@ -113,7 +111,7 @@ func Search(how, userID string, words []string) []*entity.Post {
 			} else {
 				postID = GetPostIDByTagID(tag.ID)
 			}
-			postIDs = append(postIDs, postID)
+			postIDs = append(postIDs, *postID)
 		}
 
 		// delete repwated post_id
@@ -123,8 +121,9 @@ func Search(how, userID string, words []string) []*entity.Post {
 		for _, postID := range uniqPostIDs {
 			// preload tags because there is empty tags unless preload
 			db.Preload("Tags").Where("id = ? AND user_id = ?", postID, userID).Find(&posts)
-			if posts == nil {
-				log.Println("Not found any posts")
+			if len(posts) == 0 {
+				log.SetFlags(log.Lshortfile)
+				log.Println("RecordNotFound")
 				return nil
 			}
 		}

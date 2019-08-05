@@ -73,13 +73,13 @@ func (*PostServer) CreatePost(ctx context.Context, req *postpb.CreatePostRequest
 	tagNames := req.GetPost().GetTag()
 
 	// array to string
-	var tags []*entity.Tag
+	var tags []entity.Tag
 	for _, tagName := range tagNames {
 		tag, err := repository.GetTag(tagName)
 		if err != nil {
 			tag = repository.CreateTag(tagName)
 		}
-		tags = append(tags, tag)
+		tags = append(tags, *tag)
 	}
 	post = entity.Post{
 		URL:         req.GetPost().GetUrl(),
@@ -104,8 +104,11 @@ func (*PostServer) CreatePost(ctx context.Context, req *postpb.CreatePostRequest
 // DeletePost delete a post
 func (*PostServer) DeletePost(ctx context.Context, req *postpb.DeletePostRequest) (*postpb.DeletePostResponse, error) {
 	fmt.Println("DeletePost RUN")
-	id := convertStringToUint(req.GetId())
-	err := repository.Delete(id)
+
+	var post entity.Post
+
+	post.ID = convertStringToUint(req.GetId())
+	err := repository.Delete(&post)
 	if err != nil {
 		log.Println(err)
 	}
@@ -116,12 +119,14 @@ func (*PostServer) DeletePost(ctx context.Context, req *postpb.DeletePostRequest
 func (*PostServer) GetAllPostsByUserID(ctx context.Context, req *postpb.GetAllPostsByUserIDRequest) (*postpb.GetAllPostsByUserIDResponse, error) {
 	fmt.Println("GetAllPostsByUserID RUN")
 
-	var pbs []*postpb.Post
+	var post entity.Post
+	post.UserID = convertStringToUint(req.GetUserId())
 
 	// search posts grom DB
-	posts := repository.GetByUserID(req.GetUserId())
+	posts := repository.GetByUserID(&post)
 
 	// if not found any posts in DB, return sample
+	var pbs []*postpb.Post
 	if posts == nil {
 		pb := makeSamplePost()
 		pbs = append(pbs, pb)

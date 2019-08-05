@@ -39,7 +39,6 @@ func GormConnect() *gorm.DB {
 	return db
 }
 
-
 // CreateUserTable create users table
 func CreateUserTable() {
 	db := GormConnect()

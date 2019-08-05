@@ -4,20 +4,16 @@ import (
 	"log"
 
 	"github.com/kskumgk63/clippo-go/user/entity"
-	"github.com/kskumgk63/clippo-go/user/userpb"
 )
 
-// Create ユーザーの作成
-func Create(req *userpb.CreateUserRequest) error {
+// Create create a new user
+func Create(email, password string) error {
 	var user entity.User
-	email := req.GetUser().GetEmail()
-	password := req.GetUser().GetPassword()
-
-	// MySQLと接続
+	// connect with DB
 	db := GormConnect()
 	defer db.Close()
-	user.Email = email
-	user.Password = password
+
+	// Create
 	err := db.Create(&user).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
@@ -29,12 +25,12 @@ func Create(req *userpb.CreateUserRequest) error {
 }
 
 // Get ユーザーの取得
-func Get(req *userpb.GetUserRequest) (entity.User, error) {
+func Get(email string) (entity.User, error) {
 	var user entity.User
-	email := req.GetEmail()
-	// MySQLからユーザーの取得
+	// connect with DB
 	db := GormConnect()
 	defer db.Close()
+	// get the user by email
 	err := db.Where("email = ?", email).Find(&user).Error
 	if err != nil {
 		log.SetFlags(log.Lshortfile)
@@ -45,9 +41,8 @@ func Get(req *userpb.GetUserRequest) (entity.User, error) {
 }
 
 // IsEmailExisted メールアドレスに紐づくユーザーは登録されているか精査
-func IsEmailExisted(req *userpb.IsUserByEmailExistedRequest) bool {
+func IsEmailExisted(email string) bool {
 	var user entity.User
-	email := req.GetEmail()
 	// MySQLからユーザーの取得
 	db := GormConnect()
 	defer db.Close()

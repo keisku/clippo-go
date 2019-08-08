@@ -39,9 +39,9 @@ func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 			Key: TOKENCACHE,
 		}
 		res, _ := s.CacheClient.GetToken(r.Context(), req)
-		if res.Token == "" {
+		if res == nil {
 			log.SetFlags(log.Lshortfile)
-			log.Printf("*** %v\n", "JWT Token is empty.")
+			log.Println("*** JWT Token is empty ***")
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
@@ -60,10 +60,6 @@ func (s *FrontServer) AuthToken(next http.HandlerFunc) http.HandlerFunc {
 		}
 		if token.Valid {
 			next.ServeHTTP(w, r)
-		} else {
-			log.SetFlags(log.Lshortfile)
-			log.Printf("*** %v\n", fmt.Sprint(err))
-			http.Redirect(w, r, "/login", http.StatusFound)
 		}
 	}
 }
